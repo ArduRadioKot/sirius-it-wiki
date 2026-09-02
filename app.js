@@ -1,78 +1,207 @@
-const app = document.getElementById('app');
+const app = document.getElementById("app");
 let index = { life: [], articles: [] };
 let currentDay = null;
 
 // База вычисляется от URL самого app.js, а не от адреса страницы.
 // Это важно для GitHub Pages, где сайт обычно живёт в /<repo>/.
 const appScript = document.querySelector('script[src$="app.js"]');
-const APP_BASE_URL = new URL('./', appScript?.src || window.location.href);
+const APP_BASE_URL = new URL("./", appScript?.src || window.location.href);
 
 function safeDecode(value) {
-  try { return decodeURIComponent(value); } catch { return value; }
+  try {
+    return decodeURIComponent(value);
+  } catch {
+    return value;
+  }
 }
 
 function siteUrl(relativePath) {
-  const clean = String(relativePath || '')
-    .replace(/^\.\//, '')
-    .split('/')
-    .map(part => encodeURIComponent(safeDecode(part)))
-    .join('/');
+  const clean = String(relativePath || "")
+    .replace(/^\.\//, "")
+    .split("/")
+    .map((part) => encodeURIComponent(safeDecode(part)))
+    .join("/");
   return new URL(clean, APP_BASE_URL);
 }
 
-const esc = (s='') => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
-const slugify = s => s.toLowerCase().replace(/[^a-zа-яё0-9]+/gi,'-').replace(/^-|-$/g,'');
+const esc = (s = "") =>
+  String(s).replace(
+    /[&<>"']/g,
+    (c) =>
+      ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;",
+      })[c],
+  );
+const slugify = (s) =>
+  s
+    .toLowerCase()
+    .replace(/[^a-zа-яё0-9]+/gi, "-")
+    .replace(/^-|-$/g, "");
 
 function inlineMarkdown(text) {
   return esc(text)
-    .replace(/`([^`]+)`/g, '<code>$1</code>')
+    .replace(/`([^`]+)`/g, "<code>$1</code>")
     .replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1">')
-    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>')
-    .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
-    .replace(/__([^_]+)__/g, '<strong>$1</strong>')
-    .replace(/(?<!\*)\*([^*]+)\*(?!\*)/g, '<em>$1</em>');
+    .replace(
+      /\[([^\]]+)\]\(([^)]+)\)/g,
+      '<a href="$2" target="_blank" rel="noopener">$1</a>',
+    )
+    .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
+    .replace(/__([^_]+)__/g, "<strong>$1</strong>")
+    .replace(/(?<!\*)\*([^*]+)\*(?!\*)/g, "<em>$1</em>");
+}
+
+function downloadBlock(fields) {
+  if (!fields.file) return "";
+  const title = fields.title || "Скачать файл";
+  const description = fields.description
+    ? `<p>${inlineMarkdown(fields.description)}</p>`
+    : "";
+  const fileName = fields.file.split("/").pop() || "download";
+  return `<aside class="download-block"><div><strong>${esc(title)}</strong>${description}</div><a href="${esc(fields.file)}" download="${esc(fileName)}" aria-label="${esc(title)}">Скачать</a></aside>`;
 }
 
 function parseMarkdown(md) {
-  md = md.replace(/^---[\s\S]*?---\s*/, '');
-  const lines = md.replace(/\r/g,'').split('\n');
-  let out = '', para = [], list = null, code = false, codeLang = '', codeBuf = [];
-  const flushPara = () => { if (para.length) { out += `<p>${inlineMarkdown(para.join(' '))}</p>`; para=[]; } };
-  const closeList = () => { if (list) { out += `</${list}>`; list=null; } };
+  md = md.replace(/^---[\s\S]*?---\s*/, "");
+  const lines = md.replace(/\r/g, "").split("\n");
+  let out = "",
+    para = [],
+    list = null,
+    code = false,
+    codeLang = "",
+    codeBuf = [],
+    download = null;
+  const flushPara = () => {
+    if (para.length) {
+      out += `<p>${inlineMarkdown(para.join(" "))}</p>`;
+      para = [];
+    }
+  };
+  const closeList = () => {
+    if (list) {
+      out += `</${list}>`;
+      list = null;
+    }
+  };
 
   for (const line of lines) {
-    if (/^```/.test(line)) {
-      flushPara(); closeList();
-      if (!code) { code = true; codeLang = line.slice(3).trim(); codeBuf=[]; }
-      else { out += `<pre><code${codeLang ? ` class="language-${esc(codeLang)}"` : ''}>${esc(codeBuf.join('\n'))}</code></pre>`; code=false; }
+    if (/^:::download\s*$/.test(line.trim())) {
+      flushPara();
+      closeList();
+      download = {};
       continue;
     }
-    if (code) { codeBuf.push(line); continue; }
-    if (!line.trim()) { flushPara(); closeList(); continue; }
+    if (download && /^:::\s*$/.test(line.trim())) {
+      out += downloadBlock(download);
+      download = null;
+      continue;
+    }
+    if (download) {
+      const field = line.match(/^\s*(title|file|description):\s*(.*)$/);
+      if (field) download[field[1]] = field[2].trim();
+      continue;
+    }
+    if (/^```/.test(line)) {
+      flushPara();
+      closeList();
+      if (!code) {
+        code = true;
+        codeLang = line.slice(3).trim();
+        codeBuf = [];
+      } else {
+        out += `<pre><code${codeLang ? ` class="language-${esc(codeLang)}"` : ""}>${esc(codeBuf.join("\n"))}</code></pre>`;
+        code = false;
+      }
+      continue;
+    }
+    if (code) {
+      codeBuf.push(line);
+      continue;
+    }
+    if (!line.trim()) {
+      flushPara();
+      closeList();
+      continue;
+    }
     let m;
-    if ((m=line.match(/^(#{1,3})\s+(.+)$/))) { flushPara(); closeList(); const n=m[1].length; out += `<h${n} id="${slugify(m[2])}">${inlineMarkdown(m[2])}</h${n}>`; continue; }
-    if (/^---+$/.test(line.trim())) { flushPara(); closeList(); out += '<hr>'; continue; }
-    if ((m=line.match(/^>\s?(.*)$/))) { flushPara(); closeList(); out += `<blockquote>${inlineMarkdown(m[1])}</blockquote>`; continue; }
-    if ((m=line.match(/^[-*+]\s+(.+)$/))) { flushPara(); if (list !== 'ul') { closeList(); list='ul'; out+='<ul>'; } out += `<li>${inlineMarkdown(m[1])}</li>`; continue; }
-    if ((m=line.match(/^\d+[.)]\s+(.+)$/))) { flushPara(); if (list !== 'ol') { closeList(); list='ol'; out+='<ol>'; } out += `<li>${inlineMarkdown(m[1])}</li>`; continue; }
+    if ((m = line.match(/^(#{1,3})\s+(.+)$/))) {
+      flushPara();
+      closeList();
+      const n = m[1].length;
+      out += `<h${n} id="${slugify(m[2])}">${inlineMarkdown(m[2])}</h${n}>`;
+      continue;
+    }
+    if (/^---+$/.test(line.trim())) {
+      flushPara();
+      closeList();
+      out += "<hr>";
+      continue;
+    }
+    if ((m = line.match(/^>\s?(.*)$/))) {
+      flushPara();
+      closeList();
+      out += `<blockquote>${inlineMarkdown(m[1])}</blockquote>`;
+      continue;
+    }
+    if ((m = line.match(/^[-*+]\s+(.+)$/))) {
+      flushPara();
+      if (list !== "ul") {
+        closeList();
+        list = "ul";
+        out += "<ul>";
+      }
+      out += `<li>${inlineMarkdown(m[1])}</li>`;
+      continue;
+    }
+    if ((m = line.match(/^\d+[.)]\s+(.+)$/))) {
+      flushPara();
+      if (list !== "ol") {
+        closeList();
+        list = "ol";
+        out += "<ol>";
+      }
+      out += `<li>${inlineMarkdown(m[1])}</li>`;
+      continue;
+    }
     para.push(line.trim());
   }
 
-  flushPara(); closeList();
-  if (code) out += `<pre><code>${esc(codeBuf.join('\n'))}</code></pre>`;
+  flushPara();
+  closeList();
+  if (code) out += `<pre><code>${esc(codeBuf.join("\n"))}</code></pre>`;
   return out;
 }
 
+function renderMath() {
+  if (typeof renderMathInElement !== "function") return;
+  renderMathInElement(app, {
+    delimiters: [
+      { left: "$$", right: "$$", display: true },
+      { left: "\\[", right: "\\]", display: true },
+      { left: "$", right: "$", display: false },
+      { left: "\\(", right: "\\)", display: false },
+    ],
+    throwOnError: false,
+  });
+}
+
 function routeFor(item) {
-  return item.type === 'life'
+  return item.type === "life"
     ? `#/life/${encodeURIComponent(item.slug)}`
     : `#/study/${encodeURIComponent(item.day)}/${encodeURIComponent(item.slug)}`;
 }
 
 function formatDate(iso) {
   try {
-    return new Intl.DateTimeFormat('ru-RU', { day:'numeric', month:'long', year:'numeric' })
-      .format(new Date(`${iso}T12:00:00`));
+    return new Intl.DateTimeFormat("ru-RU", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    }).format(new Date(`${iso}T12:00:00`));
   } catch {
     return iso;
   }
@@ -83,84 +212,106 @@ function parseFrontMatter(md, fallbackTitle) {
   const meta = {};
   if (match) {
     for (const line of match[1].split(/\r?\n/)) {
-      const i = line.indexOf(':');
+      const i = line.indexOf(":");
       if (i === -1) continue;
       const key = line.slice(0, i).trim();
       let value = line.slice(i + 1).trim();
-      value = value.replace(/^['"]|['"]$/g, '');
+      value = value.replace(/^['"]|['"]$/g, "");
       meta[key] = value;
     }
   }
   return {
     title: meta.title || fallbackTitle,
-    description: meta.description || '',
-    order: Number(meta.order || 9999)
+    description: meta.description || "",
+    order: Number(meta.order || 9999),
   };
 }
 
 async function fetchDirectory(path) {
-  const res = await fetch(siteUrl(path), { cache: 'no-store' });
+  const res = await fetch(siteUrl(path), { cache: "no-store" });
   if (!res.ok) throw new Error(`Не удалось открыть ${path}`);
   const html = await res.text();
-  const doc = new DOMParser().parseFromString(html, 'text/html');
-  return [...doc.querySelectorAll('a[href]')]
-    .map(a => a.getAttribute('href'))
+  const doc = new DOMParser().parseFromString(html, "text/html");
+  return [...doc.querySelectorAll("a[href]")]
+    .map((a) => a.getAttribute("href"))
     .filter(Boolean)
-    .map(href => decodeURIComponent(href.split('?')[0].split('#')[0]));
+    .map((href) => decodeURIComponent(href.split("?")[0].split("#")[0]));
 }
 
 async function buildItem(type, path, slug, day = null) {
   try {
-    const res = await fetch(siteUrl(path), { cache: 'no-store' });
+    const res = await fetch(siteUrl(path), { cache: "no-store" });
     if (!res.ok) throw new Error(path);
     const md = await res.text();
-    const fallbackTitle = slug.replace(/[-_]+/g, ' ').replace(/^./, c => c.toUpperCase());
+    const fallbackTitle = slug
+      .replace(/[-_]+/g, " ")
+      .replace(/^./, (c) => c.toUpperCase());
     const meta = parseFrontMatter(md, fallbackTitle);
     return { type, path, slug, day, content: md, ...meta };
   } catch (err) {
-    console.warn('Не удалось прочитать Markdown:', path, err);
+    console.warn("Не удалось прочитать Markdown:", path, err);
     return null;
   }
 }
 
 async function discoverContentLocally() {
-  const lifeLinks = await fetchDirectory('life/');
-  const lifeFiles = lifeLinks.filter(h => /\.md$/i.test(h) && !h.includes('/'));
-  const life = (await Promise.all(lifeFiles.map(file => {
-    const slug = file.replace(/\.md$/i, '');
-    return buildItem('life', `life/${file}`, slug);
-  }))).filter(Boolean).sort((a,b) => a.order - b.order || a.title.localeCompare(b.title, 'ru'));
+  const lifeLinks = await fetchDirectory("life/");
+  const lifeFiles = lifeLinks.filter(
+    (h) => /\.md$/i.test(h) && !h.includes("/"),
+  );
+  const life = (
+    await Promise.all(
+      lifeFiles.map((file) => {
+        const slug = file.replace(/\.md$/i, "");
+        return buildItem("life", `life/${file}`, slug);
+      }),
+    )
+  )
+    .filter(Boolean)
+    .sort((a, b) => a.order - b.order || a.title.localeCompare(b.title, "ru"));
 
-  const articleRoot = await fetchDirectory('articles/');
+  const articleRoot = await fetchDirectory("articles/");
   const dayFolders = articleRoot
-    .filter(h => /^\d{4}-\d{2}-\d{2}\/$/.test(h))
-    .map(h => h.replace(/\/$/, ''));
+    .filter((h) => /^\d{4}-\d{2}-\d{2}\/$/.test(h))
+    .map((h) => h.replace(/\/$/, ""));
 
-  const articleGroups = await Promise.all(dayFolders.map(async day => {
-    const links = await fetchDirectory(`articles/${day}/`);
-    const files = links.filter(h => /\.md$/i.test(h) && !h.includes('/'));
-    return Promise.all(files.map(file => {
-      const slug = file.replace(/\.md$/i, '');
-      return buildItem('article', `articles/${day}/${file}`, slug, day);
-    }));
-  }));
+  const articleGroups = await Promise.all(
+    dayFolders.map(async (day) => {
+      const links = await fetchDirectory(`articles/${day}/`);
+      const files = links.filter((h) => /\.md$/i.test(h) && !h.includes("/"));
+      return Promise.all(
+        files.map((file) => {
+          const slug = file.replace(/\.md$/i, "");
+          return buildItem("article", `articles/${day}/${file}`, slug, day);
+        }),
+      );
+    }),
+  );
 
-  const articles = articleGroups.flat().filter(Boolean)
-    .sort((a,b) => b.day.localeCompare(a.day) || a.order - b.order || a.title.localeCompare(b.title, 'ru'));
+  const articles = articleGroups
+    .flat()
+    .filter(Boolean)
+    .sort(
+      (a, b) =>
+        b.day.localeCompare(a.day) ||
+        a.order - b.order ||
+        a.title.localeCompare(b.title, "ru"),
+    );
 
   return { life, articles };
 }
 
 async function loadGeneratedIndex() {
-  const res = await fetch(siteUrl('content-index.json'), { cache: 'no-store' });
-  if (!res.ok) throw new Error('content-index.json не найден');
+  const res = await fetch(siteUrl("content-index.json"), { cache: "no-store" });
+  if (!res.ok) throw new Error("content-index.json не найден");
   const data = await res.json();
-  if (!Array.isArray(data.life) || !Array.isArray(data.articles)) throw new Error('Некорректный content-index.json');
+  if (!Array.isArray(data.life) || !Array.isArray(data.articles))
+    throw new Error("Некорректный content-index.json");
   return data;
 }
 
 function isLocalPreview() {
-  return ['localhost', '127.0.0.1', '0.0.0.0'].includes(location.hostname);
+  return ["localhost", "127.0.0.1", "0.0.0.0"].includes(location.hostname);
 }
 
 async function loadIndex() {
@@ -171,7 +322,10 @@ async function loadIndex() {
         index = await discoverContentLocally();
         return;
       } catch (localError) {
-        console.info('Directory listing недоступен, используем content-index.json', localError);
+        console.info(
+          "Directory listing недоступен, используем content-index.json",
+          localError,
+        );
       }
     }
 
@@ -190,121 +344,169 @@ async function loadIndex() {
 }
 
 function home() {
-  const latest = [...index.articles].sort((a,b)=> (b.day+b.title).localeCompare(a.day+a.title)).slice(0,6);
+  const latest = [...index.articles]
+    .sort((a, b) => (b.day + b.title).localeCompare(a.day + a.title))
+    .slice(0, 6);
   app.innerHTML = `
     <section class="hero">
       <span class="eyebrow">Студенческая база знаний</span>
-      <h1>Сириус<br>без лишних вопросов.</h1>
+      <h1>Университет Сириус</h1>
       <p class="hero-lead">Практическая вики про учёбу и жизнь в университете. Инструкции, конспекты, полезные места и ответы на вопросы, которые обычно приходится искать в чатах.</p>
     </section>
     <section class="home-grid">
-      <a class="section-card life" href="#/life"><span class="card-index">01 / CAMPUS</span><div><h2>Жизнь</h2><p>Кампус, быт, сервисы, мероприятия и всё, что происходит вне пар.</p></div><span class="card-arrow">↗</span></a>
-      <a class="section-card study" href="#/study"><span class="card-index">02 / STUDY</span><div><h2>Учёба</h2><p>Материалы, инструкции и статьи по дням — от расписания до полезных учебных заметок.</p></div><span class="card-arrow">↗</span></a>
+      <a class="section-card life" href="#/life"><span class="card-index">01 / CAMPUS</span><div><h2>Жизнь</h2><p>Кампус, быт, сервисы, мероприятия и всё, что происходит вне пар.</p></div><span class="card-arrow"><img src="assets/arrow-up-right.svg" alt="Открыть раздел"></span></a>
+      <a class="section-card study" href="#/study"><span class="card-index">02 / STUDY</span><div><h2>Учёба</h2><p>Материалы, инструкции и статьи по дням — от расписания до полезных учебных заметок.</p></div><span class="card-arrow"><img src="assets/arrow-up-right.svg" alt="Открыть раздел"></span></a>
     </section>
     <section class="latest">
       <div class="section-heading"><h2>Последние материалы</h2><p>${index.articles.length} материалов в учебной базе</p></div>
-      <div class="article-list">${latest.map(tile).join('') || '<div class="empty-state">Пока нет статей.</div>'}</div>
+      <div class="article-list">${latest.map(tile).join("") || '<div class="empty-state">Пока нет статей.</div>'}</div>
     </section>`;
 }
 
 function tile(item) {
-  return `<a class="article-tile" href="${routeFor(item)}"><div class="tile-meta">${item.type==='life'?'ЖИЗНЬ':formatDate(item.day)}</div><div><h3>${esc(item.title)}</h3><p>${esc(item.description||'')}</p></div></a>`;
+  return `<a class="article-tile" href="${routeFor(item)}"><div class="tile-meta">${item.type === "life" ? "ЖИЗНЬ" : formatDate(item.day)}</div><div><h3>${esc(item.title)}</h3><p>${esc(item.description || "")}</p></div></a>`;
 }
 
 function lifePage() {
   app.innerHTML = `<section class="page"><div class="page-top"><div><span class="eyebrow">Раздел 01</span><h1>Жизнь</h1></div><p class="page-description">Всё, что помогает быстрее освоиться: кампус, инфраструктура, документы, мероприятия, бытовые вопросы и полезные советы студентов.</p></div>
-  <div class="content-layout"><aside class="sidebar"><p class="sidebar-title">Материалы</p>${index.life.map(x=>`<a href="${routeFor(x)}">${esc(x.title)}</a>`).join('')}</aside><div class="entries">${index.life.map(entryRow).join('') || '<div class="empty-state">Добавь Markdown-файлы в папку life/. На GitHub Pages они появятся автоматически после следующего push и деплоя.</div>'}</div></div></section>`;
+  <div class="content-layout"><aside class="sidebar"><p class="sidebar-title">Материалы</p>${index.life.map((x) => `<a href="${routeFor(x)}">${esc(x.title)}</a>`).join("")}</aside><div class="entries">${index.life.map(entryRow).join("") || '<div class="empty-state">Добавь Markdown-файлы в папку life/. На GitHub Pages они появятся автоматически после следующего push и деплоя.</div>'}</div></div></section>`;
 }
 
 function entryRow(x) {
-  return `<a class="entry-row" href="${routeFor(x)}"><span class="date">${x.type==='life'?'Гайд':formatDate(x.day)}</span><div><h3>${esc(x.title)}</h3><p>${esc(x.description||'')}</p></div><span class="entry-arrow">→</span></a>`;
+  return `<a class="entry-row" href="${routeFor(x)}"><span class="date">${x.type === "life" ? "Гайд" : formatDate(x.day)}</span><div><h3>${esc(x.title)}</h3><p>${esc(x.description || "")}</p></div><span class="entry-arrow"><img src="assets/arrow-right.svg" alt="Открыть статью"></span></a>`;
 }
 
 function studyPage(day) {
-  const days = [...new Set(index.articles.map(x=>x.day))].sort().reverse();
+  const days = [...new Set(index.articles.map((x) => x.day))].sort().reverse();
   currentDay = day && days.includes(day) ? day : days[0];
-  const items = index.articles.filter(x => !currentDay || x.day===currentDay);
+  const items = index.articles.filter(
+    (x) => !currentDay || x.day === currentDay,
+  );
   app.innerHTML = `<section class="page"><div class="page-top"><div><span class="eyebrow">Раздел 02</span><h1>Учёба</h1></div><p class="page-description">Учебные материалы организованы по дням. Добавь Markdown в <code>articles/YYYY-MM-DD/</code> и сделай push — GitHub Pages автоматически пересоберёт список статей.</p></div>
-  <div class="content-layout"><aside class="sidebar"><p class="sidebar-title">По дням</p>${days.map(d=>`<button class="day-button ${d===currentDay?'active':''}" data-day="${d}">${formatDate(d)}</button>`).join('')}</aside><div class="entries">${items.map(entryRow).join('') || '<div class="empty-state">Пока нет учебных материалов.</div>'}</div></div></section>`;
-  document.querySelectorAll('.day-button').forEach(b=>b.addEventListener('click',()=>{ location.hash=`#/study?day=${b.dataset.day}`; }));
+  <div class="content-layout"><aside class="sidebar"><p class="sidebar-title">По дням</p>${days.map((d) => `<button class="day-button ${d === currentDay ? "active" : ""}" data-day="${d}">${formatDate(d)}</button>`).join("")}</aside><div class="entries">${items.map(entryRow).join("") || '<div class="empty-state">Пока нет учебных материалов.</div>'}</div></div></section>`;
+  document.querySelectorAll(".day-button").forEach((b) =>
+    b.addEventListener("click", () => {
+      location.hash = `#/study?day=${b.dataset.day}`;
+    }),
+  );
 }
 
 async function articlePage(item) {
-  if (!item) { notFound(); return; }
+  if (!item) {
+    notFound();
+    return;
+  }
   try {
     // На GitHub Pages Markdown уже встроен в content-index.json во время сборки.
     // Поэтому открытие статьи не зависит от URL файла и не ломается в /<repo>/.
     let md = item.content;
 
     // Совместимость со старыми индексами и локальным режимом.
-    if (typeof md !== 'string') {
-      const res = await fetch(siteUrl(item.path), { cache: 'no-store' });
+    if (typeof md !== "string") {
+      const res = await fetch(siteUrl(item.path), { cache: "no-store" });
       if (!res.ok) throw new Error(`HTTP ${res.status}: ${item.path}`);
       md = await res.text();
     }
 
-    const back = item.type==='life' ? '#/life' : `#/study?day=${encodeURIComponent(item.day)}`;
-    app.innerHTML = `<article class="article-page"><header class="article-head"><a class="back-link" href="${back}">← Назад</a><div class="article-kicker">${item.type==='life'?'Жизнь':formatDate(item.day)}</div><h1>${esc(item.title)}</h1>${item.description?`<p class="summary">${esc(item.description)}</p>`:''}</header><div class="markdown">${parseMarkdown(md)}</div></article>`;
+    const back =
+      item.type === "life"
+        ? "#/life"
+        : `#/study?day=${encodeURIComponent(item.day)}`;
+    app.innerHTML = `<article class="article-page"><header class="article-head"><a class="back-link" href="${back}"><img src="assets/arrow-left.svg" alt="">Назад</a><div class="article-kicker">${item.type === "life" ? "Жизнь" : formatDate(item.day)}</div><h1>${esc(item.title)}</h1>${item.description ? `<p class="summary">${esc(item.description)}</p>` : ""}</header><div class="markdown">${parseMarkdown(md)}</div></article>`;
+    renderMath();
   } catch (error) {
-    console.error('Не удалось открыть статью:', item, error);
-    app.innerHTML='<section class="article-page"><h1>Не удалось открыть статью</h1><p>Статья есть в списке, но её содержимое не удалось загрузить. Сделай новый push, чтобы GitHub Actions заново собрал <code>content-index.json</code>.</p><p><a class="back-link" href="#/">← На главную</a></p></section>';
+    console.error("Не удалось открыть статью:", item, error);
+    app.innerHTML =
+      '<section class="article-page"><h1>Не удалось открыть статью</h1><p>Статья есть в списке, но её содержимое не удалось загрузить. Сделай новый push, чтобы GitHub Actions заново собрал <code>content-index.json</code>.</p><p><a class="back-link" href="#/"><img src="assets/arrow-left.svg" alt="">На главную</a></p></section>';
   }
 }
 
 function notFound() {
-  app.innerHTML='<section class="article-page"><h1>404</h1><p>Такой страницы нет.</p><p><a class="back-link" href="#/">← На главную</a></p></section>';
+  app.innerHTML =
+    '<section class="article-page"><h1>404</h1><p>Такой страницы нет.</p><p><a class="back-link" href="#/"><img src="assets/arrow-left.svg" alt="">На главную</a></p></section>';
 }
 
 async function router() {
-  const raw = location.hash.slice(1) || '/';
-  const [path, qs] = raw.split('?');
-  const parts = path.split('/').filter(Boolean).map(safeDecode);
+  const raw = location.hash.slice(1) || "/";
+  const [path, qs] = raw.split("?");
+  const parts = path.split("/").filter(Boolean).map(safeDecode);
 
   if (!parts.length) home();
-  else if (parts[0]==='life' && parts.length===1) lifePage();
-  else if (parts[0]==='life' && parts[1]) await articlePage(index.life.find(x=>x.slug===parts[1]));
-  else if (parts[0]==='study' && parts.length===1) {
-    const p=new URLSearchParams(qs||'');
-    studyPage(p.get('day'));
-  }
-  else if (parts[0]==='study' && parts[1] && parts[2]) {
-    await articlePage(index.articles.find(x=>x.day===parts[1]&&x.slug===parts[2]));
-  }
-  else notFound();
+  else if (parts[0] === "life" && parts.length === 1) lifePage();
+  else if (parts[0] === "life" && parts[1])
+    await articlePage(index.life.find((x) => x.slug === parts[1]));
+  else if (parts[0] === "study" && parts.length === 1) {
+    const p = new URLSearchParams(qs || "");
+    studyPage(p.get("day"));
+  } else if (parts[0] === "study" && parts[1] && parts[2]) {
+    await articlePage(
+      index.articles.find((x) => x.day === parts[1] && x.slug === parts[2]),
+    );
+  } else notFound();
 
-  app.focus({preventScroll:true});
-  window.scrollTo(0,0);
+  app.focus({ preventScroll: true });
+  window.scrollTo(0, 0);
 }
 
-const searchDialog=document.getElementById('searchDialog');
-const searchInput=document.getElementById('searchInput');
-const searchResults=document.getElementById('searchResults');
+const searchDialog = document.getElementById("searchDialog");
+const searchInput = document.getElementById("searchInput");
+const searchResults = document.getElementById("searchResults");
 
 function openSearch() {
   searchDialog.showModal();
-  searchInput.value='';
-  renderSearch('');
-  setTimeout(()=>searchInput.focus(),20);
+  searchInput.value = "";
+  renderSearch("");
+  setTimeout(() => searchInput.focus(), 20);
 }
 
 function renderSearch(q) {
-  const all=[...index.life,...index.articles];
-  const needle=q.trim().toLowerCase();
-  const rows=(needle?all.filter(x=>(x.title+' '+(x.description||'')).toLowerCase().includes(needle)):all.slice(0,8)).slice(0,12);
-  searchResults.innerHTML=rows.map(x=>`<a class="search-result" href="${routeFor(x)}"><strong>${esc(x.title)}</strong><span>${x.type==='life'?'Жизнь':formatDate(x.day)}${x.description?' · '+esc(x.description):''}</span></a>`).join('') || '<div class="empty-state">Ничего не найдено</div>';
-  searchResults.querySelectorAll('a').forEach(a=>a.onclick=()=>searchDialog.close());
+  const all = [...index.life, ...index.articles];
+  const needle = q.trim().toLowerCase();
+  const rows = (
+    needle
+      ? all.filter((x) =>
+          (x.title + " " + (x.description || ""))
+            .toLowerCase()
+            .includes(needle),
+        )
+      : all.slice(0, 8)
+  ).slice(0, 12);
+  searchResults.innerHTML =
+    rows
+      .map(
+        (x) =>
+          `<a class="search-result" href="${routeFor(x)}"><strong>${esc(x.title)}</strong><span>${x.type === "life" ? "Жизнь" : formatDate(x.day)}${x.description ? " · " + esc(x.description) : ""}</span></a>`,
+      )
+      .join("") || '<div class="empty-state">Ничего не найдено</div>';
+  searchResults
+    .querySelectorAll("a")
+    .forEach((a) => (a.onclick = () => searchDialog.close()));
 }
 
-document.getElementById('searchOpen').onclick=openSearch;
-document.getElementById('mobileSearchOpen').onclick=()=>{closeMenu();openSearch();};
-searchInput.oninput=e=>renderSearch(e.target.value);
-document.addEventListener('keydown',e=>{ if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='k'){e.preventDefault();openSearch();} });
+document.getElementById("searchOpen").onclick = openSearch;
+document.getElementById("mobileSearchOpen").onclick = () => {
+  closeMenu();
+  openSearch();
+};
+searchInput.oninput = (e) => renderSearch(e.target.value);
+document.addEventListener("keydown", (e) => {
+  if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+    e.preventDefault();
+    openSearch();
+  }
+});
 
-const menu=document.getElementById('mobileMenu');
-const menuButton=document.getElementById('menuButton');
-function closeMenu(){menu.hidden=true;menuButton.setAttribute('aria-expanded','false');}
-menuButton.onclick=()=>{menu.hidden=!menu.hidden;menuButton.setAttribute('aria-expanded',String(!menu.hidden));};
-menu.querySelectorAll('a').forEach(a=>a.onclick=closeMenu);
+const menu = document.getElementById("mobileMenu");
+const menuButton = document.getElementById("menuButton");
+function closeMenu() {
+  menu.hidden = true;
+  menuButton.setAttribute("aria-expanded", "false");
+}
+menuButton.onclick = () => {
+  menu.hidden = !menu.hidden;
+  menuButton.setAttribute("aria-expanded", String(!menu.hidden));
+};
+menu.querySelectorAll("a").forEach((a) => (a.onclick = closeMenu));
 
-window.addEventListener('hashchange',router);
+window.addEventListener("hashchange", router);
 loadIndex().then(router);

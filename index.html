@@ -1,57 +1,97 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#00A7A7" />
-  <meta name="description" content="Неофициальная вики по Университету «Сириус»: учёба, жизнь, инструкции и полезные материалы." />
-  <title>Сириус Wiki</title>
-  <link rel="stylesheet" href="styles.css" />
-</head>
-<body>
-  <header class="site-header">
-    <a class="brand" href="#/" aria-label="На главную">
-      <img class="brand-logo" src="assets/sirius-logo.svg" alt="Университет Сириус" />
-      <span class="brand-separator"></span>
-      <span class="brand-wiki">WIKI</span>
-    </a>
-    <nav class="desktop-nav" aria-label="Основная навигация">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#00A7A7" />
+    <meta
+      name="description"
+      content="Неофициальная вики по Университету «Сириус»: учёба, жизнь, инструкции и полезные материалы."
+    />
+    <title>Сириус Wiki</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="#/" aria-label="На главную">
+        <img
+          class="brand-logo"
+          src="assets/sirius-logo.svg"
+          alt="Университет Сириус"
+        />
+        <span class="brand-separator"></span>
+        <span class="brand-wiki">WIKI</span>
+      </a>
+      <nav class="desktop-nav" aria-label="Основная навигация">
+        <a href="#/life">Жизнь</a>
+        <a href="#/study">Учёба</a>
+        <button class="search-open" id="searchOpen" type="button">
+          Поиск <kbd>K</kbd>
+        </button>
+      </nav>
+      <button
+        class="menu-button"
+        id="menuButton"
+        aria-label="Открыть меню"
+        aria-expanded="false"
+      >
+        <span></span><span></span>
+      </button>
+    </header>
+
+    <div class="mobile-menu" id="mobileMenu" hidden>
       <a href="#/life">Жизнь</a>
       <a href="#/study">Учёба</a>
-      <button class="search-open" id="searchOpen" type="button">Поиск <kbd>⌘K</kbd></button>
-    </nav>
-    <button class="menu-button" id="menuButton" aria-label="Открыть меню" aria-expanded="false">
-      <span></span><span></span>
-    </button>
-  </header>
-
-  <div class="mobile-menu" id="mobileMenu" hidden>
-    <a href="#/life">Жизнь</a>
-    <a href="#/study">Учёба</a>
-    <button id="mobileSearchOpen" type="button">Поиск</button>
-  </div>
-
-  <main id="app" tabindex="-1"></main>
-
-  <footer class="site-footer">
-    <div>
-      <strong>Сириус Wiki</strong>
-      <p>Неофициальная база знаний студентов.</p>
+      <button id="mobileSearchOpen" type="button">Поиск</button>
     </div>
-    <p class="footer-note">Логотип принадлежит Университету «Сириус». Проект не является официальным сайтом университета.</p>
-  </footer>
 
-  <dialog class="search-dialog" id="searchDialog">
-    <form method="dialog" class="search-shell">
-      <div class="search-row">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m21 21-4.3-4.3m2.3-5.2A7.5 7.5 0 1 1 4 11.5a7.5 7.5 0 0 1 15 0Z"/></svg>
-        <input id="searchInput" autocomplete="off" placeholder="Найти в вики..." />
-        <button value="cancel" aria-label="Закрыть">Esc</button>
+    <main id="app" tabindex="-1"></main>
+
+    <footer class="site-footer">
+      <div>
+        <strong>Сириус Wiki</strong>
+        <p>база знаний студентов.</p>
       </div>
-      <div id="searchResults" class="search-results"></div>
-    </form>
-  </dialog>
+      <p class="footer-note">
+        Логотип принадлежит Университету «Сириус». Проект не является
+        официальным сайтом университета.
+      </p>
+    </footer>
 
-  <script src="app.js" defer></script>
-</body>
+    <dialog class="search-dialog" id="searchDialog">
+      <form method="dialog" class="search-shell">
+        <div class="search-row">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path
+              d="m21 21-4.3-4.3m2.3-5.2A7.5 7.5 0 1 1 4 11.5a7.5 7.5 0 0 1 15 0Z"
+            />
+          </svg>
+          <input
+            id="searchInput"
+            autocomplete="off"
+            placeholder="Найти в вики..."
+          />
+          <button value="cancel" aria-label="Закрыть">Esc</button>
+        </div>
+        <div id="searchResults" class="search-results"></div>
+      </form>
+    </dialog>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.js"
+      crossorigin="anonymous"
+      defer
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/contrib/auto-render.min.js"
+      crossorigin="anonymous"
+      defer
+    ></script>
+    <script src="app.js" defer></script>
+  </body>
 </html>
