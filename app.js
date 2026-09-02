@@ -43,7 +43,15 @@ const slugify = (s) =>
     .replace(/^-|-$/g, "");
 
 function inlineMarkdown(text) {
-  return esc(text)
+  const math = [];
+  const protectedText = String(text).replace(
+    /(\$\$[\s\S]*?\$\$|\\\[[\s\S]*?\\\]|\\\([\s\S]*?\\\)|(?<!\$)\$(?!\$)[\s\S]*?(?<!\$)\$(?!\$))/g,
+    (formula) => {
+      math.push(formula);
+      return `\u0000MATH${math.length - 1}\u0000`;
+    },
+  );
+  return esc(protectedText)
     .replace(/`([^`]+)`/g, "<code>$1</code>")
     .replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1">')
     .replace(
@@ -52,7 +60,8 @@ function inlineMarkdown(text) {
     )
     .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
     .replace(/__([^_]+)__/g, "<strong>$1</strong>")
-    .replace(/(?<!\*)\*([^*]+)\*(?!\*)/g, "<em>$1</em>");
+    .replace(/(?<!\*)\*([^*]+)\*(?!\*)/g, "<em>$1</em>")
+    .replace(/\u0000MATH(\d+)\u0000/g, (_, i) => math[i]);
 }
 
 function downloadBlock(fields) {
@@ -61,8 +70,9 @@ function downloadBlock(fields) {
   const description = fields.description
     ? `<p>${inlineMarkdown(fields.description)}</p>`
     : "";
-  const fileName = fields.file.split("/").pop() || "download";
-  return `<aside class="download-block"><div><strong>${esc(title)}</strong>${description}</div><a href="${esc(fields.file)}" download="${esc(fileName)}" aria-label="${esc(title)}">Скачать</a></aside>`;
+  const fileName = fields.file.split(/[\\/]/).pop() || "download";
+  const fileUrl = siteUrl(fields.file).href;
+  return `<aside class="download-block"><div><strong>${esc(title)}</strong>${description}</div><a href="${esc(fileUrl)}" download="${esc(fileName)}" aria-label="${esc(title)}">Скачать</a></aside>`;
 }
 
 function parseMarkdown(md) {
