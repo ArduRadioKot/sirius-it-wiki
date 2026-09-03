@@ -23,6 +23,7 @@ function parseFrontMatter(md, fallbackTitle) {
   return {
     title: meta.title || fallbackTitle,
     description: meta.description || '',
+    subject: meta.subject || 'Другое',
     order: Number(meta.order || 9999)
   };
 }

@@ -789,3 +789,46 @@ kbd {
     text-align: left;
   }
 }
+
+/* Study grouping: by day / by subject */
+.study-switch {
+  display: inline-flex;
+  gap: 4px;
+  margin-top: 28px;
+  padding: 4px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+}
+.study-switch-button {
+  border: 0;
+  border-radius: 999px;
+  padding: 10px 16px;
+  background: transparent;
+  color: var(--muted);
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.18s ease, color 0.18s ease;
+}
+.study-switch-button:hover {
+  color: var(--accent-deep);
+  background: var(--accent-softer);
+}
+.study-switch-button.active {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+.subject-button {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (max-width: 760px) {
+  .study-switch {
+    width: 100%;
+    margin-top: 20px;
+  }
+  .study-switch-button {
+    flex: 1 1 50%;
+  }
+}

@@ -32,9 +32,12 @@ You can add the following front matter at the beginning of the file:
 ---
 title: Article title
 description: Short description
+subject: History
 order: 1
 ---
 ```
+
+`subject` is used by the **By subject** view in the Study section. If it is omitted, the article is placed in **Other** (`Другое`). The folder date is still used for the **By day** view.
 
 ## LaTeX Formulas
 

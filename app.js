@@ -1,6 +1,8 @@
 const app = document.getElementById("app");
 let index = { life: [], articles: [] };
 let currentDay = null;
+let currentSubject = null;
+let studyView = "day";
 
 // База вычисляется от URL самого app.js, а не от адреса страницы.
 // Это важно для GitHub Pages, где сайт обычно живёт в /<repo>/.
@@ -233,6 +235,7 @@ function parseFrontMatter(md, fallbackTitle) {
   return {
     title: meta.title || fallbackTitle,
     description: meta.description || "",
+    subject: meta.subject || "Другое",
     order: Number(meta.order || 9999),
   };
 }
@@ -374,7 +377,10 @@ function home() {
 }
 
 function tile(item) {
-  return `<a class="article-tile" href="${routeFor(item)}"><div class="tile-meta">${item.type === "life" ? "ЖИЗНЬ" : formatDate(item.day)}</div><div><h3>${esc(item.title)}</h3><p>${esc(item.description || "")}</p></div></a>`;
+  const meta = item.type === "life"
+    ? "ЖИЗНЬ"
+    : `${esc(item.subject || "Другое")} · ${formatDate(item.day)}`;
+  return `<a class="article-tile" href="${routeFor(item)}"><div class="tile-meta">${meta}</div><div><h3>${esc(item.title)}</h3><p>${esc(item.description || "")}</p></div></a>`;
 }
 
 function lifePage() {
@@ -382,21 +388,64 @@ function lifePage() {
   <div class="content-layout"><aside class="sidebar"><p class="sidebar-title">Материалы</p>${index.life.map((x) => `<a href="${routeFor(x)}">${esc(x.title)}</a>`).join("")}</aside><div class="entries">${index.life.map(entryRow).join("") || '<div class="empty-state">Добавь Markdown-файлы в папку life/. На GitHub Pages они появятся автоматически после следующего push и деплоя.</div>'}</div></div></section>`;
 }
 
-function entryRow(x) {
-  return `<a class="entry-row" href="${routeFor(x)}"><span class="date">${x.type === "life" ? "Гайд" : formatDate(x.day)}</span><div><h3>${esc(x.title)}</h3><p>${esc(x.description || "")}</p></div><span class="entry-arrow"><img src="assets/arrow-right.svg" alt="Открыть статью"></span></a>`;
+function entryRow(x, mode = "day") {
+  let label = "Гайд";
+  if (x.type !== "life") {
+    label = mode === "subject"
+      ? formatDate(x.day)
+      : esc(x.subject || "Другое");
+  }
+  return `<a class="entry-row" href="${routeFor(x)}"><span class="date">${label}</span><div><h3>${esc(x.title)}</h3><p>${esc(x.description || "")}</p></div><span class="entry-arrow"><img src="assets/arrow-right.svg" alt="Открыть статью"></span></a>`;
 }
 
-function studyPage(day) {
-  const days = [...new Set(index.articles.map((x) => x.day))].sort().reverse();
-  currentDay = day && days.includes(day) ? day : days[0];
-  const items = index.articles.filter(
-    (x) => !currentDay || x.day === currentDay,
-  );
-  app.innerHTML = `<section class="page"><div class="page-top"><div><span class="eyebrow">Раздел 02</span><h1>Учёба</h1></div><p class="page-description">Учебные материалы организованы по дням. Добавь Markdown в <code>articles/YYYY-MM-DD/</code> и сделай push — GitHub Pages автоматически пересоберёт список статей.</p></div>
-  <div class="content-layout"><aside class="sidebar"><p class="sidebar-title">По дням</p>${days.map((d) => `<button class="day-button ${d === currentDay ? "active" : ""}" data-day="${d}">${formatDate(d)}</button>`).join("")}</aside><div class="entries">${items.map(entryRow).join("") || '<div class="empty-state">Пока нет учебных материалов.</div>'}</div></div></section>`;
-  document.querySelectorAll(".day-button").forEach((b) =>
+function studyPage({ day = null, subject = null, view = "day" } = {}) {
+  const days = [...new Set(index.articles.map((x) => x.day).filter(Boolean))]
+    .sort()
+    .reverse();
+  const subjects = [...new Set(index.articles.map((x) => x.subject || "Другое"))]
+    .sort((a, b) => a.localeCompare(b, "ru"));
+
+  studyView = view === "subject" ? "subject" : "day";
+  currentDay = day && days.includes(day) ? day : days[0] || null;
+  currentSubject = subject && subjects.includes(subject) ? subject : subjects[0] || null;
+
+  const items = studyView === "subject"
+    ? index.articles
+        .filter((x) => !currentSubject || (x.subject || "Другое") === currentSubject)
+        .sort((a, b) => b.day.localeCompare(a.day) || a.order - b.order || a.title.localeCompare(b.title, "ru"))
+    : index.articles
+        .filter((x) => !currentDay || x.day === currentDay)
+        .sort((a, b) => a.order - b.order || a.title.localeCompare(b.title, "ru"));
+
+  const sidebarItems = studyView === "subject"
+    ? subjects.map((name) => `<button class="day-button subject-button ${name === currentSubject ? "active" : ""}" data-subject="${esc(name)}">${esc(name)}</button>`).join("")
+    : days.map((d) => `<button class="day-button ${d === currentDay ? "active" : ""}" data-day="${d}">${formatDate(d)}</button>`).join("");
+
+  app.innerHTML = `<section class="page"><div class="page-top"><div><span class="eyebrow">Раздел 02</span><h1>Учёба</h1></div><p class="page-description">Материалы можно смотреть по дате или по предмету. Для сортировки по предметам укажи <code>subject: Название предмета</code> во front matter Markdown-статьи.</p></div>
+  <div class="study-switch" role="group" aria-label="Способ сортировки"><button type="button" class="study-switch-button ${studyView === "day" ? "active" : ""}" data-view="day">По дням</button><button type="button" class="study-switch-button ${studyView === "subject" ? "active" : ""}" data-view="subject">По предметам</button></div>
+  <div class="content-layout"><aside class="sidebar"><p class="sidebar-title">${studyView === "subject" ? "По предметам" : "По дням"}</p>${sidebarItems}</aside><div class="entries">${items.map((x) => entryRow(x, studyView)).join("") || '<div class="empty-state">Пока нет учебных материалов.</div>'}</div></div></section>`;
+
+  document.querySelectorAll(".study-switch-button").forEach((b) =>
     b.addEventListener("click", () => {
-      location.hash = `#/study?day=${b.dataset.day}`;
+      if (b.dataset.view === "subject") {
+        const first = currentSubject || subjects[0] || "";
+        location.hash = `#/study?view=subject${first ? `&subject=${encodeURIComponent(first)}` : ""}`;
+      } else {
+        const first = currentDay || days[0] || "";
+        location.hash = `#/study?view=day${first ? `&day=${encodeURIComponent(first)}` : ""}`;
+      }
+    }),
+  );
+
+  document.querySelectorAll("[data-day]").forEach((b) =>
+    b.addEventListener("click", () => {
+      location.hash = `#/study?view=day&day=${encodeURIComponent(b.dataset.day)}`;
+    }),
+  );
+
+  document.querySelectorAll("[data-subject]").forEach((b) =>
+    b.addEventListener("click", () => {
+      location.hash = `#/study?view=subject&subject=${encodeURIComponent(b.dataset.subject)}`;
     }),
   );
 }
@@ -421,8 +470,11 @@ async function articlePage(item) {
     const back =
       item.type === "life"
         ? "#/life"
-        : `#/study?day=${encodeURIComponent(item.day)}`;
-    app.innerHTML = `<article class="article-page"><header class="article-head"><a class="back-link" href="${back}"><img src="assets/arrow-left.svg" alt="">Назад</a><div class="article-kicker">${item.type === "life" ? "Жизнь" : formatDate(item.day)}</div><h1>${esc(item.title)}</h1>${item.description ? `<p class="summary">${esc(item.description)}</p>` : ""}</header><div class="markdown">${parseMarkdown(md)}</div></article>`;
+        : `#/study?view=day&day=${encodeURIComponent(item.day)}`;
+    const kicker = item.type === "life"
+      ? "Жизнь"
+      : `${esc(item.subject || "Другое")} · ${formatDate(item.day)}`;
+    app.innerHTML = `<article class="article-page"><header class="article-head"><a class="back-link" href="${back}"><img src="assets/arrow-left.svg" alt="">Назад</a><div class="article-kicker">${kicker}</div><h1>${esc(item.title)}</h1>${item.description ? `<p class="summary">${esc(item.description)}</p>` : ""}</header><div class="markdown">${parseMarkdown(md)}</div></article>`;
     renderMath();
   } catch (error) {
     console.error("Не удалось открыть статью:", item, error);
@@ -447,7 +499,11 @@ async function router() {
     await articlePage(index.life.find((x) => x.slug === parts[1]));
   else if (parts[0] === "study" && parts.length === 1) {
     const p = new URLSearchParams(qs || "");
-    studyPage(p.get("day"));
+    studyPage({
+      day: p.get("day"),
+      subject: p.get("subject"),
+      view: p.get("view") || (p.get("subject") ? "subject" : "day"),
+    });
   } else if (parts[0] === "study" && parts[1] && parts[2]) {
     await articlePage(
       index.articles.find((x) => x.day === parts[1] && x.slug === parts[2]),
@@ -475,7 +531,7 @@ function renderSearch(q) {
   const rows = (
     needle
       ? all.filter((x) =>
-          (x.title + " " + (x.description || ""))
+          (x.title + " " + (x.description || "") + " " + (x.subject || ""))
             .toLowerCase()
             .includes(needle),
         )
@@ -485,7 +541,7 @@ function renderSearch(q) {
     rows
       .map(
         (x) =>
-          `<a class="search-result" href="${routeFor(x)}"><strong>${esc(x.title)}</strong><span>${x.type === "life" ? "Жизнь" : formatDate(x.day)}${x.description ? " · " + esc(x.description) : ""}</span></a>`,
+          `<a class="search-result" href="${routeFor(x)}"><strong>${esc(x.title)}</strong><span>${x.type === "life" ? "Жизнь" : `${esc(x.subject || "Другое")} · ${formatDate(x.day)}`}${x.description ? " · " + esc(x.description) : ""}</span></a>`,
       )
       .join("") || '<div class="empty-state">Ничего не найдено</div>';
   searchResults
