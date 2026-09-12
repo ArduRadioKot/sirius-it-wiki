@@ -77,7 +77,7 @@ async function buildArticles() {
   }
 
   const days = dayEntries
-    .filter(entry => entry.isDirectory() && /^\d{4}-\d{2}-\d{2}$/.test(entry.name))
+    .filter(entry => entry.isDirectory() && (/^\d{4}-\d{2}-\d{2}$/.test(entry.name) || entry.name === 'undated'))
     .map(entry => entry.name);
 
   const result = [];
@@ -103,7 +103,7 @@ async function buildArticles() {
   }
 
   return result.sort((a, b) =>
-    b.day.localeCompare(a.day) ||
+    (a.day === 'undated' ? 1 : b.day === 'undated' ? -1 : b.day.localeCompare(a.day)) ||
     a.order - b.order ||
     a.title.localeCompare(b.title, 'ru')
   );

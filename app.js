@@ -208,6 +208,7 @@ function routeFor(item) {
 }
 
 function formatDate(iso) {
+  if (iso === "undated") return "Без подтверждённой даты";
   try {
     return new Intl.DateTimeFormat("ru-RU", {
       day: "numeric",
@@ -285,7 +286,7 @@ async function discoverContentLocally() {
 
   const articleRoot = await fetchDirectory("articles/");
   const dayFolders = articleRoot
-    .filter((h) => /^\d{4}-\d{2}-\d{2}\/$/.test(h))
+    .filter((h) => /^\d{4}-\d{2}-\d{2}\/$/.test(h) || h === "undated/")
     .map((h) => h.replace(/\/$/, ""));
 
   const articleGroups = await Promise.all(
@@ -306,7 +307,7 @@ async function discoverContentLocally() {
     .filter(Boolean)
     .sort(
       (a, b) =>
-        b.day.localeCompare(a.day) ||
+        (a.day === "undated" ? 1 : b.day === "undated" ? -1 : b.day.localeCompare(a.day)) ||
         a.order - b.order ||
         a.title.localeCompare(b.title, "ru"),
     );
@@ -400,8 +401,7 @@ function entryRow(x, mode = "day") {
 
 function studyPage({ day = null, subject = null, view = "day" } = {}) {
   const days = [...new Set(index.articles.map((x) => x.day).filter(Boolean))]
-    .sort()
-    .reverse();
+    .sort((a, b) => a === "undated" ? 1 : b === "undated" ? -1 : b.localeCompare(a));
   const subjects = [...new Set(index.articles.map((x) => x.subject || "Другое"))]
     .sort((a, b) => a.localeCompare(b, "ru"));
 
@@ -412,7 +412,7 @@ function studyPage({ day = null, subject = null, view = "day" } = {}) {
   const items = studyView === "subject"
     ? index.articles
         .filter((x) => !currentSubject || (x.subject || "Другое") === currentSubject)
-        .sort((a, b) => b.day.localeCompare(a.day) || a.order - b.order || a.title.localeCompare(b.title, "ru"))
+        .sort((a, b) => (a.day === "undated" ? 1 : b.day === "undated" ? -1 : b.day.localeCompare(a.day)) || a.order - b.order || a.title.localeCompare(b.title, "ru"))
     : index.articles
         .filter((x) => !currentDay || x.day === currentDay)
         .sort((a, b) => a.order - b.order || a.title.localeCompare(b.title, "ru"));
