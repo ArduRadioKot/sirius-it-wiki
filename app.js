@@ -331,7 +331,7 @@ function isLocalPreview() {
 async function loadIndex() {
   try {
     // На локальном python -m http.server сохраняем удобство: новые файлы видны сразу.
-    if (isLocalPreview()) {
+    if (isLocalPreview() && navigator.onLine && !navigator.serviceWorker?.controller) {
       try {
         index = await discoverContentLocally();
         return;
@@ -371,6 +371,7 @@ function home() {
       <a class="section-card life" href="#/life"><span class="card-index">01 / CAMPUS</span><div><h2>Жизнь</h2><p>Кампус, быт, сервисы, мероприятия и всё, что происходит вне пар.</p></div><span class="card-arrow"><img src="assets/arrow-up-right.svg" alt="Открыть раздел"></span></a>
       <a class="section-card study" href="#/study"><span class="card-index">02 / STUDY</span><div><h2>Учёба</h2><p>Материалы, инструкции и статьи по дням — от расписания до полезных учебных заметок.</p></div><span class="card-arrow"><img src="assets/arrow-up-right.svg" alt="Открыть раздел"></span></a>
     </section>
+    <section class="schedule-home"><a href="#/schedule"><span class="eyebrow">Каждый день под рукой</span><h2>Расписание и время до пары →</h2><p>ИОП-ИТ-26/1 и ИОП-ИТ-26/2 · доступно без интернета</p></a></section>
     <section class="latest">
       <div class="section-heading"><h2>Последние материалы</h2><p>${index.articles.length} материалов в учебной базе</p></div>
       <div class="article-list">${latest.map(tile).join("") || '<div class="empty-state">Пока нет статей.</div>'}</div>
@@ -418,11 +419,11 @@ function studyPage({ day = null, subject = null, view = "day" } = {}) {
         .sort((a, b) => a.order - b.order || a.title.localeCompare(b.title, "ru"));
 
   const sidebarItems = studyView === "subject"
-    ? subjects.map((name) => `<button class="day-button subject-button ${name === currentSubject ? "active" : ""}" data-subject="${esc(name)}">${esc(name)}</button>`).join("")
-    : days.map((d) => `<button class="day-button ${d === currentDay ? "active" : ""}" data-day="${d}">${formatDate(d)}</button>`).join("");
+    ? subjects.map((name) => `<button class="day-button subject-button ${name === currentSubject ? "active" : ""}" aria-pressed="${name === currentSubject}" data-subject="${esc(name)}">${esc(name)}</button>`).join("")
+    : days.map((d) => `<button class="day-button ${d === currentDay ? "active" : ""}" aria-pressed="${d === currentDay}" data-day="${d}">${formatDate(d)}</button>`).join("");
 
-  app.innerHTML = `<section class="page"><div class="page-top"><div><span class="eyebrow">Раздел 02</span><h1>Учёба</h1></div><p class="page-description">Материалы можно смотреть по дате или по предмету. Для сортировки по предметам укажи <code>subject: Название предмета</code> во front matter Markdown-статьи.</p></div>
-  <div class="study-switch" role="group" aria-label="Способ сортировки"><button type="button" class="study-switch-button ${studyView === "day" ? "active" : ""}" data-view="day">По дням</button><button type="button" class="study-switch-button ${studyView === "subject" ? "active" : ""}" data-view="subject">По предметам</button></div>
+  app.innerHTML = `<section class="page"><div class="page-top"><div><span class="eyebrow">Раздел 02</span><h1>Учёба</h1></div><p class="page-description">Конспекты и учебные материалы по дням и предметам. Выберите нужную дату или дисциплину в списке.</p></div>
+  <div class="study-switch" role="group" aria-label="Способ сортировки"><button type="button" class="study-switch-button ${studyView === "day" ? "active" : ""}" aria-pressed="${studyView === "day"}" data-view="day">По дням</button><button type="button" class="study-switch-button ${studyView === "subject" ? "active" : ""}" aria-pressed="${studyView === "subject"}" data-view="subject">По предметам</button></div>
   <div class="content-layout"><aside class="sidebar"><p class="sidebar-title">${studyView === "subject" ? "По предметам" : "По дням"}</p>${sidebarItems}</aside><div class="entries">${items.map((x) => entryRow(x, studyView)).join("") || '<div class="empty-state">Пока нет учебных материалов.</div>'}</div></div></section>`;
 
   document.querySelectorAll(".study-switch-button").forEach((b) =>
@@ -494,6 +495,7 @@ async function router() {
   const parts = path.split("/").filter(Boolean).map(safeDecode);
 
   if (!parts.length) home();
+  else if (parts[0] === "schedule") window.SiriusSchedule.render();
   else if (parts[0] === "life" && parts.length === 1) lifePage();
   else if (parts[0] === "life" && parts[1])
     await articlePage(index.life.find((x) => x.slug === parts[1]));
