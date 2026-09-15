@@ -751,6 +751,46 @@ kbd {
   max-width: 420px;
   text-align: right;
 }
+.footer-update {
+  display: grid;
+  gap: 10px;
+  justify-items: start;
+  min-width: min(240px, 100%);
+}
+.app-version {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+#updateApp {
+  font: inherit;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 10px 14px;
+  min-height: 44px;
+  cursor: pointer;
+}
+#updateApp:hover:not(:disabled) {
+  border-color: var(--accent);
+  background: var(--accent-softer);
+}
+#updateApp:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+.footer-update-status {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.4;
+  max-width: 280px;
+}
+.footer-update-status[data-error="true"] {
+  color: #c45c5c;
+}
 .site-footer a {
   color: var(--accent-dark);
   font-weight: 600;
@@ -1041,6 +1081,12 @@ kbd {
     text-align: left;
     max-width: none;
   }
+  .footer-update {
+    width: 100%;
+  }
+  .footer-update-status {
+    max-width: none;
+  }
 }
 
 /* Study grouping: by day / by subject */
@@ -1214,11 +1260,25 @@ button:disabled {
   display: flex;
   gap: 6px;
   flex-wrap: wrap;
+  min-width: 0;
+}
+
+.schedule-date-actions {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  align-items: center;
 }
 
 .schedule-shell {
   display: grid;
   gap: 28px;
+  min-width: 0;
+}
+
+.schedule-rail,
+.schedule-main {
+  min-width: 0;
 }
 
 .schedule-next {
@@ -1623,26 +1683,97 @@ button:disabled {
   .schedule-page {
     margin-top: 24px;
     padding: 0 18px;
+    overflow-x: clip;
   }
 
   .schedule-head {
-    align-items: start;
+    align-items: stretch;
     flex-direction: column;
+    gap: 16px;
+    margin-bottom: 20px;
   }
 
-  .schedule-week {
-    overflow-x: auto;
-    grid-template-columns: repeat(7, minmax(64px, 1fr));
-    padding-bottom: 4px;
-    scrollbar-width: none;
+  .schedule-page h1 {
+    font-size: clamp(36px, 12vw, 52px);
   }
 
-  .schedule-week::-webkit-scrollbar {
-    display: none;
+  .schedule-toolbar {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .schedule-toolbar > select {
+    width: 100%;
+  }
+
+  .schedule-date {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 6px;
+    min-width: 0;
   }
 
   .schedule-date input {
+    width: 100%;
     min-width: 0;
+  }
+
+  .schedule-date-actions {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 8px;
+  }
+
+  .schedule-date-actions #refreshSchedule {
+    width: 44px;
+    padding-inline: 0;
+  }
+
+  .schedule-next {
+    padding-bottom: 16px;
+  }
+
+  .schedule-next strong {
+    font-size: clamp(20px, 5.5vw, 24px);
+  }
+
+  .schedule-week {
+    width: 100%;
+    max-width: 100%;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 5px;
+    overflow: visible;
+  }
+
+  .schedule-week-day {
+    min-width: 0;
+    min-height: 66px;
+    padding: 8px 2px;
+    border-radius: 12px;
+  }
+
+  .schedule-week-day .weekday {
+    font-size: 10px;
+    letter-spacing: 0.04em;
+  }
+
+  .schedule-week-day .daynum {
+    font-size: 16px;
+  }
+
+  .schedule-week-day .daycount {
+    font-size: 11px;
+  }
+
+  .schedule-day-bar {
+    margin-bottom: 12px;
+    gap: 10px;
+  }
+
+  .schedule-day-bar h2 {
+    font-size: clamp(18px, 5vw, 24px);
   }
 
   .schedule-home {
@@ -1650,9 +1781,9 @@ button:disabled {
   }
 
   .lesson {
-    grid-template-columns: 72px minmax(0, 1fr);
-    gap: 14px;
-    padding: 18px 0;
+    grid-template-columns: 64px minmax(0, 1fr);
+    gap: 12px;
+    padding: 16px 0;
   }
 
   .lesson.current::before {
@@ -1660,7 +1791,20 @@ button:disabled {
   }
 
   .lesson h3 {
-    font-size: 18px;
+    font-size: 17px;
+  }
+
+  .lesson-time time {
+    font-size: 17px;
+  }
+
+  .lesson-meta-line {
+    gap: 6px 10px;
+    font-size: 13px;
+  }
+
+  .lesson-meta-line span:not(:last-child)::after {
+    margin-left: 10px;
   }
 
   .lesson-multi .lesson-variants {
@@ -1675,6 +1819,15 @@ button:disabled {
     gap: 8px 12px;
     color: var(--muted);
     font-size: 13px;
+  }
+
+  .schedule-reminders {
+    width: 100%;
+  }
+
+  .schedule-reminders select,
+  .schedule-reminders button {
+    flex: 1 1 auto;
   }
 
   .schedule-foot {

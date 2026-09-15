@@ -1,5 +1,6 @@
 const PREFIX = 'sirius-wiki-' + self.registration.scope;
-const CACHE = PREFIX + 'c559240c1d321546';
+const CACHE = PREFIX + '747d87a99840d03d';
+const VERSION = CACHE.slice(PREFIX.length);
 const CORE = ['./', 'index.html', 'styles.css', 'theme.js', 'schedule.js', 'app.js', 'pwa.js', 'manifest.webmanifest', 'content-index.json', 'data/schedule.json', 'assets/sirius-logo.svg', 'assets/sirius-logo-dark.svg', 'assets/arrow-left.svg', 'assets/arrow-right.svg', 'assets/arrow-up-right.svg', 'assets/icon-192.png', 'assets/icon-512.png', 'vendor/katex/katex.min.css', 'vendor/katex/katex.min.js', 'vendor/katex/auto-render.min.js', 'vendor/katex/fonts/KaTeX_Typewriter-Regular.woff2', 'vendor/katex/fonts/KaTeX_Main-Regular.woff', 'vendor/katex/fonts/KaTeX_AMS-Regular.ttf', 'vendor/katex/fonts/KaTeX_Main-BoldItalic.woff', 'vendor/katex/fonts/KaTeX_AMS-Regular.woff2', 'vendor/katex/fonts/KaTeX_Size3-Regular.woff2', 'vendor/katex/fonts/KaTeX_Main-Regular.woff2', 'vendor/katex/fonts/KaTeX_Script-Regular.ttf', 'vendor/katex/fonts/KaTeX_Caligraphic-Bold.woff2', 'vendor/katex/fonts/KaTeX_Size3-Regular.ttf', 'vendor/katex/fonts/KaTeX_Typewriter-Regular.woff', 'vendor/katex/fonts/KaTeX_Caligraphic-Regular.woff', 'vendor/katex/fonts/KaTeX_Typewriter-Regular.ttf', 'vendor/katex/fonts/KaTeX_Main-Italic.woff', 'vendor/katex/fonts/KaTeX_Caligraphic-Bold.ttf', 'vendor/katex/fonts/KaTeX_SansSerif-Bold.woff2', 'vendor/katex/fonts/KaTeX_Math-Italic.woff2', 'vendor/katex/fonts/KaTeX_Size4-Regular.woff2', 'vendor/katex/fonts/KaTeX_Fraktur-Bold.woff2', 'vendor/katex/fonts/KaTeX_Caligraphic-Bold.woff', 'vendor/katex/fonts/KaTeX_SansSerif-Bold.ttf', 'vendor/katex/fonts/KaTeX_Fraktur-Regular.woff', 'vendor/katex/fonts/KaTeX_Main-Bold.ttf', 'vendor/katex/fonts/KaTeX_SansSerif-Italic.woff2', 'vendor/katex/fonts/KaTeX_Main-Bold.woff2', 'vendor/katex/fonts/KaTeX_SansSerif-Regular.woff2', 'vendor/katex/fonts/KaTeX_Fraktur-Regular.ttf', 'vendor/katex/fonts/KaTeX_Main-Regular.ttf', 'vendor/katex/fonts/KaTeX_Size2-Regular.woff', 'vendor/katex/fonts/KaTeX_Main-BoldItalic.woff2', 'vendor/katex/fonts/KaTeX_Fraktur-Regular.woff2', 'vendor/katex/fonts/KaTeX_Script-Regular.woff2', 'vendor/katex/fonts/KaTeX_Size4-Regular.woff', 'vendor/katex/fonts/KaTeX_Size3-Regular.woff', 'vendor/katex/fonts/KaTeX_AMS-Regular.woff', 'vendor/katex/fonts/KaTeX_Main-Bold.woff', 'vendor/katex/fonts/KaTeX_SansSerif-Italic.ttf', 'vendor/katex/fonts/KaTeX_Math-Italic.ttf', 'vendor/katex/fonts/KaTeX_Size1-Regular.woff', 'vendor/katex/fonts/KaTeX_SansSerif-Regular.woff', 'vendor/katex/fonts/KaTeX_Main-Italic.ttf', 'vendor/katex/fonts/KaTeX_Math-Italic.woff', 'vendor/katex/fonts/KaTeX_Math-BoldItalic.woff2', 'vendor/katex/fonts/KaTeX_Fraktur-Bold.ttf', 'vendor/katex/fonts/KaTeX_Size2-Regular.ttf', 'vendor/katex/fonts/KaTeX_SansSerif-Italic.woff', 'vendor/katex/fonts/KaTeX_Main-Italic.woff2', 'vendor/katex/fonts/KaTeX_Size1-Regular.woff2', 'vendor/katex/fonts/KaTeX_Fraktur-Bold.woff', 'vendor/katex/fonts/KaTeX_Script-Regular.woff', 'vendor/katex/fonts/KaTeX_SansSerif-Regular.ttf', 'vendor/katex/fonts/KaTeX_Math-BoldItalic.woff', 'vendor/katex/fonts/KaTeX_Size1-Regular.ttf', 'vendor/katex/fonts/KaTeX_Caligraphic-Regular.ttf', 'vendor/katex/fonts/KaTeX_Size4-Regular.ttf', 'vendor/katex/fonts/KaTeX_Size2-Regular.woff2', 'vendor/katex/fonts/KaTeX_Caligraphic-Regular.woff2', 'vendor/katex/fonts/KaTeX_Main-BoldItalic.ttf', 'vendor/katex/fonts/KaTeX_SansSerif-Bold.woff', 'vendor/katex/fonts/KaTeX_Math-BoldItalic.ttf'];
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(CORE)));
@@ -9,6 +10,13 @@ self.addEventListener('activate', event => {
     for (const key of await caches.keys()) if (key.startsWith(PREFIX) && key !== CACHE) await caches.delete(key);
     await self.clients.claim();
   })());
+});
+self.addEventListener('message', (event) => {
+  const data = event.data;
+  if (!data || typeof data !== 'object') return;
+  if (data.type === 'GET_VERSION') {
+    event.source?.postMessage({ type: 'VERSION', version: VERSION });
+  }
 });
 self.addEventListener('fetch', event => {
   const url = new URL(event.request.url);

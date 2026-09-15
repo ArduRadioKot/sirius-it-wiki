@@ -154,9 +154,11 @@
             <button id="previousDay" aria-label="Предыдущий день">←</button>
             <input id="scheduleDate" type="date" value="${escape(date)}" aria-label="Дата">
             <button id="nextDay" aria-label="Следующий день">→</button>
-            <button id="todayButton">Сегодня</button>
           </div>
-          <button id="refreshSchedule" ${loading ? 'disabled' : ''}>${loading ? '…' : '↻'}</button>
+          <div class="schedule-date-actions">
+            <button id="todayButton">Сегодня</button>
+            <button id="refreshSchedule" ${loading ? 'disabled' : ''}>${loading ? '…' : '↻'}</button>
+          </div>
         </div>
       </header>
       <div class="schedule-shell">
