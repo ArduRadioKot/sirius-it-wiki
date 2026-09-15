@@ -18,12 +18,12 @@
   const active = () => location.hash.startsWith('#/schedule');
   const fresh = () => snapshot && Date.now() - Date.parse(snapshot.updatedAt) < 24 * 3600000;
   const nextText = () => {
-    if (!snapshot) return ['Расписание загружается', 'Подключитесь к интернету для первой загрузки.'];
-    if (today() < snapshot.fromDate || today() > snapshot.toDate) return ['Нужно обновить расписание', 'Сохранённый период не включает сегодняшний день.'];
+    if (!snapshot) return ['Расписание загружается', 'Нужен интернет для первой загрузки'];
+    if (today() < snapshot.fromDate || today() > snapshot.toDate) return ['Нужно обновить расписание', 'Сохранённый период не включает сегодня'];
     const now = Date.now(), ongoing = lessons().filter(e => instant(e) <= now && instant(e, 'end') > now);
     if (ongoing.length) return [`До конца пары ${Math.ceil((instant(ongoing[0], 'end') - now)/60000)} мин`, [...new Set(ongoing.map(e => e.title))].join(' / ')];
     const next = lessons().find(e => instant(e) > now);
-    if (!next) return ['В сохранённом расписании больше нет пар', 'Проверьте обновления позже.'];
+    if (!next) return ['Пар больше нет', 'В сохранённом периоде'];
     const minutes = Math.ceil((instant(next) - now)/60000), days = Math.floor(minutes/1440), hours = Math.floor(minutes%1440/60);
     return [`До пары ${days ? days + ' д ' : ''}${hours ? hours + ' ч ' : ''}${minutes%60} мин`, `${next.title} · ${next.date === today() ? 'сегодня' : next.date} в ${next.start}`];
   };
@@ -40,64 +40,71 @@
     finally { loading = false; if (active()) render(); tick(); }
   }
   function lessonCard(e) {
+    const room = e.room || '—';
+    const teacher = e.teachers || '—';
     return `<article class="lesson" data-start="${instant(e)}" data-end="${instant(e,'end')}">
-      <div class="lesson-time"><time datetime="${escape(e.date)}T${escape(e.start)}">${escape(e.start)}</time><time datetime="${escape(e.date)}T${escape(e.end)}">${escape(e.end)}</time></div>
+      <div class="lesson-time"><time>${escape(e.start)}</time><span>${escape(e.end)}</span></div>
       <div class="lesson-body">
-        <span class="lesson-kind">${escape(e.kind)}</span>
         <h3>${escape(e.title)}</h3>
-        ${e.comment ? `<p class="lesson-comment mobile-only">${escape(e.comment)}</p>` : ''}
+        <p class="lesson-meta-line"><span>${escape(e.kind)}</span><span>${escape(room)}</span><span>${escape(teacher)}</span></p>
+        ${e.comment ? `<p class="lesson-comment">${escape(e.comment)}</p>` : ''}
       </div>
-      <div class="lesson-room"><span class="lesson-label">Аудитория</span><p>${escape(e.room || 'Не указана')}</p>${e.address ? `<p class="lesson-sub">${escape(e.address)}</p>` : ''}</div>
-      <div class="lesson-teacher"><span class="lesson-label">Преподаватель</span><p>${escape(e.teachers || 'Не указан')}</p>${e.comment ? `<p class="lesson-sub desktop-only">${escape(e.comment)}</p>` : ''}</div>
+      <div class="lesson-room">${escape(room)}</div>
+      <div class="lesson-teacher">${escape(teacher)}</div>
     </article>`;
+  }
+
+  function statusLine() {
+    const bits = [];
+    if (!navigator.onLine) bits.push('Без интернета');
+    else if (failure) bits.push('Офлайн-копия');
+    else if (snapshot && !fresh()) bits.push('Данные старше суток');
+    if (snapshot) bits.push(`Обновлено ${new Date(snapshot.updatedAt).toLocaleString('ru-RU', {timeZone:'Europe/Moscow'})}`);
+    return bits.join(' · ');
   }
 
   function render() {
     const rows = lessons().filter(e => e.date === date);
     const covered = snapshot && date >= snapshot.fromDate && date <= snapshot.toDate;
-    const updated = snapshot ? new Date(snapshot.updatedAt).toLocaleString('ru-RU', {timeZone:'Europe/Moscow'}) : '';
     const [headline, detail] = nextText();
     const dayTitle = new Date(date+'T12:00:00+03:00').toLocaleDateString('ru-RU', {weekday:'long', day:'numeric', month:'long', timeZone:'Europe/Moscow'});
-    const empty = `<div class="empty-state">${covered ? 'В опубликованном расписании на этот день занятий нет.' : 'На этот день нет сохранённых данных. Доступный период: ' + (snapshot ? `${snapshot.fromDate} — ${snapshot.toDate}` : 'ещё не загружен') + '.'}</div>`;
+    const empty = `<div class="empty-state">${covered ? 'В этот день занятий нет.' : 'На этот день нет сохранённых данных.' + (snapshot ? ` Период: ${snapshot.fromDate} — ${snapshot.toDate}.` : '')}</div>`;
+    const note = notificationError || (enabled ? 'Уведомления включены' : '');
     document.getElementById('app').innerHTML = `<section class="schedule-page">
       <header class="schedule-head">
-        <div>
-          <span class="eyebrow">Учебный день</span>
-          <h1>Расписание</h1>
-          <p class="schedule-intro">Пары, аудитории и время до следующего занятия. Всё время — московское.</p>
-        </div>
+        <h1>Расписание</h1>
         <div class="schedule-toolbar">
-          <label>Ваша группа<select id="scheduleGroup">${GROUPS.map(g => `<option ${g === group ? 'selected' : ''}>${g}</option>`).join('')}</select></label>
-          <label>День<div class="schedule-date"><button id="previousDay" aria-label="Предыдущий день">←</button><input id="scheduleDate" type="date" value="${escape(date)}" aria-label="Дата расписания"><button id="nextDay" aria-label="Следующий день">→</button><button id="todayButton">Сегодня</button></div></label>
-          <button id="refreshSchedule" ${loading ? 'disabled' : ''}>${loading ? 'Обновляем…' : 'Обновить'}</button>
+          <select id="scheduleGroup" aria-label="Группа">${GROUPS.map(g => `<option ${g === group ? 'selected' : ''}>${g}</option>`).join('')}</select>
+          <div class="schedule-date">
+            <button id="previousDay" aria-label="Предыдущий день">←</button>
+            <input id="scheduleDate" type="date" value="${escape(date)}" aria-label="Дата">
+            <button id="nextDay" aria-label="Следующий день">→</button>
+            <button id="todayButton">Сегодня</button>
+          </div>
+          <button id="refreshSchedule" ${loading ? 'disabled' : ''}>${loading ? '…' : '↻'}</button>
         </div>
       </header>
-      <div class="schedule-layout">
-        <aside class="schedule-aside">
-          <div class="schedule-next"><span class="schedule-next-label">Сейчас</span><strong id="nextHeadline">${escape(headline)}</strong><span id="nextDetail">${escape(detail)}</span></div>
-          <p class="schedule-meta" role="status">${snapshot ? `Обновлено ${escape(updated)} МСК.${!fresh() ? ' Данные старше суток — возможны изменения.' : ''}` : 'Расписание пока не сохранено.'} ${!navigator.onLine ? 'Без интернета: сохранённая версия.' : failure ? 'Не удалось проверить обновления. Показана сохранённая версия, если она есть.' : ''}<br><a href="https://schedule.siriusuniversity.ru" target="_blank" rel="noopener">Официальное расписание</a> · Автопроверка каждые 15 минут.</p>
-        </aside>
-        <div class="schedule-main">
-          <div class="schedule-day-bar">
-            <h2>${escape(dayTitle)}</h2>
-            <span class="schedule-count">${rows.length ? rows.length + ' ' + (rows.length === 1 ? 'занятие' : rows.length < 5 ? 'занятия' : 'занятий') : 'нет пар'}</span>
-          </div>
-          <div class="lesson-list">
-            <div class="lesson-list-head" aria-hidden="true"><span>Время</span><span>Предмет</span><span>Аудитория</span><span>Преподаватель</span></div>
-            ${rows.map(lessonCard).join('') || empty}
-          </div>
-          <section class="schedule-reminders">
-            <h2>Напоминания о парах</h2>
-            <div class="controls">
-              <label>За <select id="reminderLead">${[5,10,15,30].map(v => `<option value="${v}" ${v === lead ? 'selected' : ''}>${v} минут</option>`).join('')}</select></label>
-              <button id="enableReminders">${enabled ? 'Отключить уведомления' : 'Включить уведомления'}</button>
-              <button id="exportCalendar" ${lessons().length ? '' : 'disabled'}>Добавить в календарь</button>
-            </div>
-            <p>Уведомления приложения работают, пока оно открыто; при сворачивании браузер может задержать сигнал. Для напоминаний при закрытом приложении сохраните пары в календарь с сигналом за ${lead} минут. Разрешите уведомления в календаре. Экспорт — снимок расписания: после изменений его нужно импортировать заново.</p>
-            <p id="notificationStatus" role="status">${escape(notificationError || (enabled ? 'Уведомления включены для выбранной группы. Для данных старше суток сигналы приостановлены.' : 'Разрешение запрашивается только после нажатия кнопки.'))}</p>
-          </section>
-        </div>
+      <div class="schedule-next">
+        <strong id="nextHeadline">${escape(headline)}</strong>
+        <span id="nextDetail">${escape(detail)}</span>
       </div>
+      <div class="schedule-day-bar">
+        <h2>${escape(dayTitle)}</h2>
+        <span class="schedule-count">${rows.length || '0'}</span>
+      </div>
+      <div class="lesson-list">
+        <div class="lesson-list-head" aria-hidden="true"><span>Время</span><span>Пара</span><span>Аудитория</span><span>Преподаватель</span></div>
+        ${rows.map(lessonCard).join('') || empty}
+      </div>
+      <footer class="schedule-foot">
+        <div class="schedule-reminders">
+          <select id="reminderLead" aria-label="Напомнить за">${[5,10,15,30].map(v => `<option value="${v}" ${v === lead ? 'selected' : ''}>за ${v} мин</option>`).join('')}</select>
+          <button id="enableReminders">${enabled ? 'Уведомления вкл.' : 'Уведомления'}</button>
+          <button id="exportCalendar" ${lessons().length ? '' : 'disabled'}>В календарь</button>
+          <span id="notificationStatus" role="status">${escape(note)}</span>
+        </div>
+        <p class="schedule-meta" role="status">${escape(statusLine())} · <a href="https://schedule.siriusuniversity.ru" target="_blank" rel="noopener">Источник</a></p>
+      </footer>
     </section>`;
     document.getElementById('scheduleGroup').onchange = e => { group=e.target.value; put('sirius-group',group); render(); tick(); };
     document.getElementById('scheduleDate').onchange = e => { if (/^\d{4}-\d{2}-\d{2}$/.test(e.target.value)) {date=e.target.value;render();} };
@@ -112,10 +119,10 @@
   async function toggleReminders() {
     notificationError='';
     if(enabled) enabled=false;
-    else if(!('Notification' in window) || !('serviceWorker' in navigator)) notificationError='Этот браузер не поддерживает уведомления. Используйте календарь; на iPhone попробуйте установить приложение на экран Домой.';
+    else if(!('Notification' in window) || !('serviceWorker' in navigator)) notificationError='Уведомления недоступны — используйте календарь';
     else {
-      try { enabled = (await Notification.requestPermission()) === 'granted'; if (!enabled) notificationError='Уведомления не разрешены. Разрешите их в настройках браузера или используйте календарь.'; }
-      catch { notificationError='Не удалось включить уведомления. Используйте календарь.'; }
+      try { enabled = (await Notification.requestPermission()) === 'granted'; if (!enabled) notificationError='Нет разрешения на уведомления'; }
+      catch { notificationError='Не удалось включить уведомления'; }
     }
     put('sirius-reminders',String(enabled));render();tick();
   }
