@@ -368,8 +368,8 @@ function home() {
       <p class="hero-lead">Практическая вики про учёбу и жизнь в университете. Инструкции, конспекты, полезные места и ответы на вопросы, которые обычно приходится искать в чатах.</p>
     </section>
     <section class="home-grid">
-      <a class="section-card life" href="#/life"><span class="card-index">01 / CAMPUS</span><div><h2>Жизнь</h2><p>Кампус, быт, сервисы, мероприятия и всё, что происходит вне пар.</p></div><span class="card-arrow"><img src="assets/arrow-up-right.svg" alt="Открыть раздел"></span></a>
-      <a class="section-card study" href="#/study"><span class="card-index">02 / STUDY</span><div><h2>Учёба</h2><p>Материалы, инструкции и статьи по дням — от расписания до полезных учебных заметок.</p></div><span class="card-arrow"><img src="assets/arrow-up-right.svg" alt="Открыть раздел"></span></a>
+      <a class="section-card study" href="#/study"><span class="card-index">01 / STUDY</span><div><h2>Учёба</h2><p>Конспекты, лекции и материалы по дням и предметам.</p></div><span class="card-arrow" aria-hidden="true"><span class="icon icon-arrow-up-right"></span></span></a>
+      <a class="section-card life" href="#/life"><span class="card-index">02 / CAMPUS</span><div><h2>Жизнь</h2><p>Кампус, быт, сервисы, мероприятия и всё, что происходит вне пар.</p></div><span class="card-arrow" aria-hidden="true"><span class="icon icon-arrow-up-right"></span></span></a>
     </section>
     <section class="schedule-home"><a href="#/schedule"><span class="eyebrow">Каждый день под рукой</span><h2>Расписание и время до пары →</h2><p>ИОП-ИТ-26/1 и ИОП-ИТ-26/2 · доступно без интернета</p></a></section>
     <section class="latest">
@@ -386,7 +386,7 @@ function tile(item) {
 }
 
 function lifePage() {
-  app.innerHTML = `<section class="page"><div class="page-top"><div><span class="eyebrow">Раздел 01</span><h1>Жизнь</h1></div><p class="page-description">Всё, что помогает быстрее освоиться: кампус, инфраструктура, документы, мероприятия, бытовые вопросы и полезные советы студентов.</p></div>
+  app.innerHTML = `<section class="page"><div class="page-top"><div><span class="eyebrow">Раздел 02</span><h1>Жизнь</h1></div><p class="page-description">Всё, что помогает быстрее освоиться: кампус, инфраструктура, документы, мероприятия, бытовые вопросы и полезные советы студентов.</p></div>
   <div class="content-layout"><aside class="sidebar"><p class="sidebar-title">Материалы</p>${index.life.map((x) => `<a href="${routeFor(x)}">${esc(x.title)}</a>`).join("")}</aside><div class="entries">${index.life.map(entryRow).join("") || '<div class="empty-state">Добавь Markdown-файлы в папку life/. На GitHub Pages они появятся автоматически после следующего push и деплоя.</div>'}</div></div></section>`;
 }
 
@@ -397,7 +397,7 @@ function entryRow(x, mode = "day") {
       ? formatDate(x.day)
       : esc(x.subject || "Другое");
   }
-  return `<a class="entry-row" href="${routeFor(x)}"><span class="date">${label}</span><div><h3>${esc(x.title)}</h3><p>${esc(x.description || "")}</p></div><span class="entry-arrow"><img src="assets/arrow-right.svg" alt="Открыть статью"></span></a>`;
+  return `<a class="entry-row" href="${routeFor(x)}"><span class="date">${label}</span><div><h3>${esc(x.title)}</h3><p>${esc(x.description || "")}</p></div><span class="entry-arrow" aria-hidden="true"><span class="icon icon-arrow-right"></span></span></a>`;
 }
 
 function studyPage({ day = null, subject = null, view = "day" } = {}) {
@@ -422,7 +422,7 @@ function studyPage({ day = null, subject = null, view = "day" } = {}) {
     ? subjects.map((name) => `<button class="day-button subject-button ${name === currentSubject ? "active" : ""}" aria-pressed="${name === currentSubject}" data-subject="${esc(name)}">${esc(name)}</button>`).join("")
     : days.map((d) => `<button class="day-button ${d === currentDay ? "active" : ""}" aria-pressed="${d === currentDay}" data-day="${d}">${formatDate(d)}</button>`).join("");
 
-  app.innerHTML = `<section class="page"><div class="page-top"><div><span class="eyebrow">Раздел 02</span><h1>Учёба</h1></div><p class="page-description">Конспекты и учебные материалы по дням и предметам. Выберите нужную дату или дисциплину в списке.</p></div>
+  app.innerHTML = `<section class="page"><div class="page-top"><div><span class="eyebrow">Раздел 01</span><h1>Учёба</h1></div><p class="page-description">Конспекты и учебные материалы по дням и предметам. Выберите нужную дату или дисциплину в списке.</p></div>
   <div class="study-switch" role="group" aria-label="Способ сортировки"><button type="button" class="study-switch-button ${studyView === "day" ? "active" : ""}" aria-pressed="${studyView === "day"}" data-view="day">По дням</button><button type="button" class="study-switch-button ${studyView === "subject" ? "active" : ""}" aria-pressed="${studyView === "subject"}" data-view="subject">По предметам</button></div>
   <div class="content-layout"><aside class="sidebar"><p class="sidebar-title">${studyView === "subject" ? "По предметам" : "По дням"}</p>${sidebarItems}</aside><div class="entries">${items.map((x) => entryRow(x, studyView)).join("") || '<div class="empty-state">Пока нет учебных материалов.</div>'}</div></div></section>`;
 
@@ -475,18 +475,18 @@ async function articlePage(item) {
     const kicker = item.type === "life"
       ? "Жизнь"
       : `${esc(item.subject || "Другое")} · ${formatDate(item.day)}`;
-    app.innerHTML = `<article class="article-page"><header class="article-head"><a class="back-link" href="${back}"><img src="assets/arrow-left.svg" alt="">Назад</a><div class="article-kicker">${kicker}</div><h1>${esc(item.title)}</h1>${item.description ? `<p class="summary">${esc(item.description)}</p>` : ""}</header><div class="markdown">${parseMarkdown(md)}</div></article>`;
+    app.innerHTML = `<article class="article-page"><header class="article-head"><a class="back-link" href="${back}"><span class="icon icon-arrow-left" aria-hidden="true"></span>Назад</a><div class="article-kicker">${kicker}</div><h1>${esc(item.title)}</h1>${item.description ? `<p class="summary">${esc(item.description)}</p>` : ""}</header><div class="markdown">${parseMarkdown(md)}</div></article>`;
     renderMath();
   } catch (error) {
     console.error("Не удалось открыть статью:", item, error);
     app.innerHTML =
-      '<section class="article-page"><h1>Не удалось открыть статью</h1><p>Статья есть в списке, но её содержимое не удалось загрузить. Сделай новый push, чтобы GitHub Actions заново собрал <code>content-index.json</code>.</p><p><a class="back-link" href="#/"><img src="assets/arrow-left.svg" alt="">На главную</a></p></section>';
+      '<section class="article-page"><h1>Не удалось открыть статью</h1><p>Статья есть в списке, но её содержимое не удалось загрузить. Сделай новый push, чтобы GitHub Actions заново собрал <code>content-index.json</code>.</p><p><a class="back-link" href="#/"><span class="icon icon-arrow-left" aria-hidden="true"></span>На главную</a></p></section>';
   }
 }
 
 function notFound() {
   app.innerHTML =
-    '<section class="article-page"><h1>404</h1><p>Такой страницы нет.</p><p><a class="back-link" href="#/"><img src="assets/arrow-left.svg" alt="">На главную</a></p></section>';
+    '<section class="article-page"><h1>404</h1><p>Такой страницы нет.</p><p><a class="back-link" href="#/"><span class="icon icon-arrow-left" aria-hidden="true"></span>На главную</a></p></section>';
 }
 
 async function router() {
@@ -520,6 +520,98 @@ const searchDialog = document.getElementById("searchDialog");
 const searchInput = document.getElementById("searchInput");
 const searchResults = document.getElementById("searchResults");
 
+const SITE_PAGES = [
+  {
+    type: "page",
+    title: "Главная",
+    description: "Обзор вики, свежие материалы и быстрый доступ к разделам",
+    href: "#/",
+    keywords: "главная вики сириус home",
+  },
+  {
+    type: "page",
+    title: "Учёба",
+    description: "Учебные статьи по дням и предметам",
+    href: "#/study",
+    keywords: "учёба учеба лекции материалы предметы",
+  },
+  {
+    type: "page",
+    title: "Жизнь",
+    description: "Кампус, быт, транспорт, сервисы и адаптация",
+    href: "#/life",
+    keywords: "жизнь кампус интернат сервисы",
+  },
+  {
+    type: "page",
+    title: "Расписание",
+    description: "Пары, аудитории, отсчёт до занятия и напоминания",
+    href: "#/schedule",
+    keywords: "расписание пары группа иоп аудитория календарь",
+  },
+];
+
+function stripSearchText(md = "") {
+  return String(md)
+    .replace(/^---[\s\S]*?---\s*/, "")
+    .replace(/```[\s\S]*?```/g, " ")
+    .replace(/:::[\s\S]*?:::/g, " ")
+    .replace(/!\[[^\]]*]\([^)]*\)/g, " ")
+    .replace(/\[([^\]]+)]\([^)]*\)/g, "$1")
+    .replace(/[#>*_`~|=]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function searchTokens(q) {
+  return q
+    .trim()
+    .toLowerCase()
+    .split(/\s+/)
+    .filter(Boolean);
+}
+
+function matchScore(item, tokens) {
+  const title = String(item.title || "").toLowerCase();
+  const description = String(item.description || "").toLowerCase();
+  const subject = String(item.subject || "").toLowerCase();
+  const keywords = String(item.keywords || "").toLowerCase();
+  const body = stripSearchText(item.content).toLowerCase();
+  let score = 0;
+  for (const token of tokens) {
+    if (title.includes(token)) score += 100;
+    else if (subject.includes(token) || keywords.includes(token)) score += 70;
+    else if (description.includes(token)) score += 50;
+    else if (body.includes(token)) score += 20;
+    else return 0;
+  }
+  if (item.type === "page") score += 5;
+  return score;
+}
+
+function matchSnippet(item, tokens) {
+  const plain = stripSearchText(item.content);
+  if (!plain || !tokens.length) return item.description || "";
+  const lower = plain.toLowerCase();
+  const token = tokens.find((t) => lower.includes(t));
+  if (!token) return item.description || "";
+  const at = lower.indexOf(token);
+  const start = Math.max(0, at - 42);
+  const end = Math.min(plain.length, at + token.length + 68);
+  const slice = plain.slice(start, end).trim();
+  return `${start > 0 ? "…" : ""}${slice}${end < plain.length ? "…" : ""}`;
+}
+
+function searchLabel(item) {
+  if (item.type === "page") return "Раздел";
+  if (item.type === "life") return "Жизнь";
+  return `${item.subject || "Другое"} · ${formatDate(item.day)}`;
+}
+
+function searchHref(item) {
+  return item.href || routeFor(item);
+}
+
 function openSearch() {
   searchDialog.showModal();
   searchInput.value = "";
@@ -528,23 +620,28 @@ function openSearch() {
 }
 
 function renderSearch(q) {
-  const all = [...index.life, ...index.articles];
-  const needle = q.trim().toLowerCase();
-  const rows = (
-    needle
-      ? all.filter((x) =>
-          (x.title + " " + (x.description || "") + " " + (x.subject || ""))
-            .toLowerCase()
-            .includes(needle),
+  const tokens = searchTokens(q);
+  const articles = [...(index?.life || []), ...(index?.articles || [])];
+  const catalog = [...SITE_PAGES, ...articles];
+  const ranked = tokens.length
+    ? catalog
+        .map((item) => ({ item, score: matchScore(item, tokens) }))
+        .filter((row) => row.score > 0)
+        .sort(
+          (a, b) =>
+            b.score - a.score ||
+            a.item.title.localeCompare(b.item.title, "ru"),
         )
-      : all.slice(0, 8)
-  ).slice(0, 12);
+        .map((row) => row.item)
+    : [...SITE_PAGES, ...articles.slice(0, 6)];
+
+  const rows = ranked.slice(0, 16);
   searchResults.innerHTML =
     rows
-      .map(
-        (x) =>
-          `<a class="search-result" href="${routeFor(x)}"><strong>${esc(x.title)}</strong><span>${x.type === "life" ? "Жизнь" : `${esc(x.subject || "Другое")} · ${formatDate(x.day)}`}${x.description ? " · " + esc(x.description) : ""}</span></a>`,
-      )
+      .map((x) => {
+        const snippet = tokens.length ? matchSnippet(x, tokens) : x.description || "";
+        return `<a class="search-result" href="${searchHref(x)}"><strong>${esc(x.title)}</strong><span>${esc(searchLabel(x))}${snippet ? " · " + esc(snippet) : ""}</span></a>`;
+      })
       .join("") || '<div class="empty-state">Ничего не найдено</div>';
   searchResults
     .querySelectorAll("a")
@@ -566,15 +663,33 @@ document.addEventListener("keydown", (e) => {
 
 const menu = document.getElementById("mobileMenu");
 const menuButton = document.getElementById("menuButton");
+function isMenuOpen() {
+  return menu.classList.contains("is-open");
+}
+function openMenu() {
+  menu.classList.add("is-open");
+  menu.setAttribute("aria-hidden", "false");
+  menuButton.setAttribute("aria-expanded", "true");
+  menuButton.setAttribute("aria-label", "Закрыть меню");
+  document.body.classList.add("menu-open");
+}
 function closeMenu() {
-  menu.hidden = true;
+  if (!isMenuOpen()) return;
+  menu.classList.remove("is-open");
+  menu.setAttribute("aria-hidden", "true");
   menuButton.setAttribute("aria-expanded", "false");
+  menuButton.setAttribute("aria-label", "Открыть меню");
+  document.body.classList.remove("menu-open");
 }
 menuButton.onclick = () => {
-  menu.hidden = !menu.hidden;
-  menuButton.setAttribute("aria-expanded", String(!menu.hidden));
+  if (isMenuOpen()) closeMenu();
+  else openMenu();
 };
 menu.querySelectorAll("a").forEach((a) => (a.onclick = closeMenu));
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") closeMenu();
+});
+window.addEventListener("hashchange", () => closeMenu());
 
 window.addEventListener("hashchange", router);
 loadIndex().then(router);

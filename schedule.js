@@ -39,18 +39,70 @@
     } catch { failure = true; }
     finally { loading = false; if (active()) render(); tick(); }
   }
-  function lessonCard(e) {
-    const room = e.room || '—';
-    const teacher = e.teachers || '—';
-    return `<article class="lesson" data-start="${instant(e)}" data-end="${instant(e,'end')}">
+  const shiftDate = (iso, days) => {
+    const d = new Date(`${iso}T12:00:00Z`);
+    d.setUTCDate(d.getUTCDate() + days);
+    return d.toISOString().slice(0, 10);
+  };
+  const weekDates = (iso) => {
+    const d = new Date(`${iso}T12:00:00Z`);
+    const offset = (d.getUTCDay() + 6) % 7;
+    const monday = shiftDate(iso, -offset);
+    return Array.from({ length: 7 }, (_, i) => shiftDate(monday, i));
+  };
+  const dayLabel = (iso, opts) =>
+    new Date(`${iso}T12:00:00+03:00`).toLocaleDateString('ru-RU', { timeZone: 'Europe/Moscow', ...opts });
+  const slotsFor = (rows) => {
+    const map = new Map();
+    for (const e of rows) {
+      const key = `${e.start}|${e.end}`;
+      if (!map.has(key)) map.set(key, []);
+      map.get(key).push(e);
+    }
+    return [...map.values()];
+  };
+  function lessonCard(slot) {
+    const e = slot[0];
+    const titles = [...new Set(slot.map((x) => x.title))];
+    const kind = [...new Set(slot.map((x) => x.kind))].join(' · ');
+    const rooms = slot.map((x) => x.room || '—');
+    const teachers = slot.map((x) => x.teachers || '—');
+    const comments = slot.map((x) => x.comment).filter(Boolean);
+    const uniqueRooms = [...new Set(rooms)];
+    const uniqueTeachers = [...new Set(teachers)];
+    const variants =
+      slot.length > 1
+        ? `<div class="lesson-variants">${slot
+            .map(
+              (x) =>
+                `<div class="lesson-variant"><span>${escape(x.room || '—')}</span><span>${escape(x.teachers || '—')}</span></div>`,
+            )
+            .join('')}</div>`
+        : '';
+    const metaBits = [`<span>${escape(kind)}</span>`];
+    if (slot.length === 1) {
+      metaBits.push(`<span>${escape(uniqueRooms[0])}</span>`, `<span>${escape(uniqueTeachers[0])}</span>`);
+    } else {
+      metaBits.push(`<span>${slot.length} потока</span>`);
+    }
+    return `<article class="lesson${slot.length > 1 ? ' lesson-multi' : ''}" data-start="${instant(e)}" data-end="${instant(e, 'end')}">
       <div class="lesson-time"><time>${escape(e.start)}</time><span>${escape(e.end)}</span></div>
       <div class="lesson-body">
-        <h3>${escape(e.title)}</h3>
-        <p class="lesson-meta-line"><span>${escape(e.kind)}</span><span>${escape(room)}</span><span>${escape(teacher)}</span></p>
-        ${e.comment ? `<p class="lesson-comment">${escape(e.comment)}</p>` : ''}
+        <h3>${escape(titles.join(' / '))}</h3>
+        <p class="lesson-meta-line">${metaBits.join('')}</p>
+        ${variants}
+        ${comments.map((c) => `<p class="lesson-comment">${escape(c)}</p>`).join('')}
       </div>
-      <div class="lesson-room">${escape(room)}</div>
-      <div class="lesson-teacher">${escape(teacher)}</div>
+      <div class="lesson-room">${
+        slot.length > 1
+          ? uniqueRooms.map((r) => `<span>${escape(r)}</span>`).join('')
+          : escape(uniqueRooms[0])
+      }</div>
+      <div class="lesson-teacher">${
+        slot.length > 1
+          ? uniqueTeachers.map((t) => `<span>${escape(t)}</span>`).join('')
+          : escape(uniqueTeachers[0])
+      }</div>
     </article>`;
   }
 
@@ -59,22 +111,45 @@
     if (!navigator.onLine) bits.push('Без интернета');
     else if (failure) bits.push('Офлайн-копия');
     else if (snapshot && !fresh()) bits.push('Данные старше суток');
-    if (snapshot) bits.push(`Обновлено ${new Date(snapshot.updatedAt).toLocaleString('ru-RU', {timeZone:'Europe/Moscow'})}`);
+    if (snapshot) bits.push(`Обновлено ${new Date(snapshot.updatedAt).toLocaleString('ru-RU', { timeZone: 'Europe/Moscow' })}`);
     return bits.join(' · ');
   }
 
+  function weekNav() {
+    const todayIso = today();
+    return `<nav class="schedule-week" aria-label="Дни недели">${weekDates(date)
+      .map((iso) => {
+        const count = lessons().filter((e) => e.date === iso).length;
+        const classes = [
+          'schedule-week-day',
+          iso === date ? 'active' : '',
+          iso === todayIso ? 'is-today' : '',
+          count ? 'has-lessons' : 'is-empty',
+        ]
+          .filter(Boolean)
+          .join(' ');
+        return `<button type="button" class="${classes}" data-date="${escape(iso)}" aria-pressed="${iso === date}">
+          <span class="weekday">${escape(dayLabel(iso, { weekday: 'short' }))}</span>
+          <span class="daynum">${escape(dayLabel(iso, { day: 'numeric' }))}</span>
+          <span class="daycount">${count ? count : '—'}</span>
+        </button>`;
+      })
+      .join('')}</nav>`;
+  }
+
   function render() {
-    const rows = lessons().filter(e => e.date === date);
+    const rows = lessons().filter((e) => e.date === date);
+    const slots = slotsFor(rows);
     const covered = snapshot && date >= snapshot.fromDate && date <= snapshot.toDate;
     const [headline, detail] = nextText();
-    const dayTitle = new Date(date+'T12:00:00+03:00').toLocaleDateString('ru-RU', {weekday:'long', day:'numeric', month:'long', timeZone:'Europe/Moscow'});
+    const dayTitle = dayLabel(date, { weekday: 'long', day: 'numeric', month: 'long' });
     const empty = `<div class="empty-state">${covered ? 'В этот день занятий нет.' : 'На этот день нет сохранённых данных.' + (snapshot ? ` Период: ${snapshot.fromDate} — ${snapshot.toDate}.` : '')}</div>`;
     const note = notificationError || (enabled ? 'Уведомления включены' : '');
     document.getElementById('app').innerHTML = `<section class="schedule-page">
       <header class="schedule-head">
         <h1>Расписание</h1>
         <div class="schedule-toolbar">
-          <select id="scheduleGroup" aria-label="Группа">${GROUPS.map(g => `<option ${g === group ? 'selected' : ''}>${g}</option>`).join('')}</select>
+          <select id="scheduleGroup" aria-label="Группа">${GROUPS.map((g) => `<option ${g === group ? 'selected' : ''}>${g}</option>`).join('')}</select>
           <div class="schedule-date">
             <button id="previousDay" aria-label="Предыдущий день">←</button>
             <input id="scheduleDate" type="date" value="${escape(date)}" aria-label="Дата">
@@ -84,36 +159,74 @@
           <button id="refreshSchedule" ${loading ? 'disabled' : ''}>${loading ? '…' : '↻'}</button>
         </div>
       </header>
-      <div class="schedule-next">
-        <strong id="nextHeadline">${escape(headline)}</strong>
-        <span id="nextDetail">${escape(detail)}</span>
-      </div>
-      <div class="schedule-day-bar">
-        <h2>${escape(dayTitle)}</h2>
-        <span class="schedule-count">${rows.length || '0'}</span>
-      </div>
-      <div class="lesson-list">
-        <div class="lesson-list-head" aria-hidden="true"><span>Время</span><span>Пара</span><span>Аудитория</span><span>Преподаватель</span></div>
-        ${rows.map(lessonCard).join('') || empty}
+      <div class="schedule-shell">
+        <aside class="schedule-rail">
+          <div class="schedule-next">
+            <strong id="nextHeadline">${escape(headline)}</strong>
+            <span id="nextDetail">${escape(detail)}</span>
+          </div>
+          ${weekNav()}
+          <p class="schedule-meta schedule-meta-rail" role="status">${escape(statusLine())} · <a href="https://schedule.siriusuniversity.ru" target="_blank" rel="noopener">Источник</a></p>
+        </aside>
+        <div class="schedule-main">
+          <div class="schedule-day-bar">
+            <h2>${escape(dayTitle)}</h2>
+            <span class="schedule-count">${rows.length || '0'}</span>
+          </div>
+          <div class="lesson-list">
+            <div class="lesson-list-head" aria-hidden="true"><span>Время</span><span>Пара</span><span>Аудитория</span><span>Преподаватель</span></div>
+            ${slots.map(lessonCard).join('') || empty}
+          </div>
+        </div>
       </div>
       <footer class="schedule-foot">
         <div class="schedule-reminders">
-          <select id="reminderLead" aria-label="Напомнить за">${[5,10,15,30].map(v => `<option value="${v}" ${v === lead ? 'selected' : ''}>за ${v} мин</option>`).join('')}</select>
+          <select id="reminderLead" aria-label="Напомнить за">${[5, 10, 15, 30].map((v) => `<option value="${v}" ${v === lead ? 'selected' : ''}>за ${v} мин</option>`).join('')}</select>
           <button id="enableReminders">${enabled ? 'Уведомления вкл.' : 'Уведомления'}</button>
           <button id="exportCalendar" ${lessons().length ? '' : 'disabled'}>В календарь</button>
           <span id="notificationStatus" role="status">${escape(note)}</span>
         </div>
-        <p class="schedule-meta" role="status">${escape(statusLine())} · <a href="https://schedule.siriusuniversity.ru" target="_blank" rel="noopener">Источник</a></p>
+        <p class="schedule-meta schedule-meta-foot" role="status">${escape(statusLine())} · <a href="https://schedule.siriusuniversity.ru" target="_blank" rel="noopener">Источник</a></p>
       </footer>
     </section>`;
-    document.getElementById('scheduleGroup').onchange = e => { group=e.target.value; put('sirius-group',group); render(); tick(); };
-    document.getElementById('scheduleDate').onchange = e => { if (/^\d{4}-\d{2}-\d{2}$/.test(e.target.value)) {date=e.target.value;render();} };
-    for (const [id, step] of [['previousDay',-1],['nextDay',1]]) document.getElementById(id).onclick = () => { const d=new Date(date+'T12:00:00Z');d.setUTCDate(d.getUTCDate()+step);date=d.toISOString().slice(0,10);render(); };
-    document.getElementById('todayButton').onclick=()=>{date=today();render();};
-    document.getElementById('refreshSchedule').onclick=refresh;
-    document.getElementById('reminderLead').onchange=e=>{lead=Number(e.target.value);put('sirius-lead',String(lead));render();};
-    document.getElementById('enableReminders').onclick=toggleReminders;
-    document.getElementById('exportCalendar').onclick=exportCalendar;
+    document.getElementById('scheduleGroup').onchange = (e) => {
+      group = e.target.value;
+      put('sirius-group', group);
+      render();
+      tick();
+    };
+    document.getElementById('scheduleDate').onchange = (e) => {
+      if (/^\d{4}-\d{2}-\d{2}$/.test(e.target.value)) {
+        date = e.target.value;
+        render();
+      }
+    };
+    for (const [id, step] of [
+      ['previousDay', -1],
+      ['nextDay', 1],
+    ])
+      document.getElementById(id).onclick = () => {
+        date = shiftDate(date, step);
+        render();
+      };
+    document.getElementById('todayButton').onclick = () => {
+      date = today();
+      render();
+    };
+    document.getElementById('refreshSchedule').onclick = refresh;
+    document.getElementById('reminderLead').onchange = (e) => {
+      lead = Number(e.target.value);
+      put('sirius-lead', String(lead));
+      render();
+    };
+    document.getElementById('enableReminders').onclick = toggleReminders;
+    document.getElementById('exportCalendar').onclick = exportCalendar;
+    document.querySelectorAll('.schedule-week-day').forEach((btn) => {
+      btn.onclick = () => {
+        date = btn.dataset.date;
+        render();
+      };
+    });
     paintTime();
   }
   async function toggleReminders() {

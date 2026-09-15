@@ -6,7 +6,7 @@
     <meta name="theme-color" content="#00A7A7" />
     <meta
       name="description"
-      content="Неофициальная вики по Университету «Сириус»: учёба, жизнь, инструкции и полезные материалы."
+      content="Студенческая вики по Университету «Сириус»: учёба, жизнь, инструкции и полезные материалы."
     />
     <title>Сириус Wiki</title>
     <link rel="manifest" href="manifest.webmanifest" />
@@ -23,66 +23,74 @@
     <header class="site-header">
       <a class="brand" href="#/" aria-label="На главную">
         <img
-          class="brand-logo"
+          class="brand-logo brand-logo-light"
           src="assets/sirius-logo.svg"
           alt="Университет Сириус"
+        />
+        <img
+          class="brand-logo brand-logo-dark"
+          src="assets/sirius-logo-dark.svg"
+          alt=""
+          aria-hidden="true"
         />
         <span class="brand-separator"></span>
         <span class="brand-wiki">WIKI</span>
       </a>
 
-      <nav class="desktop-nav" aria-label="Основная навигация">
-        <a href="#/life">Жизнь</a>
-        <a href="#/study">Учёба</a>
-        <a href="#/schedule">Расписание</a>
-        <button class="search-open" id="searchOpen" type="button">
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path
-              d="m21 21-4.3-4.3m2.3-5.2A7.5 7.5 0 1 1 4 11.5a7.5 7.5 0 0 1 15 0Z"
-            />
-          </svg>
-          <span>Поиск</span>
-          <kbd>K</kbd>
-        </button>
-      </nav>
+      <div class="header-end">
+        <nav class="desktop-nav" aria-label="Основная навигация">
+          <a href="#/study">Учёба</a>
+          <a href="#/life">Жизнь</a>
+          <a href="#/schedule">Расписание</a>
+          <button class="search-open" id="searchOpen" type="button">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path
+                d="m21 21-4.3-4.3m2.3-5.2A7.5 7.5 0 1 1 4 11.5a7.5 7.5 0 0 1 15 0Z"
+              />
+            </svg>
+            <span>Поиск</span>
+            <kbd>K</kbd>
+          </button>
+        </nav>
 
-      <div class="header-actions">
-        <button
-          type="button"
-          class="theme-toggle"
-          data-theme-toggle
-          data-theme-choice="system"
-          aria-label="Сменить тему"
-        >
-          <svg class="theme-icon theme-icon-system" viewBox="0 0 24 24" aria-hidden="true">
-            <rect x="3" y="4" width="18" height="12" rx="2" />
-            <path d="M8 20h8M12 16v4" />
-          </svg>
-          <svg class="theme-icon theme-icon-light" viewBox="0 0 24 24" aria-hidden="true">
-            <circle cx="12" cy="12" r="4" />
-            <path
-              d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"
-            />
-          </svg>
-          <svg class="theme-icon theme-icon-dark" viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M21 14.5A8.5 8.5 0 1 1 9.5 3 7 7 0 0 0 21 14.5Z" />
-          </svg>
-        </button>
-        <button
-          class="menu-button"
-          id="menuButton"
-          aria-label="Открыть меню"
-          aria-expanded="false"
-        >
-          <span></span><span></span><span></span>
-        </button>
+        <div class="header-actions">
+          <button
+            type="button"
+            class="theme-toggle"
+            data-theme-toggle
+            data-theme-choice="system"
+            aria-label="Сменить тему"
+          >
+            <svg class="theme-icon theme-icon-system" viewBox="0 0 24 24" aria-hidden="true">
+              <rect x="3" y="4" width="18" height="12" rx="2" />
+              <path d="M8 20h8M12 16v4" />
+            </svg>
+            <svg class="theme-icon theme-icon-light" viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="12" cy="12" r="4" />
+              <path
+                d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"
+              />
+            </svg>
+            <svg class="theme-icon theme-icon-dark" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M21 14.5A8.5 8.5 0 1 1 9.5 3 7 7 0 0 0 21 14.5Z" />
+            </svg>
+          </button>
+          <button
+            class="menu-button"
+            id="menuButton"
+            aria-label="Открыть меню"
+            aria-expanded="false"
+          >
+            <span></span><span></span><span></span>
+          </button>
+        </div>
       </div>
     </header>
 
-    <div class="mobile-menu" id="mobileMenu" hidden>
+    <div class="mobile-menu" id="mobileMenu" aria-hidden="true">
       <nav aria-label="Мобильная навигация">
-        <a href="#/life">Жизнь</a>
         <a href="#/study">Учёба</a>
+        <a href="#/life">Жизнь</a>
         <a href="#/schedule">Расписание</a>
         <button id="mobileSearchOpen" type="button">Поиск</button>
       </nav>
@@ -90,7 +98,6 @@
 
     <div class="app-tools">
       <button id="installApp" type="button">Установить приложение</button>
-      <span id="offlineStatus" role="status">Подготовка офлайн-режима…</span>
     </div>
     <dialog id="installHelp">
       <h2>Установить Сириус Wiki</h2>
@@ -111,6 +118,20 @@
       <div>
         <strong>Сириус Wiki</strong>
         <p>база знаний студентов.</p>
+        <p>
+          Автор -
+          <a href="https://github.com/ArduRadioKot" target="_blank" rel="noopener"
+            >Alexander</a
+          >.
+        </p>
+      </div>
+      <div class="footer-links">
+        <a
+          href="https://github.com/ArduRadioKot/sirius-it-wiki"
+          target="_blank"
+          rel="noopener"
+          >GitHub проекта</a
+        >
       </div>
       <p class="footer-note">
         Логотип принадлежит Университету «Сириус». Проект не является
