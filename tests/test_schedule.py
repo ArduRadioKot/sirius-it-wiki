@@ -160,4 +160,33 @@ class ScheduleTests(unittest.TestCase):
             self.assertIn('SUMMARY:Физика', ics)
             self.assertTrue((Path(directory)/'calendars'/'iop-it-25-2.ics').exists())
 
+    def test_remote_collector_sends_token_and_requires_https(self):
+        response=Mock();response.read.return_value=json.dumps(self.snapshot()).encode()
+        response.__enter__=Mock(return_value=response);response.__exit__=Mock(return_value=False)
+        env={'SCHEDULE_COLLECTOR_URL':'https://functions.yandexcloud.net/abc','SCHEDULE_COLLECTOR_TOKEN':'secret'}
+        with patch.dict(m.os.environ,env),patch.object(m.urllib.request,'urlopen',return_value=response) as urlopen:
+            self.assertEqual(m.remote_collect(),self.snapshot())
+        self.assertEqual(urlopen.call_args.args[0].get_header('X-schedule-token'),'secret')
+        with patch.dict(m.os.environ,{'SCHEDULE_COLLECTOR_URL':'http://example.com'}),self.assertRaises(ValueError):m.remote_collect()
+
+class CollectorFunctionTests(unittest.TestCase):
+    def setUp(self):
+        import sys
+        sys.modules['update_schedule']=m
+        spec=importlib.util.spec_from_file_location('collector',Path(__file__).resolve().parents[1]/'cloud/yandex-function/index.py')
+        self.f=importlib.util.module_from_spec(spec);spec.loader.exec_module(self.f)
+    def test_rejects_missing_or_wrong_token(self):
+        with patch.dict(m.os.environ,{'SCHEDULE_COLLECTOR_TOKEN':'secret'}),patch.object(m,'collect') as collect:
+            self.assertEqual(self.f.handler({'headers':{}},None)['statusCode'],403)
+            self.assertEqual(self.f.handler({'headers':{'X-Schedule-Token':'nope'}},None)['statusCode'],403)
+            collect.assert_not_called()
+    def test_returns_valid_snapshot(self):
+        snap=ScheduleTests.snapshot(None)
+        with patch.dict(m.os.environ,{'SCHEDULE_COLLECTOR_TOKEN':'secret'}),patch.object(m,'collect',return_value=snap):
+            out=self.f.handler({'headers':{'X-Schedule-Token':'secret'}},None)
+        self.assertEqual(out['statusCode'],200);self.assertEqual(json.loads(out['body']),snap)
+    def test_source_errors_become_502(self):
+        with patch.dict(m.os.environ,{'SCHEDULE_COLLECTOR_TOKEN':'secret'}),patch.object(m,'collect',side_effect=TimeoutError()):
+            self.assertEqual(self.f.handler({'headers':{'x-schedule-token':'secret'}},None)['statusCode'],502)
+
 if __name__=='__main__':unittest.main()

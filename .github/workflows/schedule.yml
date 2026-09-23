@@ -25,6 +25,9 @@ jobs:
 
       - name: Fetch and publish the timetable
         env:
+          # The site answers Russian IPs only: collect through cloud/yandex-function.
+          SCHEDULE_COLLECTOR_URL: ${{ secrets.SCHEDULE_COLLECTOR_URL }}
+          SCHEDULE_COLLECTOR_TOKEN: ${{ secrets.SCHEDULE_COLLECTOR_TOKEN }}
           SCHEDULE_PROXY_URL: ${{ secrets.SCHEDULE_PROXY_URL }}
           GIT_AUTHOR_NAME: github-actions[bot]
           GIT_AUTHOR_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com

@@ -253,6 +253,22 @@ def collect():
                 fromDate=monday.isoformat(), toDate=(monday + dt.timedelta(days=20)).isoformat(), groups=groups)
 
 
+def remote_collect():
+    """Ask the Russian-hosted collector (cloud/yandex-function) for a snapshot.
+
+    The university site only answers Russian IPs, so GitHub Actions cannot scrape it directly.
+    """
+    url = os.environ['SCHEDULE_COLLECTOR_URL'].strip()
+    if urllib.parse.urlsplit(url).scheme != 'https':
+        raise ValueError('SCHEDULE_COLLECTOR_URL must be an HTTPS URL')
+    request = urllib.request.Request(url, headers={
+        'User-Agent': 'sirius-wiki-schedule',
+        'X-Schedule-Token': os.environ.get('SCHEDULE_COLLECTOR_TOKEN', ''),
+    })
+    with urllib.request.urlopen(request, timeout=180) as response:
+        return json.loads(response.read())
+
+
 def valid_snapshot(data, require_all=True):
     """Only a usable last-good snapshot may replace a failed source request."""
     try:
@@ -393,4 +409,4 @@ def update(target=None, fetch_snapshot=collect, sleep=time.sleep):
 
 
 if __name__ == '__main__':
-    update()
+    update(fetch_snapshot=remote_collect if os.environ.get('SCHEDULE_COLLECTOR_URL', '').strip() else collect)
