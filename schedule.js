@@ -53,6 +53,10 @@
   let deviceMessage = '';
   let deviceFailed = false;
   let calendarMessage = '';
+  const ua = String(navigator.userAgent || '');
+  const isIOS = /iPad|iPhone|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+  const isMobile = isIOS || /Android|Mobi/i.test(ua);
+  const standalone = () => { try { return matchMedia('(display-mode: standalone)').matches || navigator.standalone === true; } catch { return navigator.standalone === true; } };
   function showDeviceMessage(text) {
     deviceMessage = text;
     document.querySelectorAll('[data-device-status]').forEach((el) => { el.textContent = text; });
@@ -144,7 +148,9 @@
     if (!force && lastAttempt && Date.now() - lastAttempt < 60000) return;
 
     lastAttempt = Date.now();
-    if (navigator.onLine && window.SiriusSource) {
+    // On GitHub Pages the university's CORS policy always blocks this, and outside Russia
+    // the request hangs until timeout, delaying the published snapshot. Only the local proxy works.
+    if (navigator.onLine && localCollector()) {
       const got = await refreshDevice(force, { quiet: background || Boolean(snapshot) });
       if (got) {
         lastCheck = Date.now();
@@ -362,7 +368,9 @@
           <button id="enableReminders">${enabled ? 'Уведомления вкл.' : 'Уведомления'}</button>
           ${localCollector() ? `<button id="deviceSchedule" ${deviceLoading ? 'disabled' : ''} aria-busy="${deviceLoading}">${deviceLoading ? 'Загрузка…' : 'С устройства'}</button>` : ''}
           <button id="googleCalendar" ${lessons().length ? '' : 'disabled'} aria-label="Добавить в Google Календарь">Google</button>
+          <button id="appleCalendar" ${lessons().length ? '' : 'disabled'} aria-label="Подписаться в Календаре Apple">Apple</button>
           <button id="notionCalendar" ${lessons().length ? '' : 'disabled'} aria-label="Добавить в Notion через Google Календарь">Notion</button>
+          <button id="copyCalendar" ${lessons().length ? '' : 'disabled'} aria-label="Скопировать ссылку на календарь">Ссылка</button>
           <button id="exportCalendar" ${lessons().length ? '' : 'disabled'}>ICS</button>
           <span id="notificationStatus" role="status">${escape(note)}</span>
           <span id="calendarStatus" role="status">${escape(calendarMessage)}</span>
@@ -404,6 +412,8 @@
     document.getElementById('exportCalendar').onclick = exportCalendar;
     document.getElementById('googleCalendar').onclick = addToGoogle;
     document.getElementById('notionCalendar').onclick = addToNotion;
+    document.getElementById('appleCalendar').onclick = addToApple;
+    document.getElementById('copyCalendar').onclick = copyCalendarLink;
     const deviceButton = document.getElementById('deviceSchedule');
     if (deviceButton) deviceButton.onclick = () => refreshDevice(true);
     const pickFile = document.getElementById('devicePickFile');
@@ -416,15 +426,40 @@
     });
     paintTime();
   }
+  // The worker can still be installing on the first launch; never wait forever (e.g. local preview has none).
+  async function worker() {
+    if (!('serviceWorker' in navigator)) return null;
+    const reg = await navigator.serviceWorker.getRegistration(base.href);
+    if (reg?.active) return reg;
+    if (!navigator.serviceWorker.ready) return null;
+    return Promise.race([navigator.serviceWorker.ready, new Promise((resolve) => setTimeout(() => resolve(null), 4000))]);
+  }
+  function notificationsUnavailable() {
+    if (isIOS && !standalone()) return 'На iPhone уведомления работают только в приложении: «Поделиться» → «На экран Домой», затем откройте его с иконки.';
+    if (!('Notification' in window) || !('serviceWorker' in navigator)) return 'Этот браузер не поддерживает уведомления — используйте подписку на календарь.';
+    return '';
+  }
   async function toggleReminders() {
-    notificationError='';
-    if(enabled) enabled=false;
-    else if(!('Notification' in window) || !('serviceWorker' in navigator)) notificationError='Уведомления недоступны — используйте календарь';
+    notificationError = '';
+    if (enabled) enabled = false;
+    else if ((notificationError = notificationsUnavailable())) enabled = false;
     else {
-      try { enabled = (await Notification.requestPermission()) === 'granted'; if (!enabled) notificationError='Нет разрешения на уведомления'; }
-      catch { notificationError='Не удалось включить уведомления'; }
+      try {
+        const permission = Notification.permission === 'granted' ? 'granted' : await Notification.requestPermission();
+        enabled = permission === 'granted';
+        if (!enabled) notificationError = permission === 'denied'
+          ? 'Уведомления запрещены. Разрешите их для этого сайта в настройках браузера или телефона.'
+          : 'Нет разрешения на уведомления.';
+      } catch { notificationError = 'Не удалось включить уведомления.'; }
+      if (enabled) {
+        try {
+          const reg = await worker();
+          if (!reg) throw new Error('no worker');
+          await reg.showNotification('Уведомления включены', {body: `Напомним за ${lead} мин до пары, пока приложение открыто или свёрнуто. Для напоминаний при закрытом приложении подпишитесь на календарь.`, tag: 'sirius-test', icon: new URL('assets/icon-192.png', base).href});
+        } catch { notificationError = 'Браузер не смог показать уведомление. Обновите страницу и попробуйте ещё раз.'; }
+      }
     }
-    put('sirius-reminders',String(enabled));render();tick();
+    put('sirius-reminders', String(enabled)); render(); tick();
   }
   function paintTime() {
     if(!active()) return;
@@ -439,7 +474,7 @@
     if(notifying || !enabled || !fresh() || !('Notification' in window) || Notification.permission !== 'granted') return;
     notifying=true;
     try {
-      const reg=await navigator.serviceWorker.getRegistration(base.href); if(!reg?.active) return;
+      const reg=await worker(); if(!reg) return;
       const due=lessons().filter(e=>instant(e)>Date.now() && instant(e)-Date.now()<=lead*60000);
       // Same-time subgroups are combined into one reminder.
       for(const start of new Set(due.map(e=>instant(e)))) {
@@ -528,23 +563,55 @@
     lines.push('END:VCALENDAR');
     return lines.map(foldIcs).join('\r\n') + '\r\n';
   }
+  async function copyText(text) {
+    try { await navigator.clipboard.writeText(text); return true; } catch { return false; }
+  }
+  const GOOGLE_BY_URL = 'откройте calendar.google.com на компьютере → «Другие календари» → «+» → «Добавить по URL» и вставьте её. После этого пары появятся и в приложении Google Календарь на телефоне.';
+  async function googleOnPhone(extra = '') {
+    // Google Calendar apps cannot subscribe by link; only the desktop site can.
+    const link = subscribeFeedHref();
+    const copied = await copyText(link);
+    showCalendarMessage((copied ? 'Ссылка скопирована. ' : `Ссылка: ${link}. `) + 'На телефоне Google Календарь не добавляет календари по ссылке: ' + GOOGLE_BY_URL + extra);
+  }
   function addToGoogle() {
     if (!lessons().length) return;
+    if (isMobile) return googleOnPhone();
     openGoogleSubscribe();
     showCalendarMessage('Подтвердите добавление календаря в Google.');
   }
   function addToNotion() {
     if (!lessons().length) return;
+    if (isMobile) return googleOnPhone(' В Notion Calendar пары появятся сами, если подключён тот же Google-аккаунт.');
     openGoogleSubscribe();
     showCalendarMessage('Подтвердите добавление в Google. В Notion Calendar пары появятся сами, если подключён тот же Google-аккаунт.');
   }
+  function addToApple() {
+    if (!lessons().length) return;
+    // webcal:// opens the native "Subscribe" dialog on iPhone, iPad and Mac; the feed then updates itself.
+    location.href = subscribeFeedHref().replace(/^https?:/i, 'webcal:');
+    showCalendarMessage('Подтвердите подписку в Календаре. Если ничего не открылось, нажмите «Ссылка» и добавьте календарь по URL.');
+  }
+  async function copyCalendarLink() {
+    if (!lessons().length) return;
+    const link = subscribeFeedHref();
+    showCalendarMessage(await copyText(link)
+      ? 'Ссылка на календарь скопирована. Вставьте её в календаре как подписку по URL — пары будут обновляться сами.'
+      : `Ссылка на календарь: ${link}`);
+  }
   function exportCalendar() {
+    if (isIOS) {
+      // Blob downloads do nothing in an iOS home-screen app; Safari can open the published file instead.
+      window.open(subscribeFeedHref(), '_blank', 'noopener');
+      showCalendarMessage('Нажмите «Добавить все» в открывшемся окне. Чтобы пары обновлялись сами, лучше используйте «Apple».');
+      return;
+    }
     const url = URL.createObjectURL(new Blob([buildCalendar()], { type: 'text/calendar;charset=utf-8' }));
     const a = document.createElement('a');
     a.href = url;
     a.download = `sirius-${group.replace('ИОП-ИТ-', '').replace('/', '-')}.ics`;
     a.click();
     setTimeout(() => URL.revokeObjectURL(url), 10000);
+    showCalendarMessage('Файл скачан. Это разовый снимок — для автообновления используйте подписку.');
   }
   window.SiriusSchedule={render,refresh};
   let lastEnter = 0;

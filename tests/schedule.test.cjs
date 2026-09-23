@@ -155,24 +155,14 @@ test('device button loads the timetable without opening extra menus',async()=>{
   assert.match(h.store.get('sirius-schedule'),/2026-09-21T00:00:00.000Z/);
   assert.doesNotMatch(h.nodes.get('app').innerHTML,/scheduleDeviceDialog|Импортировать файл|Загрузить напрямую|Обновлять с устройства|закладк/);
 });
-test('GitHub Pages refresh collects the timetable on the user device',async()=>{
-  const h=await setup();
-  const incoming=JSON.parse(h.store.get('sirius-schedule'));
-  incoming.updatedAt='2026-09-23T12:00:00.000Z';
-  let collected=0;
-  h.context.SiriusSource={valid:()=>true,collect:async()=>{collected++;return incoming;}};
-  h.context.SiriusSchedule.render();
-  assert.doesNotMatch(h.nodes.get('app').innerHTML,/id="deviceSchedule"|С устройства|refreshSchedule|↻/);
-  await h.context.SiriusSchedule.refresh({force:true});
-  assert.equal(collected,1);
-  assert.equal(h.store.get('sirius-schedule-origin'),'device');
-});
-test('published snapshot is used when the university is blocked in the browser',async()=>{
+test('GitHub Pages never waits for the in-browser collector (blocked by CORS)',async()=>{
   const h=await setup();
   let collected=0;
   h.context.SiriusSource={valid:()=>true,collect:async()=>{collected++;throw new Error('cors');}};
+  h.context.SiriusSchedule.render();
+  assert.doesNotMatch(h.nodes.get('app').innerHTML,/id="deviceSchedule"|С устройства|refreshSchedule|↻/);
   await h.context.SiriusSchedule.refresh({force:true});
-  assert.equal(collected,1);
+  assert.equal(collected,0);
   assert.equal(h.store.get('sirius-schedule-origin'),'server');
 });
 test('local preview refresh asks the device collector after the published snapshot',async()=>{

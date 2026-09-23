@@ -352,6 +352,8 @@ async function loadIndex() {
     index = await loadGeneratedIndex();
   } catch (err) {
     console.error(err);
+    // The schedule may already be on screen and does not need the index.
+    if (location.hash.startsWith("#/schedule")) return;
     app.innerHTML = `
       <section class="article-page">
         <h1>Не удалось загрузить базу статей</h1>
@@ -499,6 +501,8 @@ async function router() {
   const [path, qs] = raw.split("?");
   const parts = path.split("/").filter(Boolean).map(safeDecode);
 
+  // The schedule lives in its own module, so it opens without waiting for the article index.
+  if (parts[0] !== "schedule") await indexReady;
   if (!parts.length) home();
   else if (parts[0] === "schedule") window.SiriusSchedule.render();
   else if (parts[0] === "life" && parts.length === 1) lifePage();
@@ -696,5 +700,25 @@ document.addEventListener("keydown", (e) => {
 });
 window.addEventListener("hashchange", () => closeMenu());
 
+const indexLoad = loadIndex();
+// Later navigations render with whatever index is available; a failed first load keeps its error page.
+const indexReady = indexLoad.catch(() => {});
 window.addEventListener("hashchange", router);
-loadIndex().then(router);
+if (location.hash.startsWith("#/schedule")) router();
+else indexLoad.then(router, () => {});
+
+// The service worker answers from its cache first and reports when a newer index arrives.
+navigator.serviceWorker?.addEventListener("message", async (event) => {
+  if (event.data?.type !== "JSON_UPDATED" || event.data.path !== "content-index.json") return;
+  try {
+    index = await loadGeneratedIndex();
+  } catch {
+    return;
+  }
+  // Re-render lists in place; leave an open article alone so the reader keeps their position.
+  const route = (location.hash.slice(1) || "/").split("?")[0].split("/").filter(Boolean);
+  if (route[0] === "schedule" || route.length >= 2) return;
+  const y = window.scrollY;
+  await router();
+  window.scrollTo(0, y);
+});

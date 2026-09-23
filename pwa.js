@@ -145,10 +145,13 @@
     reg.addEventListener('updatefound', () => activateWaiting(reg.installing));
   };
 
+  let lastUpdateCheck = 0;
   const checkForUpdates = async () => {
     if (!navigator.onLine || !('serviceWorker' in navigator)) return;
+    // Focus and visibility events fire in bursts; one check a minute is plenty.
+    if (Date.now() - lastUpdateCheck < 60000) return;
+    lastUpdateCheck = Date.now();
     try {
-      await fetchFresh('sw.js');
       const reg = await navigator.serviceWorker.getRegistration(base.href);
       if (!reg) return;
       await reg.update();
@@ -262,14 +265,14 @@
         skipReload = sessionStorage.getItem('sirius-updated') === '1';
         if (skipReload) sessionStorage.removeItem('sirius-updated');
       } catch {}
-      fetchFresh('sw.js')
-        .catch(() => {})
-        .then(() =>
-          navigator.serviceWorker.register(new URL('sw.js', base), {
-            scope: base.pathname,
-            updateViaCache: 'none',
-          }),
-        )
+      // Only a worker replacing an older one should reload the page; the very first
+      // install taking control must not interrupt the first launch.
+      const hadController = Boolean(navigator.serviceWorker.controller);
+      navigator.serviceWorker
+        .register(new URL('sw.js', base), {
+          scope: base.pathname,
+          updateViaCache: 'none',
+        })
         .then((reg) => {
           if (!reg) return;
           trackRegistration(reg);
@@ -278,7 +281,7 @@
         })
         .catch(() => {});
       navigator.serviceWorker.addEventListener('controllerchange', () => {
-        if (skipReload || updating) return;
+        if (!hadController || skipReload || updating) return;
         skipReload = true;
         hardReload();
       });
