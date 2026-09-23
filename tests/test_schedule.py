@@ -168,6 +168,12 @@ class ScheduleTests(unittest.TestCase):
             self.assertEqual(m.remote_collect(),self.snapshot())
         self.assertEqual(urlopen.call_args.args[0].get_header('X-schedule-token'),'secret')
         with patch.dict(m.os.environ,{'SCHEDULE_COLLECTOR_URL':'http://example.com'}),self.assertRaises(ValueError):m.remote_collect()
+    def test_remote_collector_error_shows_response_body(self):
+        import io
+        error=m.urllib.error.HTTPError('https://x',403,'Forbidden',{},io.BytesIO(b'forbidden'))
+        with patch.dict(m.os.environ,{'SCHEDULE_COLLECTOR_URL':'https://x'}),patch.object(m.urllib.request,'urlopen',side_effect=error):
+            with self.assertRaises(m.urllib.error.URLError) as caught:m.remote_collect()
+        self.assertEqual(m.brief_error(caught.exception),'HTTP 403: forbidden')
 
 class CollectorFunctionTests(unittest.TestCase):
     def setUp(self):

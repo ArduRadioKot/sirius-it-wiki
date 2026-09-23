@@ -263,10 +263,15 @@ def remote_collect():
         raise ValueError('SCHEDULE_COLLECTOR_URL must be an HTTPS URL')
     request = urllib.request.Request(url, headers={
         'User-Agent': 'sirius-wiki-schedule',
-        'X-Schedule-Token': os.environ.get('SCHEDULE_COLLECTOR_TOKEN', ''),
+        'X-Schedule-Token': os.environ.get('SCHEDULE_COLLECTOR_TOKEN', '').strip(),
     })
-    with urllib.request.urlopen(request, timeout=180) as response:
-        return json.loads(response.read())
+    try:
+        with urllib.request.urlopen(request, timeout=180) as response:
+            return json.loads(response.read())
+    except urllib.error.HTTPError as error:
+        # 'forbidden' comes from our token check; Yandex's own JSON means the function is not public.
+        body = error.read(300).decode('utf-8', 'replace').replace('\n', ' ')
+        raise urllib.error.URLError(f'HTTP {error.code}: {body}') from None
 
 
 def valid_snapshot(data, require_all=True):
