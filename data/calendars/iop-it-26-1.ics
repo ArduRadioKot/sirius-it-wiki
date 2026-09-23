@@ -1,0 +1,1204 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Sirius Wiki//Schedule//RU
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:Сириус ИОП-ИТ-26/1
+X-WR-TIMEZONE:Europe/Moscow
+REFRESH-INTERVAL;VALUE=DURATION:PT4H
+X-PUBLISHED-TTL:PT4H
+BEGIN:VEVENT
+UID:87ebb6c48b0bac370d2b@sirius-wiki
+DTSTAMP:20260923T185457Z
+DTSTART:20260921T054500Z
+DTEND:20260921T070500Z
+SUMMARY:Приоритеты Стратегии научно-технол
+ огического развития Российской Федерац
+ ии
+LOCATION:Дистантционно
+DESCRIPTION:ИОП-ИТ-26/1 · Семенов Михаил Евгенье
+ вич\nЛекции\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Приоритеты Стратегии научно-техн
+ ологического развития Российской Федер
+ ации
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:1903709e284f3fdb0ac3@sirius-wiki
+DTSTAMP:20260923T185457Z
+DTSTART:20260921T072000Z
+DTEND:20260921T084000Z
+SUMMARY:Иностранный язык
+LOCATION:1-14-19.Альфа 4.1
+DESCRIPTION:ИОП-ИТ-26/1 · Гаранян Александра Вал
+ ерьевна\nПрактические занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Иностранный язык
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:a08e14b0f9690e54f6ba@sirius-wiki
+DTSTAMP:20260923T185457Z
+DTSTART:20260921T072000Z
+DTEND:20260921T084000Z
+SUMMARY:Иностранный язык
+LOCATION:1.081.08 К_Росатом (СПД)
+DESCRIPTION:ИОП-ИТ-26/1 · Карагозян Лиана Дигран
+ овна\nПрактические занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Иностранный язык
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:3d31186fe7bffa185c24@sirius-wiki
+DTSTAMP:20260923T185457Z
+DTSTART:20260921T072000Z
+DTEND:20260921T084000Z
+SUMMARY:Иностранный язык
+LOCATION:1.32К_3
+DESCRIPTION:ИОП-ИТ-26/1 · Половникова Наталья Ан
+ атольевна\nПрактические занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Иностранный язык
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:838a430b3e290e2f9e01@sirius-wiki
+DTSTAMP:20260923T185457Z
+DTSTART:20260921T103000Z
+DTEND:20260921T115000Z
+SUMMARY:География
+LOCATION:1\,34К_1
+DESCRIPTION:ИОП-ИТ-26/1 · Ваганов Михаил Геннадь
+ евич\nПрактические занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:География
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:c442e3748e098a6e3f52@sirius-wiki
+DTSTAMP:20260923T185457Z
+DTSTART:20260921T120500Z
+DTEND:20260921T132500Z
+SUMMARY:География
+LOCATION:19-3К_19
+DESCRIPTION:ИОП-ИТ-26/1 · Ваганов Михаил Геннадь
+ евич\nЛекции\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:География
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:78a981d86fb5a21cac45@sirius-wiki
+DTSTAMP:20260923T185457Z
+DTSTART:20260922T054500Z
+DTEND:20260922T070500Z
+SUMMARY:Математическая логика и теория алго
+ ритмов
+LOCATION:19-3К_19
+DESCRIPTION:ИОП-ИТ-26/1 · Кручинин Дмитрий Влади
+ мирович\nЛекции\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Математическая логика и теория ал
+ горитмов
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:f7cc19df3bf208889b2b@sirius-wiki
+DTSTAMP:20260923T185457Z
+DTSTART:20260922T072000Z
+DTEND:20260922T084000Z
+SUMMARY:Литература
+LOCATION:1.32К_3
+DESCRIPTION:ИОП-ИТ-26/1 · Титенок Елена Александ
+ ровна\nПрактические занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Литература
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:fbf7613a674248500276@sirius-wiki
+DTSTAMP:20260923T185457Z
+DTSTART:20260922T085500Z
+DTEND:20260922T101500Z
+SUMMARY:Алгоритмы и структуры данных (Инфор
+ матика)
+LOCATION:1-07-12.Бета 4.1 (комп)
+DESCRIPTION:ИОП-ИТ-26/1 · Богданов Алексей Алекс
+ андрович\nПрактические занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Алгоритмы и структуры данных (Инф
+ орматика)
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:f442f3bafac9237e3375@sirius-wiki
+DTSTAMP:20260923T185457Z
+DTSTART:20260922T113000Z
+DTEND:20260922T125000Z
+SUMMARY:Физическая культура и спорт (Физиче
+ ская культура)
+LOCATION:Корпус "Спорт"
+DESCRIPTION:ИОП-ИТ-26/1 · Сагдиева Ляйля Рустемо
+ вна\nПрактические занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Физическая культура и спорт (Физи
+ ческая культура)
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:100a1ca366d53571f315@sirius-wiki
+DTSTAMP:20260923T185457Z
+DTSTART:20260923T054500Z
+DTEND:20260923T070500Z
+SUMMARY:Линейная алгебра и аналитическая ге
+ ометрия (Математика)
+LOCATION:Дистант
+DESCRIPTION:ИОП-ИТ-26/1 · Почекутов Дмитрий Юрье
+ вич\nЛекции\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Линейная алгебра и аналитическая 
+ геометрия (Математика)
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:c0f35784131b7579a302@sirius-wiki
+DTSTAMP:20260923T185457Z
+DTSTART:20260923T072000Z
+DTEND:20260923T084000Z
+SUMMARY:Математический анализ (Математика)
+LOCATION:Дистант
+DESCRIPTION:ИОП-ИТ-26/1 · Федоров Глеб Владимиро
+ вич\nЛекции\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Математический анализ (Математик
+ а)
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:b741601af4701da3ac8a@sirius-wiki
+DTSTAMP:20260923T185457Z
+DTSTART:20260923T085500Z
+DTEND:20260923T101500Z
+SUMMARY:Внеурочное мероприятие
+LOCATION:Альфа 5.8
+DESCRIPTION:ИОП-ИТ-26/1 · Спирина К.Г.  Исанчурин
+ а Г.М\nВнеучебное мероприятие\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Внеурочное мероприятие
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:d5c4e3d31ef82e08e387@sirius-wiki
+DTSTAMP:20260923T185457Z
+DTSTART:20260923T103000Z
+DTEND:20260923T115000Z
+SUMMARY:Математический анализ (Математика)
+LOCATION:Альфа 5.3
+DESCRIPTION:ИОП-ИТ-26/1 · у\, Завальнюк Елена Вал
+ ерьевна\nПрактические занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Математический анализ (Математик
+ а)
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:d48ea20cc8d1a07aa595@sirius-wiki
+DTSTAMP:20260923T185457Z
+DTSTART:20260923T120500Z
+DTEND:20260923T132500Z
+SUMMARY:История России (История)
+LOCATION:Альфа 5.3
+DESCRIPTION:ИОП-ИТ-26/1 · Ермакова Дарья Сергеев
+ на\nПрактические занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:История России (История)
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:59c556f1a3fb2711fc1b@sirius-wiki
+DTSTAMP:20260923T185457Z
+DTSTART:20260924T054500Z
+DTEND:20260924T070500Z
+SUMMARY:Алгоритмы и структуры данных (Инфор
+ матика)
+LOCATION:1-07-12.Бета 4.1 (комп)
+DESCRIPTION:ИОП-ИТ-26/1 · Богданов Алексей Алекс
+ андрович\nПрактические занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Алгоритмы и структуры данных (Инф
+ орматика)
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:bfb3e63ce68dd0009c00@sirius-wiki
+DTSTAMP:20260923T185457Z
+DTSTART:20260924T072000Z
+DTEND:20260924T084000Z
+SUMMARY:Математический анализ (Математика)
+LOCATION:1.32К_3
+DESCRIPTION:ИОП-ИТ-26/1 · Завальнюк Елена Валерь
+ евна\nПрактические занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Математический анализ (Математик
+ а)
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:ae7ab3011a5404b13dfa@sirius-wiki
+DTSTAMP:20260923T185457Z
+DTSTART:20260924T103000Z
+DTEND:20260924T115000Z
+SUMMARY:Физика
+LOCATION:1\,34К_1
+DESCRIPTION:ИОП-ИТ-26/1 · Воронов Артем Владимир
+ ович\nПрактические занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Физика
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:066132292c0d144d5f8a@sirius-wiki
+DTSTAMP:20260923T185457Z
+DTSTART:20260924T120500Z
+DTEND:20260924T132500Z
+SUMMARY:Современные социальные науки (Общес
+ твознание)
+LOCATION:1.32К_3
+DESCRIPTION:ИОП-ИТ-26/1 · Галявиев Нияз Рамилеви
+ ч\nПрактические занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Современные социальные науки (Общ
+ ествознание)
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:aad235c1536b6f43dfa0@sirius-wiki
+DTSTAMP:20260923T185457Z
+DTSTART:20260924T134000Z
+DTEND:20260924T150000Z
+SUMMARY:Защита проектов
+LOCATION:Альфа 5.8
+DESCRIPTION:ИОП-ИТ-26/1 · Семенов Михаил Евгенье
+ вич\nВнеучебное мероприятие\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Защита проектов
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:638f79a7e97b738b7bdd@sirius-wiki
+DTSTAMP:20260923T185457Z
+DTSTART:20260925T072000Z
+DTEND:20260925T084000Z
+SUMMARY:Физическая культура и спорт (Физиче
+ ская культура)
+LOCATION:Корпус "Спорт"
+DESCRIPTION:ИОП-ИТ-26/1 · Сагдиева Ляйля Рустемо
+ вна\nПрактические занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Физическая культура и спорт (Физи
+ ческая культура)
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:2150e15f21cc46b5284d@sirius-wiki
+DTSTAMP:20260923T185457Z
+DTSTART:20260925T103000Z
+DTEND:20260925T115000Z
+SUMMARY:Иностранный язык
+LOCATION:1\,28К_7 (Комп)
+DESCRIPTION:ИОП-ИТ-26/1 · Гаранян Александра Вал
+ ерьевна\nПрактические занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Иностранный язык
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:028df82e9900b18ec460@sirius-wiki
+DTSTAMP:20260923T185457Z
+DTSTART:20260925T103000Z
+DTEND:20260925T115000Z
+SUMMARY:Иностранный язык
+LOCATION:1-14-17.Альфа 4.3
+DESCRIPTION:ИОП-ИТ-26/1 · Половникова Наталья Ан
+ атольевна\nПрактические занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Иностранный язык
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:492f4e633856f9ae7a1f@sirius-wiki
+DTSTAMP:20260923T185457Z
+DTSTART:20260925T103000Z
+DTEND:20260925T115000Z
+SUMMARY:Иностранный язык
+LOCATION:Бета 2.3
+DESCRIPTION:ИОП-ИТ-26/1 · Карагозян Лиана Дигран
+ овна\nПрактические занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Иностранный язык
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:72d521dc05267516fcd6@sirius-wiki
+DTSTAMP:20260923T185457Z
+DTSTART:20260925T120500Z
+DTEND:20260925T132500Z
+SUMMARY:Линейная алгебра и аналитическая ге
+ ометрия (Математика)
+LOCATION:Бета 2.3
+DESCRIPTION:ИОП-ИТ-26/1 · у\, Почекутов Дмитрий Ю
+ рьевич\nПрактические занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Линейная алгебра и аналитическая 
+ геометрия (Математика)
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:b36850fc34ca5c284687@sirius-wiki
+DTSTAMP:20260923T185457Z
+DTSTART:20260925T134000Z
+DTEND:20260925T150000Z
+SUMMARY:Физика
+LOCATION:1.32К_3
+DESCRIPTION:ИОП-ИТ-26/1 · Воронов Артем Владимир
+ ович\nПрактические занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Физика
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:3108785b9c1b06c9ab07@sirius-wiki
+DTSTAMP:20260923T185457Z
+DTSTART:20260926T054500Z
+DTEND:20260926T070500Z
+SUMMARY:Математическая логика и теория алго
+ ритмов
+LOCATION:1.32К_3
+DESCRIPTION:ИОП-ИТ-26/1 · Кручинин Дмитрий Влади
+ мирович\nПрактические занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Математическая логика и теория ал
+ горитмов
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:09d026d697a1e6b41167@sirius-wiki
+DTSTAMP:20260923T185457Z
+DTSTART:20260926T072000Z
+DTEND:20260926T084000Z
+SUMMARY:Линейная алгебра и аналитическая ге
+ ометрия (Математика)
+LOCATION:Альфа 5.2
+DESCRIPTION:ИОП-ИТ-26/1 · Почекутов Дмитрий Юрье
+ вич\nПрактические занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Линейная алгебра и аналитическая 
+ геометрия (Математика)
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:2186d3bf7c110ddbca22@sirius-wiki
+DTSTAMP:20260923T185457Z
+DTSTART:20260928T054500Z
+DTEND:20260928T070500Z
+SUMMARY:Математический анализ (Математика)
+LOCATION:Альфа 5.8
+DESCRIPTION:ИОП-ИТ-26/1 · Федоров Глеб Владимиро
+ вич\nЛекции\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Математический анализ (Математик
+ а)
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:be36e0f64547651abed4@sirius-wiki
+DTSTAMP:20260923T185457Z
+DTSTART:20260928T072000Z
+DTEND:20260928T084000Z
+SUMMARY:Иностранный язык
+LOCATION:1-14-14.Альфа 4.6
+DESCRIPTION:ИОП-ИТ-26/1 · Половникова Наталья Ан
+ атольевна\nПрактические занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Иностранный язык
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:0faa8bb0e2c5e0c732fa@sirius-wiki
+DTSTAMP:20260923T185457Z
+DTSTART:20260928T072000Z
+DTEND:20260928T084000Z
+SUMMARY:Иностранный язык
+LOCATION:1.081.08 К_Росатом (СПД)
+DESCRIPTION:ИОП-ИТ-26/1 · Гаранян Александра Вал
+ ерьевна\nПрактические занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Иностранный язык
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:e091e29499e6847879ba@sirius-wiki
+DTSTAMP:20260923T185457Z
+DTSTART:20260928T072000Z
+DTEND:20260928T084000Z
+SUMMARY:Иностранный язык
+LOCATION:К_14
+DESCRIPTION:ИОП-ИТ-26/1 · Карагозян Лиана Дигран
+ овна\nПрактические занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Иностранный язык
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:f746635b052f2e7d08e8@sirius-wiki
+DTSTAMP:20260923T185457Z
+DTSTART:20260928T085500Z
+DTEND:20260928T101500Z
+SUMMARY:География
+LOCATION:Альфа 5.8
+DESCRIPTION:ИОП-ИТ-26/1 · Ваганов Михаил Геннадь
+ евич\nПрактические занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:География
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:bf0aecfc2791c5be3294@sirius-wiki
+DTSTAMP:20260923T185457Z
+DTSTART:20260928T120500Z
+DTEND:20260928T132500Z
+SUMMARY:География
+LOCATION:Альфа 5.8
+DESCRIPTION:ИОП-ИТ-26/1 · Ваганов Михаил Геннадь
+ евич\nЛекции\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:География
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:8431f67ff456f5aa0b48@sirius-wiki
+DTSTAMP:20260923T185457Z
+DTSTART:20260929T054500Z
+DTEND:20260929T070500Z
+SUMMARY:Литература
+LOCATION:Альфа 5.8
+DESCRIPTION:ИОП-ИТ-26/1 · Титенок Елена Александ
+ ровна\nЛекции\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Литература
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:8ab489792b5149383408@sirius-wiki
+DTSTAMP:20260923T185457Z
+DTSTART:20260929T072000Z
+DTEND:20260929T084000Z
+SUMMARY:Приоритеты Стратегии научно-технол
+ огического развития Российской Федерац
+ ии
+LOCATION:1.32К_3
+DESCRIPTION:ИОП-ИТ-26/1 · Семенов Михаил Евгенье
+ вич\nПрактические занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Приоритеты Стратегии научно-техн
+ ологического развития Российской Федер
+ ации
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:bd2c886d8359e8f13d84@sirius-wiki
+DTSTAMP:20260923T185457Z
+DTSTART:20260929T085500Z
+DTEND:20260929T101500Z
+SUMMARY:Алгоритмы и структуры данных (Инфор
+ матика)
+LOCATION:1-07-12.Бета 4.1 (комп)
+DESCRIPTION:ИОП-ИТ-26/1 · Богданов Алексей Алекс
+ андрович\nПрактические занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Алгоритмы и структуры данных (Инф
+ орматика)
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:e9b66e7b13f1ec18e1ed@sirius-wiki
+DTSTAMP:20260923T185457Z
+DTSTART:20260930T054500Z
+DTEND:20260930T070500Z
+SUMMARY:Линейная алгебра и аналитическая ге
+ ометрия (Математика)
+LOCATION:Альфа 5.8
+DESCRIPTION:ИОП-ИТ-26/1 · Почекутов Дмитрий Юрье
+ вич\nЛекции\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Линейная алгебра и аналитическая 
+ геометрия (Математика)
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:c0ba8072b827c6a39c4f@sirius-wiki
+DTSTAMP:20260923T185457Z
+DTSTART:20260930T072000Z
+DTEND:20260930T084000Z
+SUMMARY:История России (История)
+LOCATION:Альфа 5.8
+DESCRIPTION:ИОП-ИТ-26/1 · Ермакова Дарья Сергеев
+ на\nЛекции\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:История России (История)
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:69af33f676ad40b73438@sirius-wiki
+DTSTAMP:20260923T185457Z
+DTSTART:20260930T085500Z
+DTEND:20260930T101500Z
+SUMMARY:Линейная алгебра и аналитическая ге
+ ометрия (Математика)
+LOCATION:1\,34К_1
+DESCRIPTION:ИОП-ИТ-26/1 · Почекутов Дмитрий Юрье
+ вич\nПрактические занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Линейная алгебра и аналитическая 
+ геометрия (Математика)
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:259ee154edb394846c46@sirius-wiki
+DTSTAMP:20260923T185457Z
+DTSTART:20261001T054500Z
+DTEND:20261001T070500Z
+SUMMARY:Алгоритмы и структуры данных (Инфор
+ матика)
+LOCATION:1-07-12.Бета 4.1 (комп)
+DESCRIPTION:ИОП-ИТ-26/1 · Богданов Алексей Алекс
+ андрович\nПрактические занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Алгоритмы и структуры данных (Инф
+ орматика)
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:968c00a58375bd5f8110@sirius-wiki
+DTSTAMP:20260923T185457Z
+DTSTART:20261001T072000Z
+DTEND:20261001T084000Z
+SUMMARY:Математический анализ (Математика)
+LOCATION:1\,34К_1
+DESCRIPTION:ИОП-ИТ-26/1 · Завальнюк Елена Валерь
+ евна\nПрактические занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Математический анализ (Математик
+ а)
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:75b35a76ea9fad70f467@sirius-wiki
+DTSTAMP:20260923T185457Z
+DTSTART:20261001T085500Z
+DTEND:20261001T101500Z
+SUMMARY:Математическая логика и теория алго
+ ритмов
+LOCATION:Альфа 5.8
+DESCRIPTION:ИОП-ИТ-26/1 · у\, Кручинин Дмитрий Вл
+ адимирович\nЛекции\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Математическая логика и теория ал
+ горитмов
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:16a1959206cb1d68dc6b@sirius-wiki
+DTSTAMP:20260923T185457Z
+DTSTART:20261001T120500Z
+DTEND:20261001T132500Z
+SUMMARY:Современные социальные науки (Общес
+ твознание)
+LOCATION:Альфа 5.8
+DESCRIPTION:ИОП-ИТ-26/1 · Галявиев Нияз Рамилеви
+ ч\nЛекции\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Современные социальные науки (Общ
+ ествознание)
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:e34f90e6dc8dffcb059a@sirius-wiki
+DTSTAMP:20260923T185457Z
+DTSTART:20261002T072000Z
+DTEND:20261002T084000Z
+SUMMARY:Физическая культура и спорт (Физиче
+ ская культура)
+LOCATION:Корпус "Спорт"
+DESCRIPTION:ИОП-ИТ-26/1 · Сагдиева Ляйля Рустемо
+ вна\nПрактические занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Физическая культура и спорт (Физи
+ ческая культура)
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:71a9ca1434e12491c530@sirius-wiki
+DTSTAMP:20260923T185457Z
+DTSTART:20261002T103000Z
+DTEND:20261002T115000Z
+SUMMARY:Иностранный язык
+LOCATION:1-14-17.Альфа 4.3
+DESCRIPTION:ИОП-ИТ-26/1 · Гаранян Александра Вал
+ ерьевна\nПрактические занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Иностранный язык
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:00053f9d286a50be6a30@sirius-wiki
+DTSTAMP:20260923T185457Z
+DTSTART:20261002T103000Z
+DTEND:20261002T115000Z
+SUMMARY:Иностранный язык
+LOCATION:Альфа 5.1
+DESCRIPTION:ИОП-ИТ-26/1 · Карагозян Лиана Дигран
+ овна\nПрактические занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Иностранный язык
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:9e912d488b6c12255c16@sirius-wiki
+DTSTAMP:20260923T185457Z
+DTSTART:20261002T103000Z
+DTEND:20261002T115000Z
+SUMMARY:Иностранный язык
+LOCATION:Альфа 5.5
+DESCRIPTION:ИОП-ИТ-26/1 · Половникова Наталья Ан
+ атольевна\nПрактические занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Иностранный язык
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:71963d16c45d8614c8db@sirius-wiki
+DTSTAMP:20260923T185457Z
+DTSTART:20261002T120500Z
+DTEND:20261002T132500Z
+SUMMARY:Математический анализ (Математика)
+LOCATION:Альфа 5.2
+DESCRIPTION:ИОП-ИТ-26/1 · Завальнюк Елена Валерь
+ евна\nПрактические занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Математический анализ (Математик
+ а)
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:8788f66ce3c3a61875d7@sirius-wiki
+DTSTAMP:20260923T185457Z
+DTSTART:20261002T134000Z
+DTEND:20261002T150000Z
+SUMMARY:Физика
+LOCATION:1.32К_3
+DESCRIPTION:ИОП-ИТ-26/1 · Воронов Артем Владимир
+ ович\nПрактические занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Физика
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:503c47789b310b0a8b4b@sirius-wiki
+DTSTAMP:20260923T185457Z
+DTSTART:20261003T054500Z
+DTEND:20261003T070500Z
+SUMMARY:Линейная алгебра и аналитическая ге
+ ометрия (Математика)
+LOCATION:Бета 2.3
+DESCRIPTION:ИОП-ИТ-26/1 · Почекутов Дмитрий Юрье
+ вич\nПрактические занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Линейная алгебра и аналитическая 
+ геометрия (Математика)
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:8ba9aaec2471b9b1fd42@sirius-wiki
+DTSTAMP:20260923T185457Z
+DTSTART:20261003T072000Z
+DTEND:20261003T084000Z
+SUMMARY:Математическая логика и теория алго
+ ритмов
+LOCATION:1.32К_3
+DESCRIPTION:ИОП-ИТ-26/1 · Кручинин Дмитрий Влади
+ мирович\nПрактические занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Математическая логика и теория ал
+ горитмов
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:8264a7a50bdd7bd4360d@sirius-wiki
+DTSTAMP:20260923T185457Z
+DTSTART:20261003T103000Z
+DTEND:20261003T115000Z
+SUMMARY:Литература
+LOCATION:1.32К_3
+DESCRIPTION:ИОП-ИТ-26/1 · Титенок Елена Александ
+ ровна\nПрактические занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Литература
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:db214823b408154ac265@sirius-wiki
+DTSTAMP:20260923T185457Z
+DTSTART:20261005T072000Z
+DTEND:20261005T084000Z
+SUMMARY:Иностранный язык
+LOCATION:1-14-14.Альфа 4.6
+DESCRIPTION:ИОП-ИТ-26/1 · Половникова Наталья Ан
+ атольевна\nПрактические занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Иностранный язык
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:53454275449ba7d8e2e9@sirius-wiki
+DTSTAMP:20260923T185457Z
+DTSTART:20261005T072000Z
+DTEND:20261005T084000Z
+SUMMARY:Иностранный язык
+LOCATION:1.081.08 К_Росатом (СПД)
+DESCRIPTION:ИОП-ИТ-26/1 · Гаранян Александра Вал
+ ерьевна\nПрактические занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Иностранный язык
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:6b5fdc3ffd8295784ab4@sirius-wiki
+DTSTAMP:20260923T185457Z
+DTSTART:20261005T072000Z
+DTEND:20261005T084000Z
+SUMMARY:Иностранный язык
+LOCATION:К_14
+DESCRIPTION:ИОП-ИТ-26/1 · Карагозян Лиана Дигран
+ овна\nПрактические занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Иностранный язык
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:8e2b9011a921bb5b93f2@sirius-wiki
+DTSTAMP:20260923T185457Z
+DTSTART:20261005T085500Z
+DTEND:20261005T101500Z
+SUMMARY:География
+LOCATION:1\,34К_1
+DESCRIPTION:ИОП-ИТ-26/1 · Ваганов Михаил Геннадь
+ евич\nПрактические занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:География
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:05067769779d88b3c261@sirius-wiki
+DTSTAMP:20260923T185457Z
+DTSTART:20261005T120500Z
+DTEND:20261005T132500Z
+SUMMARY:География
+LOCATION:Альфа 5.8
+DESCRIPTION:ИОП-ИТ-26/1 · Ваганов Михаил Геннадь
+ евич\nЛекции\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:География
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:43c502ffc13925bab00f@sirius-wiki
+DTSTAMP:20260923T185457Z
+DTSTART:20261006T054500Z
+DTEND:20261006T070500Z
+SUMMARY:Русский язык
+LOCATION:1.32К_3
+DESCRIPTION:ИОП-ИТ-26/1 · Титенок Елена Александ
+ ровна\nПрактические занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Русский язык
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:86a8b71b50a9e10b60b5@sirius-wiki
+DTSTAMP:20260923T185457Z
+DTSTART:20261006T072000Z
+DTEND:20261006T084000Z
+SUMMARY:Линейная алгебра и аналитическая ге
+ ометрия (Математика)
+LOCATION:1\,34К_1
+DESCRIPTION:ИОП-ИТ-26/1 · Почекутов Дмитрий Юрье
+ вич\nПрактические занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Линейная алгебра и аналитическая 
+ геометрия (Математика)
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:f38c183712e8ebf14d08@sirius-wiki
+DTSTAMP:20260923T185457Z
+DTSTART:20261007T054500Z
+DTEND:20261007T070500Z
+SUMMARY:Линейная алгебра и аналитическая ге
+ ометрия (Математика)
+LOCATION:Альфа 5.8
+DESCRIPTION:ИОП-ИТ-26/1 · Почекутов Дмитрий Юрье
+ вич\nЛекции\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Линейная алгебра и аналитическая 
+ геометрия (Математика)
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:c20839cfe5fe54695536@sirius-wiki
+DTSTAMP:20260923T185457Z
+DTSTART:20261007T072000Z
+DTEND:20261007T084000Z
+SUMMARY:Математический анализ (Математика)
+LOCATION:Альфа 5.10
+DESCRIPTION:ИОП-ИТ-26/1 · Федоров Глеб Владимиро
+ вич\nЛекции\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Математический анализ (Математик
+ а)
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:4d26b4a7b751474f4327@sirius-wiki
+DTSTAMP:20260923T185457Z
+DTSTART:20261007T103000Z
+DTEND:20261007T115000Z
+SUMMARY:История России (История)
+LOCATION:1\,34К_1
+DESCRIPTION:ИОП-ИТ-26/1 · Ермакова Дарья Сергеев
+ на\nПрактические занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:История России (История)
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:6154d07e3d362a085761@sirius-wiki
+DTSTAMP:20260923T185457Z
+DTSTART:20261008T072000Z
+DTEND:20261008T084000Z
+SUMMARY:Математическая логика и теория алго
+ ритмов
+LOCATION:Альфа 5.10
+DESCRIPTION:ИОП-ИТ-26/1 · у\, Кручинин Дмитрий Вл
+ адимирович\nЛекции\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Математическая логика и теория ал
+ горитмов
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:a1c4cf229fe3586d1c93@sirius-wiki
+DTSTAMP:20260923T185457Z
+DTSTART:20261008T085500Z
+DTEND:20261008T101500Z
+SUMMARY:Математический анализ (Математика)
+LOCATION:1\,34К_1
+DESCRIPTION:ИОП-ИТ-26/1 · Завальнюк Елена Валерь
+ евна\nПрактические занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Математический анализ (Математик
+ а)
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:2bea909a6876c2f67e4b@sirius-wiki
+DTSTAMP:20260923T185457Z
+DTSTART:20261008T120500Z
+DTEND:20261008T132500Z
+SUMMARY:Физика
+LOCATION:1.33К_2
+DESCRIPTION:ИОП-ИТ-26/1 · Воронов Артем Владимир
+ ович\nПрактические занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Физика
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:2ed0dcf6c881965eac76@sirius-wiki
+DTSTAMP:20260923T185457Z
+DTSTART:20261009T072000Z
+DTEND:20261009T084000Z
+SUMMARY:Физическая культура и спорт (Физиче
+ ская культура)
+LOCATION:Корпус "Спорт"
+DESCRIPTION:ИОП-ИТ-26/1 · Сагдиева Ляйля Рустемо
+ вна\nПрактические занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Физическая культура и спорт (Физи
+ ческая культура)
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:11413ee3471e5ff6d657@sirius-wiki
+DTSTAMP:20260923T185457Z
+DTSTART:20261009T103000Z
+DTEND:20261009T115000Z
+SUMMARY:Иностранный язык
+LOCATION:1-14-17.Альфа 4.3
+DESCRIPTION:ИОП-ИТ-26/1 · Гаранян Александра Вал
+ ерьевна\nПрактические занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Иностранный язык
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:4e721daa16aed2f36268@sirius-wiki
+DTSTAMP:20260923T185457Z
+DTSTART:20261009T103000Z
+DTEND:20261009T115000Z
+SUMMARY:Иностранный язык
+LOCATION:Альфа 5.1
+DESCRIPTION:ИОП-ИТ-26/1 · Карагозян Лиана Дигран
+ овна\nПрактические занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Иностранный язык
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:30b254b41442b2f14b0d@sirius-wiki
+DTSTAMP:20260923T185457Z
+DTSTART:20261009T103000Z
+DTEND:20261009T115000Z
+SUMMARY:Иностранный язык
+LOCATION:Альфа 5.5
+DESCRIPTION:ИОП-ИТ-26/1 · Половникова Наталья Ан
+ атольевна\nПрактические занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Иностранный язык
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:4d021226a5808468b5d1@sirius-wiki
+DTSTAMP:20260923T185457Z
+DTSTART:20261009T120500Z
+DTEND:20261009T132500Z
+SUMMARY:Линейная алгебра и аналитическая ге
+ ометрия (Математика)
+LOCATION:Бета 2.3
+DESCRIPTION:ИОП-ИТ-26/1 · у\, Почекутов Дмитрий Ю
+ рьевич\nПрактические занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Линейная алгебра и аналитическая 
+ геометрия (Математика)
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:6b804b1839773a5a6c05@sirius-wiki
+DTSTAMP:20260923T185457Z
+DTSTART:20261009T134000Z
+DTEND:20261009T150000Z
+SUMMARY:Физика
+LOCATION:1.32К_3
+DESCRIPTION:ИОП-ИТ-26/1 · Воронов Артем Владимир
+ ович\nПрактические занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Физика
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:ab9e789aefc575d2a0c9@sirius-wiki
+DTSTAMP:20260923T185457Z
+DTSTART:20261010T054500Z
+DTEND:20261010T070500Z
+SUMMARY:Математический анализ (Математика)
+LOCATION:Альфа 5.4
+DESCRIPTION:ИОП-ИТ-26/1 · Завальнюк Елена Валерь
+ евна\nПрактические занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Математический анализ (Математик
+ а)
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:796c95020841d3d58ac4@sirius-wiki
+DTSTAMP:20260923T185457Z
+DTSTART:20261010T072000Z
+DTEND:20261010T084000Z
+SUMMARY:Математическая логика и теория алго
+ ритмов
+LOCATION:1.32К_3
+DESCRIPTION:ИОП-ИТ-26/1 · Кручинин Дмитрий Влади
+ мирович\nПрактические занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Математическая логика и теория ал
+ горитмов
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:76d70f50845acb790737@sirius-wiki
+DTSTAMP:20260923T185457Z
+DTSTART:20261010T085500Z
+DTEND:20261010T101500Z
+SUMMARY:Линейная алгебра и аналитическая ге
+ ометрия (Математика)
+LOCATION:Альфа 5.11
+DESCRIPTION:ИОП-ИТ-26/1 · Почекутов Дмитрий Юрье
+ вич\nПрактические занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Линейная алгебра и аналитическая 
+ геометрия (Математика)
+END:VALARM
+END:VEVENT
+END:VCALENDAR

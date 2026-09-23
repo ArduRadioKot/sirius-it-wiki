@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#00A7A7" />
+    <meta
+      name="description"
+      content="Студенческая вики по Университету «Сириус»: учёба, жизнь, инструкции и полезные материалы."
+    />
+    <title>Сириус Wiki</title>
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="assets/icon-192.png" />
+    <script src="theme.js"></script>
+    <link rel="stylesheet" href="styles.css" />
+    <link
+      rel="stylesheet"
+      href="vendor/katex/katex.min.css"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="#/" aria-label="На главную">
+        <img
+          class="brand-logo brand-logo-light"
+          src="assets/sirius-logo.svg"
+          alt="Университет Сириус"
+        />
+        <img
+          class="brand-logo brand-logo-dark"
+          src="assets/sirius-logo-dark.svg"
+          alt=""
+          aria-hidden="true"
+        />
+        <span class="brand-separator"></span>
+        <span class="brand-wiki">WIKI</span>
+      </a>
+
+      <div class="header-end">
+        <nav class="desktop-nav" aria-label="Основная навигация">
+          <a href="#/study">Учёба</a>
+          <a href="#/life">Жизнь</a>
+          <a href="#/schedule">Расписание</a>
+          <button class="search-open" id="searchOpen" type="button">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path
+                d="m21 21-4.3-4.3m2.3-5.2A7.5 7.5 0 1 1 4 11.5a7.5 7.5 0 0 1 15 0Z"
+              />
+            </svg>
+            <span>Поиск</span>
+            <kbd>K</kbd>
+          </button>
+        </nav>
+
+        <div class="header-actions">
+          <button
+            type="button"
+            class="theme-toggle"
+            data-theme-toggle
+            data-theme-choice="system"
+            aria-label="Сменить тему"
+          >
+            <svg class="theme-icon theme-icon-system" viewBox="0 0 24 24" aria-hidden="true">
+              <rect x="3" y="4" width="18" height="12" rx="2" />
+              <path d="M8 20h8M12 16v4" />
+            </svg>
+            <svg class="theme-icon theme-icon-light" viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="12" cy="12" r="4" />
+              <path
+                d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"
+              />
+            </svg>
+            <svg class="theme-icon theme-icon-dark" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M21 14.5A8.5 8.5 0 1 1 9.5 3 7 7 0 0 0 21 14.5Z" />
+            </svg>
+          </button>
+          <button
+            class="menu-button"
+            id="menuButton"
+            aria-label="Открыть меню"
+            aria-expanded="false"
+          >
+            <span></span><span></span><span></span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <div class="mobile-menu" id="mobileMenu" aria-hidden="true">
+      <nav aria-label="Мобильная навигация">
+        <a href="#/study">Учёба</a>
+        <a href="#/life">Жизнь</a>
+        <a href="#/schedule">Расписание</a>
+        <button id="mobileSearchOpen" type="button">Поиск</button>
+      </nav>
+    </div>
+
+    <div class="app-tools">
+      <button id="installApp" type="button">Установить приложение</button>
+    </div>
+    <dialog id="installHelp">
+      <h2>Установить Сириус Wiki</h2>
+      <p>
+        На iPhone или iPad: откройте сайт в Safari → «Поделиться» → «На экран
+        Домой».
+      </p>
+      <p>
+        На Android и компьютере: откройте меню браузера → «Установить
+        приложение» или «Добавить на главный экран». Если пункта нет, попробуйте
+        Chrome или Edge.
+      </p>
+      <form method="dialog"><button>Понятно</button></form>
+    </dialog>
+    <input type="file" id="deviceFile" accept="application/json,.json" hidden>
+    <main id="app" tabindex="-1"></main>
+
+    <footer class="site-footer">
+      <div>
+        <strong>Сириус Wiki</strong>
+        <p>база знаний студентов.</p>
+   
+      </div>
+      <div class="footer-links">
+      
+      </div>
+      <div class="footer-update">
+        <p class="app-version">
+          Версия сервиса: <span id="appVersion">…</span>
+        </p>
+        <button type="button" id="updateApp" disabled>
+          Обновить
+        </button>
+        <p id="updateStatus" class="footer-update-status" hidden></p>
+      </div>
+      <p class="footer-note">
+        Логотип принадлежит Университету «Сириус». Проект не является
+        официальным сайтом университета.
+      </p>
+    </footer>
+
+    <dialog class="search-dialog" id="searchDialog">
+      <form method="dialog" class="search-shell">
+        <div class="search-row">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path
+              d="m21 21-4.3-4.3m2.3-5.2A7.5 7.5 0 1 1 4 11.5a7.5 7.5 0 0 1 15 0Z"
+            />
+          </svg>
+          <input
+            id="searchInput"
+            autocomplete="off"
+            placeholder="Найти в вики..."
+          />
+          <button value="cancel" aria-label="Закрыть">Esc</button>
+        </div>
+        <div id="searchResults" class="search-results"></div>
+      </form>
+    </dialog>
+
+    <script
+      src="vendor/katex/katex.min.js"
+      crossorigin="anonymous"
+      defer
+    ></script>
+    <script
+      src="vendor/katex/auto-render.min.js"
+      crossorigin="anonymous"
+      defer
+    ></script>
+    <script src="schedule-source.js" defer></script>
+    <script src="schedule.js" defer></script>
+    <script src="app.js" defer></script>
+    <script src="pwa.js" defer></script>
+  </body>
+</html>
