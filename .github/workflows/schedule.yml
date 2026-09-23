@@ -1,0 +1,41 @@
+name: Update schedule
+
+on:
+  schedule:
+    # Every 2 hours, off the top of the hour (GitHub queues :00 runs the longest).
+    - cron: '17 */2 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+
+concurrency:
+  group: schedule
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Fetch and publish the timetable
+        env:
+          SCHEDULE_PROXY_URL: ${{ secrets.SCHEDULE_PROXY_URL }}
+          GIT_AUTHOR_NAME: github-actions[bot]
+          GIT_AUTHOR_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
+        run: bash scripts/publish-schedule.sh
+
+      # Pushes made with GITHUB_TOKEN may not start the branch-based Pages build.
+      - name: Rebuild GitHub Pages
+        if: success()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ "$(git rev-parse HEAD)" != "$GITHUB_SHA" ]; then
+            gh api -X POST "repos/$GITHUB_REPOSITORY/pages/builds" --silent || echo '::warning::Could not request a Pages build.'
+          fi
