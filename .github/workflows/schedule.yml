@@ -2,8 +2,10 @@ name: Update schedule
 
 on:
   schedule:
-    # Every 2 hours, off the top of the hour (GitHub queues :00 runs the longest).
-    - cron: '17 */2 * * *'
+    # GitHub drops many scheduled runs, so check every 30 minutes; the script
+    # publishes at most every ~2 hours unless lessons change.
+    # Off the top of the hour: GitHub queues :00 runs the longest.
+    - cron: '17,47 * * * *'
   workflow_dispatch:
 
 permissions:

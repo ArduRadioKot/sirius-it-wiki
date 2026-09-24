@@ -28,9 +28,9 @@ if old['updatedAt'] == new['updatedAt']:
     sys.exit(1)  # source unavailable: the old snapshot was kept
 keys = ('fromDate', 'toDate', 'groups')
 changed = any(old.get(k) != new.get(k) for k in keys)
-# The app treats snapshots older than a day as stale, so refresh the timestamp twice a day.
+# Refresh the timestamp (and rebuild Pages) about every 2 hours even without changes.
 age = dt.datetime.now(dt.timezone.utc) - dt.datetime.fromisoformat(old['updatedAt'])
-sys.exit(0 if changed or age > dt.timedelta(hours=12) else 1)
+sys.exit(0 if changed or age > dt.timedelta(minutes=110) else 1)
 PY
     then
       echo 'Schedule unchanged, nothing to publish.'
