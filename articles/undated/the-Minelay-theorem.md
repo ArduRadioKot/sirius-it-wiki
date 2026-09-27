@@ -27,14 +27,14 @@ $$
 Пусть точки $A_1, B_1, C_1$ лежат на одной прямой (прямой Менелая). Опустим перпендикуляры $h_1, h_2, h_3$ из вершин $A, C, B$ на эту прямую (обозначим основания перпендикуляров $A_2, C_2, B_2$).
 
 Из подобия образованных прямоугольных треугольников получаем:
-1. $\triangle AA_2B_1 \sim \triangle CC_2B_1 \implies \frac{CB_1}{AB_1} = \frac{h_2}{h_1}$
+1. $\triangle AA_2B_1 \sim \triangle CC_2B_1 \implies \frac{CB_1}{B_1A} = \frac{h_2}{h_1}$
 2. $\triangle A_1CC_2 \sim \triangle A_1BB_2 \implies \frac{BA_1}{A_1C} = \frac{h_3}{h_2}$
-3. $\triangle AA_2C_1 \sim \triangle BB_2C_1 \implies \frac{AC_1}{BC_1} = \frac{h_1}{h_3}$
+3. $\triangle AA_2C_1 \sim \triangle BB_2C_1 \implies \frac{AC_1}{C_1B} = \frac{h_1}{h_3}$
 
 Перемножая эти три равенства:
 
 $$
-\frac{AC_1}{BC_1} \cdot \frac{BA_1}{A_1C} \cdot \frac{CB_1}{AB_1} = \frac{h_1}{h_3} \cdot \frac{h_3}{h_2} \cdot \frac{h_2}{h_1} = 1
+\frac{AC_1}{C_1B} \cdot \frac{BA_1}{A_1C} \cdot \frac{CB_1}{B_1A} = \frac{h_1}{h_3} \cdot \frac{h_3}{h_2} \cdot \frac{h_2}{h_1} = 1
 $$
 
 Необходимость доказана.
@@ -60,46 +60,41 @@ $$
 
 ---
 
-#### Случай 2: Все три точки лежат на продолжениях сторон треугольника (0 точек на сторонах)
+#### Случай 2: Все три точки лежат на продолжениях сторон треугольника
 
 ##### Доказательство:
 Опустим перпендикуляры $h_1, h_2, h_3$ из вершин $A, C, B$ на секущую прямую. Из подобия соответствующих треугольников:
 
-1. $\triangle AA_2B_1 \sim \triangle B_1CC_2 \implies \frac{CB_1}{B_1A} = \frac{h_2}{h_1}$
+1. $\triangle AA_2B_1 \sim \triangle CC_2B_1 \implies \frac{CB_1}{B_1A} = \frac{h_2}{h_1}$
 2. $\triangle A_1BB_2 \sim \triangle A_1CC_2 \implies \frac{BA_1}{A_1C} = \frac{h_3}{h_2}$
-3. $\triangle AB_1C_1 \sim \triangle BB_2C_1 \implies \frac{AC_1}{C_1B} = \frac{h_1}{h_3}$
+3. $\triangle AA_2C_1 \sim \triangle BB_2C_1 \implies \frac{AC_1}{C_1B} = \frac{h_1}{h_3}$
 
 Перемножив полученные соотношения:
 
 $$
-\frac{CB_1}{B_1A} \cdot \frac{AC_1}{C_1B} \cdot \frac{BA_1}{A_1C} = \frac{h_2}{h_1} \cdot \frac{h_1}{h_3} \cdot \frac{h_3}{h_2} = 1 \quad \blacksquare
+\frac{AC_1}{C_1B} \cdot \frac{BA_1}{A_1C} \cdot \frac{CB_1}{B_1A} = \frac{h_1}{h_3} \cdot \frac{h_3}{h_2} \cdot \frac{h_2}{h_1} = 1 \quad \blacksquare
 $$
 
 ---
 
-#### Случай 3: Одна точка на стороне, две точки на продолжениях (через теорему синусов)
+#### Случай 3: Одна точка на стороне, две — на продолжениях
 
 ##### Доказательство:
-Рассмотрим $\triangle ABC$ и прямую, пересекающую сторону $AC$ в точке $B_1$, а продолжения сторон $AB$ и $BC$ — в точках $C_1$ и $A_1$. Обозначим углы при вершинах и точку пересечения прямых $M$.
+Аналогично предыдущим случаям, опуская перпендикуляры $h_1, h_2, h_3$ из вершин $A, C, B$ на секущую прямую, получаем отношения отрезков через высоты:
 
-Применив теорему синусов к треугольникам, образованным секущей прямой и вершинами:
-
-1. Из $\triangle AA_2C_1$ и $\triangle CC_2B_1$:
-   $$ \frac{AA_2}{CC_2} = \frac{h_1}{h_2} = \frac{B_1A}{CB_1} $$
-2. Из $\triangle CC_2A_1$ и $\triangle BB_2A_1$:
-   $$ \frac{CC_2}{BB_2} = \frac{h_2}{h_3} = \frac{A_1C}{BA_1} $$
-3. Из $\triangle BB_2C_1$ и $\triangle AA_2C_1$:
-   $$ \frac{BB_2}{AA_2} = \frac{h_3}{h_1} = \frac{C_1B}{AC_1} $$
+1. Из подобия треугольников для вершины $A$ и $C$: $\frac{CB_1}{B_1A} = \frac{h_2}{h_1}$
+2. Из подобия треугольников для вершины $B$ и $C$: $\frac{BA_1}{A_1C} = \frac{h_3}{h_2}$
+3. Из подобия треугольников для вершины $A$ и $B$: $\frac{AC_1}{C_1B} = \frac{h_1}{h_3}$
 
 Перемножая данные отношения, получаем:
 
 $$
-\frac{CB_1}{B_1A} \cdot \frac{AC_1}{C_1B} \cdot \frac{BA_1}{A_1C} = \frac{h_2}{h_1} \cdot \frac{h_1}{h_3} \cdot \frac{h_3}{h_2} = 1 \quad \blacksquare
+\frac{AC_1}{C_1B} \cdot \frac{BA_1}{A_1C} \cdot \frac{CB_1}{B_1A} = \frac{h_1}{h_3} \cdot \frac{h_3}{h_2} \cdot \frac{h_2}{h_1} = 1 \quad \blacksquare
 $$
 
 > **Важное замечание о количестве точек на сторонах:**
-> * **Теорема Чевы** выполняется при **нечётном** количестве точек на сторонах треугольника ($3$ или $1$).
-> * **Теорема Менелая** выполняется при **чётном** количестве точек на сторонах треугольника ($2$ или $0$).
+> * **Теорема Чевы** выполняется при **нечётном** количестве точек непосредственно на сторонах треугольника ($3$ или $1$).
+> * **Теорема Менелая** выполняется при **чётном** количестве точек непосредственно на сторонах треугольника ($2$ или $0$).
 
 ---
 
@@ -116,30 +111,44 @@ $$
 
 ### Доказательство
 
-Применим теорему Менелая к трём треугольникам с общей вершиной в точке $O$:
+Применим теорему Менелая к трём треугольникам с общей вершиной $O$:
 
-1. Для $\triangle OAB$ и секущей прямой $A_1B_1P$ (точки $A_1 \in OA$, $B_1 \in OB$, $P \in AB$):
-   $$ \frac{OA_1}{A_1A} \cdot \frac{AP}{PB} \cdot \frac{BB_1}{B_1O} = 1 \quad (3.3) $$
+1. Для $\triangle OAB$ и секущей прямой $A_1B_1P$ (где $A_1 \in OA$, $B_1 \in OB$, $P \in AB$):
+   $$
+   \frac{OA_1}{A_1A} \cdot \frac{AP}{PB} \cdot \frac{BB_1}{B_1O} = 1 \quad (3.3)
+   $$
 
-2. Для $\triangle OAC$ и секущей прямой $A_1C_1Q$ (точки $A_1 \in OA$, $C_1 \in OC$, $Q \in AC$):
-   $$ \frac{OA_1}{A_1A} \cdot \frac{AQ}{QC} \cdot \frac{CC_1}{C_1O} = 1 \quad (3.4) $$
+2. Для $\triangle OBC$ и секущей прямой $B_1C_1R$ (где $B_1 \in OB$, $C_1 \in OC$, $R \in BC$):
+   $$
+   \frac{OB_1}{B_1B} \cdot \frac{BR}{RC} \cdot \frac{CC_1}{C_1O} = 1 \quad (3.4)
+   $$
 
-3. Для $\triangle OBC$ и секущей прямой $B_1C_1R$ (точки $B_1 \in OB$, $C_1 \in OC$, $R \in BC$):
-   $$ \frac{OC_1}{C_1C} \cdot \frac{CR}{RB} \cdot \frac{BB_1}{B_1O} = 1 \quad (3.5) $$
+3. Для $\triangle OCA$ и секущей прямой $C_1A_1Q$ (где $C_1 \in OC$, $A_1 \in OA$, $Q \in AC$):
+   $$
+   \frac{OC_1}{C_1C} \cdot \frac{CQ}{QA} \cdot \frac{AA_1}{A_1O} = 1 \quad (3.5)
+   $$
 
-Разделим равенство (3.3) на (3.4):
+Выразим отношение отрезков для сторон $\triangle ABC$ из каждого равенства:
 
 $$
-\frac{AP}{PB} \cdot \frac{BB_1}{OB_1} \cdot \frac{QC}{AQ} \cdot \frac{C_1O}{CC_1} = 1
+\frac{AP}{PB} = \frac{A_1A}{OA_1} \cdot \frac{B_1O}{BB_1}, \quad 
+\frac{BR}{RC} = \frac{B_1B}{OB_1} \cdot \frac{C_1O}{CC_1}, \quad 
+\frac{CQ}{QA} = \frac{C_1C}{OC_1} \cdot \frac{A_1O}{AA_1}
 $$
 
-Умножим полученное выражение на соотношение (3.5):
+Перемножим эти три равенства:
 
 $$
-\frac{AP}{PB} \cdot \frac{QC}{AQ} \cdot \frac{RB}{CR} = 1
+\frac{AP}{PB} \cdot \frac{BR}{RC} \cdot \frac{CQ}{QA} = \left(\frac{A_1A}{OA_1} \cdot \frac{B_1O}{BB_1}\right) \cdot \left(\frac{B_1B}{OB_1} \cdot \frac{C_1O}{CC_1}\right) \cdot \left(\frac{C_1C}{OC_1} \cdot \frac{A_1O}{AA_1}\right)
 $$
 
-Перегруппировав множители:
+Группируя взаимно обратные сомножители:
+
+$$
+\frac{AP}{PB} \cdot \frac{BR}{RC} \cdot \frac{CQ}{QA} = \left(\frac{A_1A}{OA_1} \cdot \frac{A_1O}{AA_1}\right) \cdot \left(\frac{B_1O}{BB_1} \cdot \frac{B_1B}{OB_1}\right) \cdot \left(\frac{C_1O}{CC_1} \cdot \frac{C_1C}{OC_1}\right) = 1 \cdot 1 \cdot 1 = 1
+$$
+
+Таким образом, получаем:
 
 $$
 \frac{AP}{PB} \cdot \frac{BR}{RC} \cdot \frac{CQ}{QA} = 1
