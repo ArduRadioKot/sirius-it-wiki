@@ -23,31 +23,22 @@ $$
 
 #### Случай 1: Остроугольный треугольник
 1. Проведём диаметр $BD$ описанной окружности ($BD = 2R$).
-2. Углы $\angle BAC = \alpha$ и $\angle CDB$ — вписанные и опираются на одну и ту же дугу $BC$, следовательно:
-   $$ \angle BAC = \angle CDB = \alpha $$
+2. Углы $\angle BAC = \alpha$ и $\angle CDB$ — вписанные и опираются на одну и ту же дугу $BC$, следовательно: $\angle BAC = \angle CDB = \alpha$.
 3. Угол $\angle BCD$ опирается на диаметр $BD$, следовательно, $\angle BCD = 90^\circ$.
-4. Из прямоугольного треугольника $\triangle BCD$:
-   $$ \sin \alpha = \frac{BC}{BD} = \frac{a}{2R} \implies \frac{a}{\sin \alpha} = 2R $$
-5. Аналогично проецируя для других вершин, получаем:
-   $$ \frac{b}{\sin \beta} = 2R \quad \text{и} \quad \frac{c}{\sin \gamma} = 2R $$
+4. Из прямоугольного треугольника $\triangle BCD$: $\sin \alpha = \frac{BC}{BD} = \frac{a}{2R} \implies \frac{a}{\sin \alpha} = 2R$.
+5. Аналогично проецируя для других вершин, получаем: $\frac{b}{\sin \beta} = 2R$ и $\frac{c}{\sin \gamma} = 2R$.
 
 #### Случай 2: Прямоугольный треугольник
 1. Пусть $\alpha = 90^\circ$, тогда сторона $a$ совпадает с диаметром ($a = BC = 2R$).
-2. Так как $\sin 90^\circ = 1$:
-   $$ \frac{a}{\sin 90^\circ} = \frac{a}{1} = 2R $$
-3. Для остальных углов:
-   $$ \sin \beta = \frac{AC}{BC} = \frac{b}{2R} \implies \frac{b}{\sin \beta} = 2R $$
-   $$ \sin \gamma = \frac{c}{2R} \implies \frac{c}{\sin \gamma} = 2R $$
+2. Так как $\sin 90^\circ = 1$: $\frac{a}{\sin 90^\circ} = \frac{a}{1} = 2R$.
+3. Для остальных углов: $\sin \beta = \frac{AC}{BC} = \frac{b}{2R} \implies \frac{b}{\sin \beta} = 2R$ и $\sin \gamma = \frac{c}{2R} \implies \frac{c}{\sin \gamma} = 2R$.
 
 #### Случай 3: Тупоугольный треугольник
 1. Проведём диаметр $BD = 2R$.
-2. Четырёхугольник $ABCD$ — вписанный в окружность, следовательно:
-   $$ \angle BDC = 180^\circ - \angle BAC = 180^\circ - \alpha $$
+2. Четырёхугольник $ABCD$ — вписанный в окружность, следовательно: $\angle BDC = 180^\circ - \angle BAC = 180^\circ - \alpha$.
 3. Поскольку $\alpha$ — тупой угол, угол $(180^\circ - \alpha)$ является острым.
-4. В прямоугольном треугольнике $\triangle BCD$:
-   $$ \sin(180^\circ - \alpha) = \frac{a}{2R} $$
-5. Используя формулу приведения $\sin(180^\circ - \alpha) = \sin \alpha$:
-   $$ \sin \alpha = \frac{a}{2R} \implies \frac{a}{\sin \alpha} = 2R $$
+4. В прямоугольном треугольнике $\triangle BCD$: $\sin(180^\circ - \alpha) = \frac{a}{2R}$.
+5. Используя формулу приведения $\sin(180^\circ - \alpha) = \sin \alpha$: $\sin \alpha = \frac{a}{2R} \implies \frac{a}{\sin \alpha} = 2R$.
 
 $\blacksquare$
 
