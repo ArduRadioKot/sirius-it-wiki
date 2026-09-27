@@ -362,7 +362,7 @@ async function loadIndex() {
       }
     }
 
-    // На GitHub Pages список каталогов недоступен. Индекс создаёт GitHub Actions при каждом push.
+    // На GitHub Pages список каталогов недоступен. Индекс обновляет workflow content-index.yml.
     index = await loadGeneratedIndex();
   } catch (err) {
     console.error(err);
@@ -372,7 +372,7 @@ async function loadIndex() {
       <section class="article-page">
         <h1>Не удалось загрузить базу статей</h1>
         <p>Файл <code>content-index.json</code> отсутствует или повреждён.</p>
-        <p>Если сайт опубликован через GitHub Pages, проверь, что workflow <code>Deploy Sirius Wiki to GitHub Pages</code> завершился успешно и в настройках Pages выбран источник <strong>GitHub Actions</strong>.</p>
+        <p>Если сайт опубликован через GitHub Pages, проверь, что workflow <code>Update content index</code> завершился успешно после последнего push со статьями.</p>
       </section>`;
     throw err;
   }

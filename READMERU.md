@@ -24,7 +24,7 @@ sirius-it-wiki/
 
 ## Как добавить статью
 
-Создай `.md` файл в `life/` или в папке нужного дня внутри `articles/` и отправь изменения в GitHub.
+Создай `.md` файл в `life/` или в папке нужного дня внутри `articles/` и отправь изменения в GitHub. Workflow `.github/workflows/content-index.yml` сам пересоберёт `content-index.json` при каждом push в `main` — вручную запускать `node generate-index.mjs` не обязательно. Сайт на GitHub Pages берётся с ветки `main`.
 
 В начале файла можно указать:
 

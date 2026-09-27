@@ -1,0 +1,49 @@
+name: Update content index
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'articles/**'
+      - 'life/**'
+      - 'generate-index.mjs'
+      - 'scripts/publish-content-index.sh'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+
+# Separate from schedule.yml so timetable pushes are not blocked by index rebuilds.
+concurrency:
+  group: content-index
+  cancel-in-progress: true
+
+jobs:
+  index:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 1
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Regenerate and publish content-index.json
+        env:
+          GIT_AUTHOR_NAME: github-actions[bot]
+          GIT_AUTHOR_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
+        run: bash scripts/publish-content-index.sh
+
+      # Pushes made with GITHUB_TOKEN may not start the branch-based Pages build.
+      - name: Rebuild GitHub Pages
+        if: success()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ "$(git rev-parse HEAD)" != "$GITHUB_SHA" ]; then
+            gh api -X POST "repos/$GITHUB_REPOSITORY/pages/builds" --silent || echo '::warning::Could not request a Pages build.'
+          fi

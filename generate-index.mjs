@@ -109,16 +109,26 @@ async function buildArticles() {
   );
 }
 
-const index = {
-  generatedAt: new Date().toISOString(),
-  life: await buildLife(),
-  articles: await buildArticles()
-};
+const outfile = path.join(root, 'content-index.json');
+const life = await buildLife();
+const articles = await buildArticles();
 
-await fs.writeFile(
-  path.join(root, 'content-index.json'),
-  `${JSON.stringify(index, null, 2)}\n`,
-  'utf8'
-);
+function payload(index) {
+  return JSON.stringify({ life: index.life, articles: index.articles });
+}
 
-console.log(`content-index.json: ${index.life.length} life, ${index.articles.length} articles`);
+const next = { generatedAt: new Date().toISOString(), life, articles };
+
+try {
+  const previous = JSON.parse(await fs.readFile(outfile, 'utf8'));
+  if (payload(previous) === payload(next)) {
+    console.log(`content-index.json: unchanged (${life.length} life, ${articles.length} articles)`);
+    process.exit(0);
+  }
+} catch (error) {
+  if (error.code !== 'ENOENT') throw error;
+}
+
+await fs.writeFile(outfile, `${JSON.stringify(next, null, 2)}\n`, 'utf8');
+
+console.log(`content-index.json: ${life.length} life, ${articles.length} articles`);

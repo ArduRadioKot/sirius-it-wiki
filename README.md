@@ -24,7 +24,7 @@ sirius-it-wiki/
 
 ## Adding an Article
 
-Create a `.md` file in `life/` or in the relevant day folder inside `articles/`, then push the changes to GitHub.
+Create a `.md` file in `life/` or in the relevant day folder inside `articles/`, then push the changes to GitHub. Workflow `.github/workflows/content-index.yml` rebuilds `content-index.json` from Markdown on each push to `main` (you do not need to run `node generate-index.mjs` by hand). GitHub Pages serves the site from the `main` branch.
 
 You can add the following front matter at the beginning of the file:
 
