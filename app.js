@@ -307,7 +307,11 @@ async function discoverContentLocally() {
     .filter(Boolean)
     .sort(
       (a, b) =>
-        (a.day === "undated" ? 1 : b.day === "undated" ? -1 : b.day.localeCompare(a.day)) ||
+        (a.day === "undated"
+          ? 1
+          : b.day === "undated"
+            ? -1
+            : b.day.localeCompare(a.day)) ||
         a.order - b.order ||
         a.title.localeCompare(b.title, "ru"),
     );
@@ -326,17 +330,27 @@ async function loadGeneratedIndex() {
 
 function isLocalPreview() {
   const hostname = location.hostname;
-  return hostname === "localhost" || hostname === "127.0.0.1" || hostname === "0.0.0.0" ||
-    hostname === "::1" || hostname === "[::1]" || hostname.endsWith(".local") ||
+  return (
+    hostname === "localhost" ||
+    hostname === "127.0.0.1" ||
+    hostname === "0.0.0.0" ||
+    hostname === "::1" ||
+    hostname === "[::1]" ||
+    hostname.endsWith(".local") ||
     /^10\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(hostname) ||
     /^192\.168\.\d{1,3}\.\d{1,3}$/.test(hostname) ||
-    /^172\.(1[6-9]|2\d|3[0-1])\.\d{1,3}\.\d{1,3}$/.test(hostname);
+    /^172\.(1[6-9]|2\d|3[0-1])\.\d{1,3}\.\d{1,3}$/.test(hostname)
+  );
 }
 
 async function loadIndex() {
   try {
     // На локальном python -m http.server сохраняем удобство: новые файлы видны сразу.
-    if (isLocalPreview() && navigator.onLine && !navigator.serviceWorker?.controller) {
+    if (
+      isLocalPreview() &&
+      navigator.onLine &&
+      !navigator.serviceWorker?.controller
+    ) {
       try {
         index = await discoverContentLocally();
         return;
@@ -370,7 +384,6 @@ function home() {
     .slice(0, 6);
   app.innerHTML = `
     <section class="hero">
-      <span class="eyebrow">Студенческая база знаний</span>
       <h1>Университет Сириус</h1>
       <p class="hero-lead">Практическая вики про учёбу и жизнь в университете. Инструкции, конспекты, полезные места и ответы на вопросы, которые обычно приходится искать в чатах.</p>
     </section>
@@ -378,7 +391,7 @@ function home() {
       <a class="section-card study" href="#/study"><span class="card-index">01 / STUDY</span><div><h2>Учёба</h2><p>Конспекты, лекции и материалы по дням и предметам.</p></div><span class="card-arrow" aria-hidden="true"><span class="icon icon-arrow-up-right"></span></span></a>
       <a class="section-card life" href="#/life"><span class="card-index">02 / CAMPUS</span><div><h2>Жизнь</h2><p>Кампус, быт, сервисы, мероприятия и всё, что происходит вне пар.</p></div><span class="card-arrow" aria-hidden="true"><span class="icon icon-arrow-up-right"></span></span></a>
     </section>
-    <section class="schedule-home"><a href="#/schedule"><span class="eyebrow">Каждый день под рукой</span><h2>Расписание и время до пары →</h2><p>ИОП-ИТ-25 и ИОП-ИТ-26 · обе группы · доступно без интернета</p></a></section>
+    <section class="schedule-home"><a href="#/schedule"><h2>Расписание и время до пары →</h2><p>ИОП-ИТ-25 и ИОП-ИТ-26 · обе группы · доступно без интернета</p></a></section>
     <section class="latest">
       <div class="section-heading"><h2>Последние материалы</h2><p>${index.articles.length} материалов в учебной базе</p></div>
       <div class="article-list">${latest.map(tile).join("") || '<div class="empty-state">Пока нет статей.</div>'}</div>
@@ -386,9 +399,10 @@ function home() {
 }
 
 function tile(item) {
-  const meta = item.type === "life"
-    ? "ЖИЗНЬ"
-    : `${esc(item.subject || "Другое")} · ${formatDate(item.day)}`;
+  const meta =
+    item.type === "life"
+      ? "ЖИЗНЬ"
+      : `${esc(item.subject || "Другое")} · ${formatDate(item.day)}`;
   return `<a class="article-tile" href="${routeFor(item)}"><div class="tile-meta">${meta}</div><div><h3>${esc(item.title)}</h3><p>${esc(item.description || "")}</p></div></a>`;
 }
 
@@ -400,34 +414,63 @@ function lifePage() {
 function entryRow(x, mode = "day") {
   let label = "Гайд";
   if (x.type !== "life") {
-    label = mode === "subject"
-      ? formatDate(x.day)
-      : esc(x.subject || "Другое");
+    label = mode === "subject" ? formatDate(x.day) : esc(x.subject || "Другое");
   }
   return `<a class="entry-row" href="${routeFor(x)}"><span class="date">${label}</span><div><h3>${esc(x.title)}</h3><p>${esc(x.description || "")}</p></div><span class="entry-arrow" aria-hidden="true"><span class="icon icon-arrow-right"></span></span></a>`;
 }
 
 function studyPage({ day = null, subject = null, view = "day" } = {}) {
-  const days = [...new Set(index.articles.map((x) => x.day).filter(Boolean))]
-    .sort((a, b) => a === "undated" ? 1 : b === "undated" ? -1 : b.localeCompare(a));
-  const subjects = [...new Set(index.articles.map((x) => x.subject || "Другое"))]
-    .sort((a, b) => a.localeCompare(b, "ru"));
+  const days = [
+    ...new Set(index.articles.map((x) => x.day).filter(Boolean)),
+  ].sort((a, b) =>
+    a === "undated" ? 1 : b === "undated" ? -1 : b.localeCompare(a),
+  );
+  const subjects = [
+    ...new Set(index.articles.map((x) => x.subject || "Другое")),
+  ].sort((a, b) => a.localeCompare(b, "ru"));
 
   studyView = view === "subject" ? "subject" : "day";
   currentDay = day && days.includes(day) ? day : days[0] || null;
-  currentSubject = subject && subjects.includes(subject) ? subject : subjects[0] || null;
+  currentSubject =
+    subject && subjects.includes(subject) ? subject : subjects[0] || null;
 
-  const items = studyView === "subject"
-    ? index.articles
-        .filter((x) => !currentSubject || (x.subject || "Другое") === currentSubject)
-        .sort((a, b) => (a.day === "undated" ? 1 : b.day === "undated" ? -1 : b.day.localeCompare(a.day)) || a.order - b.order || a.title.localeCompare(b.title, "ru"))
-    : index.articles
-        .filter((x) => !currentDay || x.day === currentDay)
-        .sort((a, b) => a.order - b.order || a.title.localeCompare(b.title, "ru"));
+  const items =
+    studyView === "subject"
+      ? index.articles
+          .filter(
+            (x) =>
+              !currentSubject || (x.subject || "Другое") === currentSubject,
+          )
+          .sort(
+            (a, b) =>
+              (a.day === "undated"
+                ? 1
+                : b.day === "undated"
+                  ? -1
+                  : b.day.localeCompare(a.day)) ||
+              a.order - b.order ||
+              a.title.localeCompare(b.title, "ru"),
+          )
+      : index.articles
+          .filter((x) => !currentDay || x.day === currentDay)
+          .sort(
+            (a, b) => a.order - b.order || a.title.localeCompare(b.title, "ru"),
+          );
 
-  const sidebarItems = studyView === "subject"
-    ? subjects.map((name) => `<button class="day-button subject-button ${name === currentSubject ? "active" : ""}" aria-pressed="${name === currentSubject}" data-subject="${esc(name)}">${esc(name)}</button>`).join("")
-    : days.map((d) => `<button class="day-button ${d === currentDay ? "active" : ""}" aria-pressed="${d === currentDay}" data-day="${d}">${formatDate(d)}</button>`).join("");
+  const sidebarItems =
+    studyView === "subject"
+      ? subjects
+          .map(
+            (name) =>
+              `<button class="day-button subject-button ${name === currentSubject ? "active" : ""}" aria-pressed="${name === currentSubject}" data-subject="${esc(name)}">${esc(name)}</button>`,
+          )
+          .join("")
+      : days
+          .map(
+            (d) =>
+              `<button class="day-button ${d === currentDay ? "active" : ""}" aria-pressed="${d === currentDay}" data-day="${d}">${formatDate(d)}</button>`,
+          )
+          .join("");
 
   app.innerHTML = `<section class="page"><div class="page-top"><div><span class="eyebrow">Раздел 01</span><h1>Учёба</h1></div><p class="page-description">Конспекты и учебные материалы по дням и предметам. Выберите нужную дату или дисциплину в списке.</p></div>
   <div class="study-switch" role="group" aria-label="Способ сортировки"><button type="button" class="study-switch-button ${studyView === "day" ? "active" : ""}" aria-pressed="${studyView === "day"}" data-view="day">По дням</button><button type="button" class="study-switch-button ${studyView === "subject" ? "active" : ""}" aria-pressed="${studyView === "subject"}" data-view="subject">По предметам</button></div>
@@ -479,9 +522,10 @@ async function articlePage(item) {
       item.type === "life"
         ? "#/life"
         : `#/study?view=day&day=${encodeURIComponent(item.day)}`;
-    const kicker = item.type === "life"
-      ? "Жизнь"
-      : `${esc(item.subject || "Другое")} · ${formatDate(item.day)}`;
+    const kicker =
+      item.type === "life"
+        ? "Жизнь"
+        : `${esc(item.subject || "Другое")} · ${formatDate(item.day)}`;
     app.innerHTML = `<article class="article-page"><header class="article-head"><a class="back-link" href="${back}"><span class="icon icon-arrow-left" aria-hidden="true"></span>Назад</a><div class="article-kicker">${kicker}</div><h1>${esc(item.title)}</h1>${item.description ? `<p class="summary">${esc(item.description)}</p>` : ""}</header><div class="markdown">${parseMarkdown(md)}</div></article>`;
     renderMath();
   } catch (error) {
@@ -573,11 +617,7 @@ function stripSearchText(md = "") {
 }
 
 function searchTokens(q) {
-  return q
-    .trim()
-    .toLowerCase()
-    .split(/\s+/)
-    .filter(Boolean);
+  return q.trim().toLowerCase().split(/\s+/).filter(Boolean);
 }
 
 function matchScore(item, tokens) {
@@ -638,8 +678,7 @@ function renderSearch(q) {
         .filter((row) => row.score > 0)
         .sort(
           (a, b) =>
-            b.score - a.score ||
-            a.item.title.localeCompare(b.item.title, "ru"),
+            b.score - a.score || a.item.title.localeCompare(b.item.title, "ru"),
         )
         .map((row) => row.item)
     : [...SITE_PAGES, ...articles.slice(0, 6)];
@@ -648,7 +687,9 @@ function renderSearch(q) {
   searchResults.innerHTML =
     rows
       .map((x) => {
-        const snippet = tokens.length ? matchSnippet(x, tokens) : x.description || "";
+        const snippet = tokens.length
+          ? matchSnippet(x, tokens)
+          : x.description || "";
         return `<a class="search-result" href="${searchHref(x)}"><strong>${esc(x.title)}</strong><span>${esc(searchLabel(x))}${snippet ? " · " + esc(snippet) : ""}</span></a>`;
       })
       .join("") || '<div class="empty-state">Ничего не найдено</div>';
@@ -709,14 +750,21 @@ else indexLoad.then(router, () => {});
 
 // The service worker answers from its cache first and reports when a newer index arrives.
 navigator.serviceWorker?.addEventListener("message", async (event) => {
-  if (event.data?.type !== "JSON_UPDATED" || event.data.path !== "content-index.json") return;
+  if (
+    event.data?.type !== "JSON_UPDATED" ||
+    event.data.path !== "content-index.json"
+  )
+    return;
   try {
     index = await loadGeneratedIndex();
   } catch {
     return;
   }
   // Re-render lists in place; leave an open article alone so the reader keeps their position.
-  const route = (location.hash.slice(1) || "/").split("?")[0].split("/").filter(Boolean);
+  const route = (location.hash.slice(1) || "/")
+    .split("?")[0]
+    .split("/")
+    .filter(Boolean);
   if (route[0] === "schedule" || route.length >= 2) return;
   const y = window.scrollY;
   await router();
