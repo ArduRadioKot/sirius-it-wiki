@@ -2792,3 +2792,27 @@ a:focus-visible .round-arrow .icon {
     display: none;
   }
 }
+
+/* Feedback: a quiet line of contacts in the footer */
+.feedback {
+  display: grid;
+  gap: 6px;
+  align-content: start;
+  font-size: 14px;
+}
+.feedback h2 {
+  margin: 0 0 2px;
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 600;
+}
+.site-footer .feedback a {
+  color: var(--muted);
+  font-weight: 400;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+.site-footer .feedback a:hover {
+  color: var(--accent-dark);
+  text-decoration: underline;
+}
