@@ -378,32 +378,48 @@ async function loadIndex() {
   }
 }
 
+const ROUND_ARROW = '<span class="round-arrow" aria-hidden="true"><span class="icon icon-arrow-sirius"></span></span>';
+const TILE_ART = ["21", "23", "26", "22", "24"];
+
 function home() {
-  const latest = [...index.articles]
-    .sort((a, b) => (b.day + b.title).localeCompare(a.day + a.title))
+  // Newest dated notes first; notes without a confirmed date never count as "latest".
+  const latest = index.articles
+    .filter((a) => /^\d{4}-\d{2}-\d{2}$/.test(a.day))
+    .sort((a, b) => b.day.localeCompare(a.day) || a.title.localeCompare(b.title, "ru"))
     .slice(0, 6);
   app.innerHTML = `
     <section class="hero">
-      <h1>Университет Сириус</h1>
-      <p class="hero-lead">Практическая вики про учёбу и жизнь в университете. Инструкции, конспекты, полезные места и ответы на вопросы, которые обычно приходится искать в чатах.</p>
+      <div class="hero-banner">
+        <span class="hero-deco hero-deco-circles" aria-hidden="true"></span>
+        <span class="hero-deco hero-deco-plus" aria-hidden="true"></span>
+        <span class="hero-deco hero-deco-rings" aria-hidden="true"></span>
+        <h1><span>Университет</span> <span>Сириус</span></h1>
+        <p class="hero-tagline">Вики про учёбу и жизнь</p>
+        <p class="hero-text">Инструкции, конспекты, полезные места и ответы на вопросы, которые обычно приходится искать в чатах.</p>
+        <div class="hero-actions"><a class="hero-cta" href="#/schedule">Открыть расписание</a><span class="hero-chevrons" aria-hidden="true"></span></div>
+      </div>
+      <a class="section-card study" href="#/study">
+        <img class="card-art" src="assets/cards/study.svg" alt="" loading="lazy">
+        <h2>Учёба</h2>${ROUND_ARROW}
+      </a>
+      <a class="section-card life" href="#/life">
+        <img class="card-art" src="assets/cards/campus.png" alt="" loading="lazy">
+        <h2>Жизнь</h2>${ROUND_ARROW}
+      </a>
     </section>
-    <section class="home-grid">
-      <a class="section-card study" href="#/study"><span class="card-index">01 / STUDY</span><div><h2>Учёба</h2><p>Конспекты, лекции и материалы по дням и предметам.</p></div><span class="card-arrow" aria-hidden="true"><span class="icon icon-arrow-up-right"></span></span></a>
-      <a class="section-card life" href="#/life"><span class="card-index">02 / CAMPUS</span><div><h2>Жизнь</h2><p>Кампус, быт, сервисы, мероприятия и всё, что происходит вне пар.</p></div><span class="card-arrow" aria-hidden="true"><span class="icon icon-arrow-up-right"></span></span></a>
-    </section>
-    <section class="schedule-home"><a href="#/schedule"><h2>Расписание и время до пары →</h2><p>ИОП-ИТ-25 и ИОП-ИТ-26 · обе группы · доступно без интернета</p></a></section>
     <section class="latest">
       <div class="section-heading"><h2>Последние материалы</h2><p>${index.articles.length} материалов в учебной базе</p></div>
       <div class="article-list">${latest.map(tile).join("") || '<div class="empty-state">Пока нет статей.</div>'}</div>
     </section>`;
 }
 
-function tile(item) {
+function tile(item, i = 0) {
   const meta =
     item.type === "life"
-      ? "ЖИЗНЬ"
-      : `${esc(item.subject || "Другое")} · ${formatDate(item.day)}`;
-  return `<a class="article-tile" href="${routeFor(item)}"><div class="tile-meta">${meta}</div><div><h3>${esc(item.title)}</h3><p>${esc(item.description || "")}</p></div></a>`;
+      ? '<span class="tile-subject">Жизнь</span>'
+      : `<span class="tile-subject">${esc(item.subject || "Другое")}</span><span class="tile-date">${formatDate(item.day)}</span>`;
+  const art = TILE_ART[i % TILE_ART.length];
+  return `<a class="article-tile" href="${routeFor(item)}"><div class="tile-meta">${meta}</div><div class="tile-body"><h3>${esc(item.title)}</h3><p>${esc(item.description || "")}</p></div><div class="tile-foot">${ROUND_ARROW}<img class="tile-art" src="assets/cards/pattern-${art}.svg" alt="" loading="lazy"></div></a>`;
 }
 
 function lifePage() {

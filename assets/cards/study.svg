@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="136 60 254 220" fill="none" stroke="#333" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+  <!-- stack of books -->
+  <path d="M232 132h132v22H232z" fill="#d9d3f3"/>
+  <path d="M244 132v22M352 132v22"/>
+  <path d="M224 154h148v24H224z" fill="#bfe7ee"/>
+  <path d="M238 154v24M358 154v24M262 166h72"/>
+  <path d="M240 110h118v22H240z" fill="#fff"/>
+  <path d="M252 110v22M346 110v22M270 121h50"/>
+  <!-- triangle ruler leaning on the books -->
+  <path d="M372 178 372 70 300 178Z" fill="#e7f6f8"/>
+  <path d="M362 160v-62l-42 62Z"/>
+  <path d="M372 86h-6M372 100h-6M372 114h-10M372 128h-6M372 142h-6M372 156h-10"/>
+  <!-- open notebook -->
+  <path d="M150 196 262 180l6 76-112 20Z" fill="#fff"/>
+  <path d="M268 256 380 268l4-76-116-12Z" fill="#fff"/>
+  <path d="M262 180v76l6 0" />
+  <path d="M146 200 156 276M384 192l-2 80" opacity=".5"/>
+  <path d="M170 212l74-10M171 226l58-8M172 240l76-10M174 254l44-6" opacity=".55"/>
+  <path d="M284 196l80 8M284 212l60 6M284 228l84 8M284 244l46 4" opacity=".55"/>
+  <!-- formula on the right page -->
+  <path d="M292 198c4-10 10-10 10 0s6 10 10 0" stroke="#0b7d86" stroke-width="2"/>
+  <path d="M320 196h12M326 190v12" stroke="#0b7d86" stroke-width="2"/>
+  <path d="M340 199c3-8 9-8 9 0s-6 8-9 0M356 194l8 10M364 194l-8 10" stroke="#0b7d86" stroke-width="2"/>
+  <!-- pencil across the notebook -->
+  <path d="M190 172 300 132l8 14-110 40Z" fill="#f2dc9b"/>
+  <path d="M190 172l8 14-22-2Z" fill="#fff"/>
+  <path d="M176 184l5-1-2-4Z" fill="#333"/>
+  <path d="M300 132l8 14 10-4-8-14Z" fill="#d9d3f3"/>
+  <!-- sparkle like the university mark -->
+  <path d="M206 92v20M196 102h20M199 95l14 14M213 95l-14 14" stroke="#4bbecf" stroke-width="2"/>
+  <circle cx="236" cy="72" r="3" fill="#4bbecf" stroke="none"/>
+</svg>
