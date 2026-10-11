@@ -611,3 +611,79 @@ title: Скачать расшифровку занятия
 file: articles/files/transcripts/mathematical-logic-2026-09-22.txt
 description: Автоматическая расшифровка аудиозаписи; возможны ошибки распознавания.
 :::
+
+---
+
+## Проверь себя
+
+:::quiz
+question: Что означает запись $\vdash A$?
+option: Для $A$ существует формальное доказательство в исчислении
+option: $A$ ложна
+option: $A$ истинна при любой оценке переменных
+answer: 1
+explanation: $\models A$ — это истинность (тавтология), а $\vdash A$ — выводимость.
+:::
+
+:::quiz
+question: Как называется утверждение «если $\vdash A$, то $\models A$»?
+option: Теорема дедукции
+option: Корректность
+option: Полнота
+answer: 2
+explanation: Полнота — обратное направление: если $\models A$, то $\vdash A$.
+:::
+
+:::quiz
+question: Какое единственное правило вывода есть в гильбертовском исчислении?
+option: Из $B$ получить $A\to B$
+option: Modus ponens: из $A$ и $A\to B$ получить $B$
+option: Из $A\to B$ получить $B$
+answer: 2
+explanation: Из одной импликации $A\to B$ без доказательства $A$ получить $B$ нельзя.
+:::
+
+:::quiz
+question: Что утверждает теорема дедукции?
+option: Если $\vdash A$, то $\vdash\neg A$
+option: Если $\Gamma\cup\{A\}\vdash B$, то $\Gamma\vdash A\to B$
+option: Если $\Gamma\vdash A\to B$, то $\vdash B$
+answer: 2
+explanation: Вывод $B$ при временном предположении $A$ превращается в вывод импликации $A\to B$.
+:::
+
+:::quiz
+question: Почему множество чётных чисел $2\mathbb N$ равномощно $\mathbb N$?
+option: Оба множества конечны
+option: Чётных чисел ровно половина
+option: Отображение $f(n)=2n$ — биекция
+answer: 3
+explanation: Бесконечное множество может быть равномощно своей собственной части.
+:::
+
+:::quiz
+question: Что утверждает теорема Кантора?
+option: $|X|=|\mathcal P(X)|$ для бесконечных $X$
+option: Множество $\mathbb Q$ несчётно
+option: $|X|<|\mathcal P(X)|$ — подмножеств всегда строго больше
+answer: 3
+explanation: Не существует сюръекции $X\to\mathcal P(X)$; доказательство — диагональный приём.
+:::
+
+:::quiz
+question: Какое множество в конспекте несчётно?
+option: Множество бесконечных двоичных последовательностей
+option: Множество чётных чисел
+option: Множество рациональных чисел $\mathbb Q$
+answer: 1
+explanation: Диагональный аргумент строит последовательность, которой нет ни в одном перечне.
+:::
+
+:::quiz
+question: К чему приводит множество $R=\{x\mid x\notin x\}$?
+option: К противоречию $R\in R\iff R\notin R$ — парадоксу Рассела
+option: К счётности $\mathbb R$
+option: К теореме дедукции
+answer: 1
+explanation: Поэтому образование множеств ограничивают аксиомами.
+:::

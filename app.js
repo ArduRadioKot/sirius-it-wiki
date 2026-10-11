@@ -77,10 +77,14 @@ function downloadBlock(fields) {
   return `<aside class="download-block"><div><strong>${esc(title)}</strong>${description}</div><a href="${esc(fileUrl)}" download="${esc(fileName)}" aria-label="${esc(title)}">Скачать</a></aside>`;
 }
 
+const QUIZ_LETTERS = ["А", "Б", "В", "Г", "Д", "Е"];
+
 function quizBlock(fields) {
   const answer = Number(fields.answer);
   if (!fields.question || !fields.options?.length || !Number.isInteger(answer) || answer < 1 || answer > fields.options.length) return "";
-  const options = fields.options.map((option, index) => `<button type="button" class="quiz-option" data-option="${index + 1}" aria-label="Вариант ${index + 1}: ${esc(option)}">${inlineMarkdown(option)}</button>`).join("");
+  const options = fields.options
+    .map((option, index) => `<button type="button" class="quiz-option" data-option="${index + 1}"><span class="quiz-letter" aria-hidden="true">${QUIZ_LETTERS[index] || index + 1}</span><span class="quiz-option-text">${inlineMarkdown(option)}</span></button>`)
+    .join("");
   return `<section class="quiz-block" data-answer="${answer}"><div class="quiz-label">Проверь себя</div><p class="quiz-question">${inlineMarkdown(fields.question)}</p><div class="quiz-options">${options}</div><p class="quiz-feedback" role="status" aria-live="polite"></p><div class="quiz-explanation" hidden>${inlineMarkdown(fields.explanation || "")}</div></section>`;
 }
 
@@ -219,20 +223,37 @@ app.addEventListener("click", (event) => {
   const button = event.target.closest(".quiz-option");
   if (!button || !app.contains(button)) return;
   const quiz = button.closest(".quiz-block");
-  const correct = Number(button.dataset.option) === Number(quiz.dataset.answer);
+  if (quiz.dataset.answered) return;
+  const answer = Number(quiz.dataset.answer);
+  const correct = Number(button.dataset.option) === answer;
+  quiz.dataset.answered = correct ? "correct" : "wrong";
   for (const option of quiz.querySelectorAll(".quiz-option")) {
-    option.classList.toggle("is-correct", Number(option.dataset.option) === Number(quiz.dataset.answer));
+    const isAnswer = Number(option.dataset.option) === answer;
+    option.classList.toggle("is-correct", isAnswer);
     option.classList.toggle("is-incorrect", option === button && !correct);
-    option.setAttribute("aria-pressed", String(option === button));
+    option.classList.toggle("is-chosen", option === button);
+    option.disabled = true;
   }
-  quiz.querySelector(".quiz-feedback").textContent = correct ? "Верно!" : "Пока нет. Правильный ответ подсвечен.";
+  quiz.querySelector(".quiz-feedback").textContent = correct ? "Верно" : "Неверно — правильный ответ отмечен";
   quiz.querySelector(".quiz-explanation").hidden = false;
   const session = quiz.closest(".review-session");
-  if (session) {
-    quiz.dataset.answered = "true";
-    session.querySelector(".review-progress-value").textContent = `${session.querySelectorAll('.quiz-block[data-answered="true"]').length} из ${session.querySelectorAll('.quiz-block').length}`;
-  }
+  if (session) updateReviewProgress(session);
 });
+
+function updateReviewProgress(session) {
+  const total = session.querySelectorAll(".quiz-block").length;
+  const answered = session.querySelectorAll(".quiz-block[data-answered]").length;
+  const right = session.querySelectorAll('.quiz-block[data-answered="correct"]').length;
+  session.querySelector(".review-progress-value").textContent = `${answered} из ${total}`;
+  session.querySelector(".review-progress-bar span").style.width = `${total ? (answered / total) * 100 : 0}%`;
+  const result = session.querySelector(".review-result");
+  if (answered === total && total) {
+    result.hidden = false;
+    result.querySelector(".review-score").textContent = `${right} из ${total}`;
+    result.querySelector(".review-verdict").textContent =
+      right === total ? "Всё верно — тема усвоена." : right / total >= 0.7 ? "Хороший результат. Перечитай разборы ошибок." : "Стоит вернуться к конспекту и пройти ещё раз.";
+  }
+}
 
 function renderMath() {
   if (typeof renderMathInElement !== "function") return;
@@ -489,9 +510,19 @@ function reviewArticles() {
   return index.articles.map((item) => ({ item, questions: quizSections(item) })).filter((row) => row.questions.length);
 }
 
+function plural(n, one, few, many) {
+  const m10 = n % 10, m100 = n % 100;
+  if (m10 === 1 && m100 !== 11) return one;
+  if (m10 >= 2 && m10 <= 4 && (m100 < 12 || m100 > 14)) return few;
+  return many;
+}
+
+const questionsLabel = (n) => `${n} ${plural(n, "вопрос", "вопроса", "вопросов")}`;
+
 function studyPage({ day = null, subject = null, view = "day" } = {}) {
   const reviews = reviewArticles();
   const questionCount = reviews.reduce((total, row) => total + row.questions.length, 0);
+  const subjectCount = new Set(reviews.map((row) => row.item.subject || "Другое")).size;
   const days = [
     ...new Set(index.articles.map((x) => x.day).filter(Boolean)),
   ].sort((a, b) =>
@@ -545,7 +576,7 @@ function studyPage({ day = null, subject = null, view = "day" } = {}) {
           .join("");
 
   app.innerHTML = `<section class="page"><div class="page-top"><div><span class="eyebrow">Раздел 01</span><h1>Учёба</h1></div><p class="page-description">Конспекты и учебные материалы по дням и предметам. Выберите нужную дату или дисциплину в списке.</p></div>
-  <a class="study-review" href="#/study/review"><div><span class="study-review-title">Самопроверка</span><p>Повтори тему по коротким вопросам и сразу разбери ответ.</p></div><div class="study-review-action"><span>${questionCount} ${questionCount === 1 ? "вопрос" : questionCount >= 2 && questionCount <= 4 ? "вопроса" : "вопросов"}</span>${ROUND_ARROW}</div></a>
+  <a class="study-review" href="#/study/review"><img class="study-review-art" src="assets/cards/pattern-23.svg" alt="" loading="lazy"><div class="study-review-text"><span class="study-review-title">Самопроверка</span><p>Короткие тесты по конспектам с разбором каждого ответа</p><span class="study-review-meta">${questionsLabel(questionCount)} · ${subjectCount} ${plural(subjectCount, "предмет", "предмета", "предметов")}</span></div>${ROUND_ARROW}</a>
   <div class="study-switch" role="group" aria-label="Способ сортировки"><button type="button" class="study-switch-button ${studyView === "day" ? "active" : ""}" aria-pressed="${studyView === "day"}" data-view="day">По дням</button><button type="button" class="study-switch-button ${studyView === "subject" ? "active" : ""}" aria-pressed="${studyView === "subject"}" data-view="subject">По предметам</button></div>
   <div class="content-layout"><aside class="sidebar"><p class="sidebar-title">${studyView === "subject" ? "По предметам" : "По дням"}</p>${sidebarItems}</aside><div class="entries">${items.map((x) => entryRow(x, studyView)).join("") || '<div class="empty-state">Пока нет учебных материалов.</div>'}</div></div></section>`;
 
@@ -574,11 +605,71 @@ function studyPage({ day = null, subject = null, view = "day" } = {}) {
   );
 }
 
-function reviewPage(path = "") {
+function reviewPage({ path = "", subject = "" } = {}) {
   const reviews = reviewArticles();
-  const selected = reviews.find((row) => row.item.path === path) || reviews[0];
-  const topics = reviews.map(({ item, questions }) => `<a class="review-topic ${item.path === selected?.item.path ? "active" : ""}" href="#/study/review?article=${encodeURIComponent(item.path)}" ${item.path === selected?.item.path ? 'aria-current="page"' : ""}><span>${esc(item.title)}</span><small>${esc(item.subject)} · ${questions.length} ${questions.length === 1 ? "вопрос" : questions.length >= 2 && questions.length <= 4 ? "вопроса" : "вопросов"}</small></a>`).join("");
-  app.innerHTML = `<section class="page review-page"><a class="back-link" href="#/study"><span class="icon icon-arrow-left" aria-hidden="true"></span>К учёбе</a><div class="page-top"><div><h1>Самопроверка</h1></div><p class="page-description">Выбери конспект и ответь на вопросы. После выбора увидишь правильный ответ с объяснением.</p></div>${reviews.length ? `<nav class="review-topics" aria-label="Темы для повторения">${topics}</nav><div class="review-session"><div class="review-session-head"><div><span>${esc(selected.item.subject)} · ${formatDate(selected.item.day)}</span><h2>${esc(selected.item.title)}</h2></div><div class="review-progress" role="status" aria-live="polite"><strong class="review-progress-value">0 из ${selected.questions.length}</strong><span>отвечено</span></div></div><div class="review-questions markdown">${parseMarkdown(selected.questions.join("\n\n"))}</div><a class="review-theory" href="${routeFor(selected.item)}">Открыть конспект с объяснениями <span aria-hidden="true">↗</span></a></div>` : '<div class="empty-state">Пока нет вопросов для самопроверки. Они появятся вместе с конспектами.</div>'}</section>`;
+  const groups = new Map();
+  for (const row of reviews) {
+    const key = row.item.subject || "Другое";
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(row);
+  }
+  const subjects = [...groups.keys()].sort((a, b) => a.localeCompare(b, "ru"));
+  let session = null;
+  if (subject && groups.has(subject)) {
+    const rows = groups.get(subject);
+    session = { key: `s:${subject}`, kicker: `${rows.length} ${plural(rows.length, "тема", "темы", "тем")}`, title: `${subject}: все вопросы`, questions: rows.flatMap((r) => r.questions), theory: null };
+  } else {
+    const row = reviews.find((r) => r.item.path === path) || reviews[0];
+    if (row) session = { key: `a:${row.item.path}`, kicker: `${row.item.subject || "Другое"} · ${formatDate(row.item.day)}`, title: row.item.title, questions: row.questions, theory: routeFor(row.item), subject: row.item.subject || "Другое" };
+  }
+  const activeSubject = subject || session?.subject || "";
+  const href = (q) => `#/study/review?${q}`;
+  const nav = subjects
+    .map((name) => {
+      const rows = groups.get(name);
+      const total = rows.reduce((n, r) => n + r.questions.length, 0);
+      const allKey = `s:${name}`;
+      const topics = rows
+        .map(({ item, questions }) => {
+          const key = `a:${item.path}`;
+          return `<a class="review-topic ${session?.key === key ? "active" : ""}" href="${href(`article=${encodeURIComponent(item.path)}`)}" ${session?.key === key ? 'aria-current="page"' : ""}><span>${esc(item.title)}</span><small>${questionsLabel(questions.length)}</small></a>`;
+        })
+        .join("");
+      return `<details class="review-group" ${name === activeSubject ? "open" : ""}><summary><span>${esc(name)}</span><small>${questionsLabel(total)}</small></summary><div class="review-group-body"><a class="review-topic review-topic-all ${session?.key === allKey ? "active" : ""}" href="${href(`subject=${encodeURIComponent(name)}`)}" ${session?.key === allKey ? 'aria-current="page"' : ""}><span>Все вопросы предмета</span><small>${questionsLabel(total)}</small></a>${topics}</div></details>`;
+    })
+    .join("");
+  const total = reviews.reduce((n, r) => n + r.questions.length, 0);
+  // Phones get one compact picker instead of the long list of subjects.
+  const picker = subjects
+    .map((name) => {
+      const rows = groups.get(name);
+      const all = rows.reduce((n, r) => n + r.questions.length, 0);
+      const opts = [`<option value="${href(`subject=${encodeURIComponent(name)}`)}" ${session?.key === `s:${name}` ? "selected" : ""}>Все вопросы предмета · ${all}</option>`]
+        .concat(rows.map(({ item, questions }) => `<option value="${href(`article=${encodeURIComponent(item.path)}`)}" ${session?.key === `a:${item.path}` ? "selected" : ""}>${esc(item.title)} · ${questions.length}</option>`))
+        .join("");
+      return `<optgroup label="${esc(name)}">${opts}</optgroup>`;
+    })
+    .join("");
+  app.innerHTML = `<section class="page review-page"><a class="back-link" href="#/study"><span class="icon icon-arrow-left" aria-hidden="true"></span>К учёбе</a>
+  <div class="page-top"><div><span class="eyebrow">${questionsLabel(total)} · ${subjects.length} ${plural(subjects.length, "предмет", "предмета", "предметов")}</span><h1>Самопроверка</h1></div><p class="page-description">Выбери тему или весь предмет и ответь на вопросы. После ответа сразу видно, где верный вариант и почему.</p></div>
+  ${session ? `<label class="review-picker"><span>Тема</span><select aria-label="Выбрать тему для самопроверки">${picker}</select></label>
+  <div class="review-layout"><aside class="review-nav" aria-label="Темы для повторения">${nav}</aside>
+  <div class="review-session" data-key="${esc(session.key)}">
+    <div class="review-session-head"><span class="review-kicker">${esc(session.kicker)}</span><h2>${esc(session.title)}</h2>
+      <div class="review-progress" role="status" aria-live="polite"><div class="review-progress-bar"><span></span></div><strong class="review-progress-value">0 из ${session.questions.length}</strong></div></div>
+    <div class="review-questions markdown">${parseMarkdown(session.questions.join("\n\n"))}</div>
+    <div class="review-result" hidden><div><span>Результат</span><strong class="review-score"></strong><p class="review-verdict"></p></div><div class="review-result-actions"><button type="button" class="review-restart">Пройти заново</button>${session.theory ? `<a class="review-theory" href="${session.theory}">Открыть конспект</a>` : ""}</div></div>
+  </div></div>` : '<div class="empty-state">Пока нет вопросов для самопроверки. Они появятся вместе с конспектами.</div>'}</section>`;
+  app.querySelectorAll(".review-session .quiz-block").forEach((quiz, i, all) => {
+    quiz.querySelector(".quiz-label").textContent = `Вопрос ${i + 1} из ${all.length}`;
+  });
+  app.querySelector(".review-picker select")?.addEventListener("change", (event) => {
+    location.hash = event.target.value;
+  });
+  app.querySelector(".review-restart")?.addEventListener("click", () => {
+    reviewPage({ path, subject });
+    app.querySelector(".review-session")?.scrollIntoView({ block: "start" });
+  });
   renderMath();
 }
 
@@ -635,7 +726,7 @@ async function router() {
     await articlePage(index.life.find((x) => x.slug === parts[1]));
   else if (parts[0] === "study" && parts[1] === "review") {
     const p = new URLSearchParams(qs || "");
-    reviewPage(p.get("article") || "");
+    reviewPage({ path: p.get("article") || "", subject: p.get("subject") || "" });
   }
   else if (parts[0] === "study" && parts.length === 1) {
     const p = new URLSearchParams(qs || "");

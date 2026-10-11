@@ -343,3 +343,70 @@ title: Скачать рукописный конспект
 file: articles/files/physics-derivative-motion.pdf
 description: Конспект по пределам, производным и их применению в механике.
 :::
+
+---
+
+## Проверь себя
+
+:::quiz
+question: Чему равен $\lim_{n\to\infty}\frac1n$?
+option: $\infty$
+option: $0$
+option: $1$
+answer: 2
+explanation: С ростом $n$ члены $\frac1n$ становятся сколь угодно близки к нулю.
+:::
+
+:::quiz
+question: Как определяется мгновенная скорость?
+option: $v=\frac{S}{t}$ за всё время движения
+option: $v(t)=\lim_{\Delta t\to0}\frac{\Delta S}{\Delta t}$
+option: $v=S\cdot t$
+answer: 2
+explanation: Мгновенная скорость — предел средней скорости при $\Delta t\to0$, то есть производная $S'(t)$.
+:::
+
+:::quiz
+question: Пусть $S(t)=t^2$. Чему равна скорость в момент $t=3$?
+option: $6$
+option: $3$
+option: $9$
+answer: 1
+explanation: $v(t)=S'(t)=2t$, поэтому $v(3)=6$.
+:::
+
+:::quiz
+question: Для $x(t)=2-8t+t^2$ в какой момент тело останавливается?
+option: $t=8$
+option: $t=2$
+option: $t=4$
+answer: 3
+explanation: $v(t)=-8+2t=0$, откуда $t=4$.
+:::
+
+:::quiz
+question: Чему равна производная $(\sin x)'$?
+option: $-\cos x$
+option: $\cos x$
+option: $-\sin x$
+answer: 2
+explanation: По таблице производных $(\sin x)'=\cos x$, а $(\cos x)'=-\sin x$.
+:::
+
+:::quiz
+question: Какой геометрический смысл у производной $f'(x)$?
+option: Наклон касательной к графику в точке
+option: Длина графика
+option: Площадь под графиком
+answer: 1
+explanation: При $\Delta x\to0$ секущая переходит в касательную, а отношение $\frac{\Delta f}{\Delta x}$ — в её наклон.
+:::
+
+:::quiz
+question: Чему равен модуль скорости при равномерном движении по окружности радиуса $R$?
+option: $\omega R^2$
+option: $\omega R$
+option: $\frac{\omega}{R}$
+answer: 2
+explanation: $|v|=\sqrt{v_x^2+v_y^2}=\omega R$.
+:::
