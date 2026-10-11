@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="215" viewBox="0 0 760 215" role="img" aria-labelledby="title desc">
+  <title id="title">Композиция функций: сначала f, потом g</title>
+  <desc id="desc">Число 4 при f(x)=x+2 превращается в 6. Затем при g(x)=3x число 6 превращается в 18.</desc>
+  <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 10 5 0 10Z" fill="#0b7d86"/></marker></defs>
+  <rect width="760" height="215" rx="22" fill="#f0f9fb"/>
+  <text x="38" y="38" fill="#07555c" font-family="Arial,sans-serif" font-size="22" font-weight="700">(g ∘ f)(4) = g(f(4))</text>
+  <path d="M145 116H332M428 116H615" stroke="#0b7d86" stroke-width="4" marker-end="url(#arrow)"/>
+  <g font-family="Arial,sans-serif" font-weight="700" font-size="35" text-anchor="middle"><text x="106" y="126" fill="#302268">4</text><text x="380" y="126" fill="#302268">6</text><text x="665" y="126" fill="#302268">18</text></g>
+  <text x="235" y="91" fill="#07555c" font-family="Arial,sans-serif" font-size="20" text-anchor="middle">f(x) = x + 2</text>
+  <text x="522" y="91" fill="#07555c" font-family="Arial,sans-serif" font-size="20" text-anchor="middle">g(x) = 3x</text>
+  <text x="235" y="158" fill="#5f6e73" font-family="Arial,sans-serif" font-size="16" text-anchor="middle">шаг 1</text>
+  <text x="522" y="158" fill="#5f6e73" font-family="Arial,sans-serif" font-size="16" text-anchor="middle">шаг 2</text>
+  <text x="380" y="190" fill="#5f6e73" font-family="Arial,sans-serif" font-size="16" text-anchor="middle">Читаем справа налево: сначала f, затем g</text>
+</svg>

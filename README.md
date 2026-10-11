@@ -69,6 +69,20 @@ description: Lecture notes for linear algebra.
 
 The `file` path is relative to the project root. `title` and `description` are optional.
 
+## Interactive quizzes
+
+Articles can include single-answer quizzes. `answer` is the one-based number of the correct option; selecting an option reveals feedback and the explanation.
+
+```md
+:::quiz
+question: What is $(g\circ f)(x)$?
+option: $f(g(x))$
+option: $g(f(x))$
+answer: 2
+explanation: Apply $f$ first, then $g$.
+:::
+```
+
 ## Theme, schedule, and install
 
 The header theme button cycles **system → light → dark** (monitor / sun / moon icons). The choice is stored locally. Dark mode uses a plain black background.

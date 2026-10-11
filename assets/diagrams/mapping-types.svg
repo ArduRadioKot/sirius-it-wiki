@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="300" viewBox="0 0 760 300" role="img" aria-labelledby="title desc">
+  <title id="title">Инъекция и отображение с общим образом</title>
+  <desc id="desc">Слева элементы 2 и минус 2 отображаются в 4. Справа три разных элемента отображаются в три разных значения.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 10 5 0 10Z" fill="#0b7d86"/></marker>
+  </defs>
+  <rect width="760" height="300" rx="22" fill="#f0f9fb"/>
+  <text x="36" y="38" fill="#07555c" font-family="Arial,sans-serif" font-size="21" font-weight="700">Два входа → один образ</text>
+  <text x="417" y="38" fill="#07555c" font-family="Arial,sans-serif" font-size="21" font-weight="700">Разные входы → разные образы</text>
+  <line x1="380" y1="25" x2="380" y2="274" stroke="#c8e5e9" stroke-width="2"/>
+  <ellipse cx="112" cy="156" rx="69" ry="93" fill="#fff" stroke="#8bcbd4" stroke-width="2"/>
+  <ellipse cx="277" cy="156" rx="69" ry="93" fill="#fff" stroke="#8bcbd4" stroke-width="2"/>
+  <text x="98" y="81" fill="#5f6e73" font-family="Arial,sans-serif" font-size="15">A</text><text x="263" y="81" fill="#5f6e73" font-family="Arial,sans-serif" font-size="15">B</text>
+  <circle cx="112" cy="128" r="20" fill="#e6e2f6"/><circle cx="112" cy="193" r="20" fill="#e6e2f6"/><circle cx="277" cy="160" r="20" fill="#b7edf0"/>
+  <text x="105" y="135" fill="#302268" font-family="Arial,sans-serif" font-size="20">2</text><text x="98" y="200" fill="#302268" font-family="Arial,sans-serif" font-size="20">−2</text><text x="270" y="167" fill="#07555c" font-family="Arial,sans-serif" font-size="20">4</text>
+  <path d="M133 131 252 155M133 189 252 165" stroke="#0b7d86" stroke-width="3" marker-end="url(#arrow)"/>
+  <ellipse cx="474" cy="156" rx="53" ry="93" fill="#fff" stroke="#8bcbd4" stroke-width="2"/><ellipse cx="679" cy="156" rx="53" ry="93" fill="#fff" stroke="#8bcbd4" stroke-width="2"/>
+  <text x="466" y="81" fill="#5f6e73" font-family="Arial,sans-serif" font-size="15">A</text><text x="671" y="81" fill="#5f6e73" font-family="Arial,sans-serif" font-size="15">B</text>
+  <g fill="#e6e2f6"><circle cx="474" cy="115" r="17"/><circle cx="474" cy="158" r="17"/><circle cx="474" cy="201" r="17"/></g>
+  <g fill="#b7edf0"><circle cx="679" cy="115" r="17"/><circle cx="679" cy="158" r="17"/><circle cx="679" cy="201" r="17"/></g>
+  <g fill="#302268" font-family="Arial,sans-serif" font-size="17" text-anchor="middle"><text x="474" y="121">1</text><text x="474" y="164">2</text><text x="474" y="207">3</text></g>
+  <g fill="#07555c" font-family="Arial,sans-serif" font-size="17" text-anchor="middle"><text x="679" y="121">a</text><text x="679" y="164">b</text><text x="679" y="207">c</text></g>
+  <path d="M495 115H652M495 158H652M495 201H652" stroke="#0b7d86" stroke-width="3" marker-end="url(#arrow)"/>
+  <text x="38" y="278" fill="#5f6e73" font-family="Arial,sans-serif" font-size="15">Не инъекция: образ 4 имеет два прообраза</text>
+  <text x="418" y="278" fill="#5f6e73" font-family="Arial,sans-serif" font-size="15">Биекция: каждому выходу соответствует один вход</text>
+</svg>

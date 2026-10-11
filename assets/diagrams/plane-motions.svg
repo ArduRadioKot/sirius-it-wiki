@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="250" viewBox="0 0 760 250" role="img" aria-labelledby="title desc">
+  <title id="title">Примеры движений плоскости</title>
+  <desc id="desc">Схемы параллельного переноса, поворота и отражения одинакового треугольника.</desc>
+  <rect width="760" height="250" rx="22" fill="#f0f9fb"/>
+  <path d="M253 22V226M506 22V226" stroke="#c8e5e9" stroke-width="2"/>
+  <g fill="#07555c" font-family="Arial,sans-serif" font-size="19" font-weight="700" text-anchor="middle"><text x="126" y="39">Перенос</text><text x="380" y="39">Поворот</text><text x="633" y="39">Отражение</text></g>
+  <g fill="#e6e2f6" stroke="#7e6fc6" stroke-width="3"><path d="M38 171 103 171 58 108Z"/><path d="M290 171 355 171 310 108Z"/><path d="M540 171 605 171 560 108Z"/></g>
+  <g fill="#b7edf0" stroke="#0b7d86" stroke-width="3"><path d="M130 171 195 171 150 108Z"/><path d="M425 99 425 164 362 119Z"/><path d="M714 171 649 171 694 108Z"/></g>
+  <path d="M105 92H150" stroke="#0b7d86" stroke-width="2" stroke-dasharray="5 5"/>
+  <path d="M343 89 Q390 64 420 89" fill="none" stroke="#0b7d86" stroke-width="2" stroke-dasharray="5 5"/>
+  <path d="M627 77V188" stroke="#0b7d86" stroke-width="2" stroke-dasharray="5 5"/>
+  <g fill="#5f6e73" font-family="Arial,sans-serif" font-size="15" text-anchor="middle"><text x="126" y="213">Сдвиг без изменения формы</text><text x="380" y="213">Вращение вокруг точки</text><text x="633" y="213">Зеркальная ось</text></g>
+</svg>
