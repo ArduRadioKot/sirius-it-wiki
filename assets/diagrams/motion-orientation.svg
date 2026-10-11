@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="270" viewBox="0 0 760 270" role="img" aria-labelledby="title desc">
+  <title id="title">Движения первого и второго рода</title>
+  <desc id="desc">Первый треугольник и его сдвинутый образ имеют одинаковый порядок обхода вершин. У зеркального образа порядок обхода противоположный.</desc>
+  <rect width="760" height="270" rx="22" fill="#f0f9fb"/>
+  <path d="M253 25V245M506 25V245" stroke="#c8e5e9" stroke-width="2"/>
+  <g fill="#07555c" font-family="Arial,sans-serif" font-size="18" font-weight="700" text-anchor="middle">
+    <text x="126" y="41">Исходный</text><text x="380" y="41">Первый род</text><text x="633" y="41">Второй род</text>
+  </g>
+  <path d="M75 181 177 181 115 88Z" fill="#e6e2f6" stroke="#7e6fc6" stroke-width="3"/>
+  <path d="M328 181 430 181 368 88Z" fill="#b7edf0" stroke="#0b7d86" stroke-width="3"/>
+  <path d="M684 181 582 181 644 88Z" fill="#f7dfe8" stroke="#bc5d83" stroke-width="3"/>
+  <g fill="#173c43" font-family="Arial,sans-serif" font-size="17" font-weight="700">
+    <text x="57" y="202">A</text><text x="177" y="202">B</text><text x="108" y="79">C</text>
+    <text x="310" y="202">A′</text><text x="429" y="202">B′</text><text x="360" y="79">C′</text>
+    <text x="684" y="202">A′</text><text x="562" y="202">B′</text><text x="638" y="79">C′</text>
+  </g>
+  <g fill="#536d73" font-family="Arial,sans-serif" font-size="15" text-anchor="middle">
+    <text x="126" y="232">A → B → C: против часовой</text>
+    <text x="380" y="232">Ориентация сохранена</text>
+    <text x="633" y="232">Ориентация изменилась</text>
+  </g>
+</svg>

@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="340" viewBox="0 0 760 340" role="img" aria-labelledby="title desc">
+  <title id="title">Центральная симметрия относительно точки O</title>
+  <desc id="desc">Точка O является серединой отрезков MM штрих и NN штрих. Треугольники OMN и OM штрих N штрих равны.</desc>
+  <rect width="760" height="340" rx="22" fill="#f0f9fb"/>
+  <path d="M220 80 300 250 380 170Z" fill="#e6e2f6" stroke="#7e6fc6" stroke-width="3"/>
+  <path d="M540 260 460 90 380 170Z" fill="#b7edf0" stroke="#0b7d86" stroke-width="3"/>
+  <path d="M220 80 540 260M300 250 460 90" stroke="#46666c" stroke-width="2" stroke-dasharray="6 6"/>
+  <circle cx="380" cy="170" r="7" fill="#07555c"/>
+  <g fill="#7e6fc6"><circle cx="220" cy="80" r="5"/><circle cx="300" cy="250" r="5"/></g>
+  <g fill="#0b7d86"><circle cx="540" cy="260" r="5"/><circle cx="460" cy="90" r="5"/></g>
+  <g fill="#173c43" font-family="Arial,sans-serif" font-size="22" font-weight="700">
+    <text x="190" y="72">M</text><text x="265" y="280">N</text><text x="360" y="200">O</text><text x="548" y="284">M′</text><text x="466" y="79">N′</text>
+  </g>
+  <g fill="#536d73" font-family="Arial,sans-serif" font-size="17" text-anchor="middle">
+    <text x="380" y="39">OM = OM′, ON = ON′</text>
+    <text x="380" y="315">Поворот на 180° вокруг O</text>
+  </g>
+</svg>
