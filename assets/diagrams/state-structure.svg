@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="790" height="310" viewBox="0 0 790 310" role="img" aria-labelledby="title desc">
+  <title id="title">Формы государственного устройства</title>
+  <desc id="desc">Унитарное государство: один центр и административные единицы. Федерация: центр и субъекты со своими органами и разграничением полномочий. Конфедерация: независимые государства объединяются по договору для общих задач.</desc>
+  <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 10 5 0 10Z" fill="#0b7d86"/></marker>
+  <marker id="arrowv" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 10 5 0 10Z" fill="#7e6fc6"/></marker></defs>
+  <rect width="790" height="310" rx="22" fill="#f0f9fb"/>
+  <text x="140.0" y="44.0" fill="#07555c" font-family="Arial,sans-serif" font-size="20" font-weight="700" text-anchor="middle">Унитарное</text>
+  <text x="140.0" y="66.0" fill="#5f6e73" font-family="Arial,sans-serif" font-size="14" text-anchor="middle">единый центр власти</text>
+  <text x="400.0" y="44.0" fill="#07555c" font-family="Arial,sans-serif" font-size="20" font-weight="700" text-anchor="middle">Федерация</text>
+  <text x="400.0" y="66.0" fill="#5f6e73" font-family="Arial,sans-serif" font-size="14" text-anchor="middle">два уровня власти</text>
+  <text x="660.0" y="44.0" fill="#07555c" font-family="Arial,sans-serif" font-size="20" font-weight="700" text-anchor="middle">Конфедерация</text>
+  <text x="660.0" y="66.0" fill="#5f6e73" font-family="Arial,sans-serif" font-size="14" text-anchor="middle">союз суверенных государств</text>
+  <rect x="70" y="90" width="140" height="46" rx="14" fill="#d6f1f5" stroke="#0b7d86" stroke-width="2"/>
+  <text x="140.0" y="119.0" fill="#07555c" font-family="Arial,sans-serif" font-size="17" font-weight="700" text-anchor="middle">Центр</text>
+  <rect x="40" y="190" width="60" height="40" rx="10" fill="#ffffff" stroke="#8bcbd4" stroke-width="2"/>
+  <text x="70.0" y="216.0" fill="#333333" font-family="Arial,sans-serif" font-size="14" font-weight="700" text-anchor="middle">АТЕ</text>
+  <path d="M140.0 136.0 70.0 188.0" stroke="#0b7d86" stroke-width="2" fill="none" stroke-linecap="round" marker-end="url(#arrow)"/>
+  <rect x="110" y="190" width="60" height="40" rx="10" fill="#ffffff" stroke="#8bcbd4" stroke-width="2"/>
+  <text x="140.0" y="216.0" fill="#333333" font-family="Arial,sans-serif" font-size="14" font-weight="700" text-anchor="middle">АТЕ</text>
+  <path d="M140.0 136.0 140.0 188.0" stroke="#0b7d86" stroke-width="2" fill="none" stroke-linecap="round" marker-end="url(#arrow)"/>
+  <rect x="180" y="190" width="60" height="40" rx="10" fill="#ffffff" stroke="#8bcbd4" stroke-width="2"/>
+  <text x="210.0" y="216.0" fill="#333333" font-family="Arial,sans-serif" font-size="14" font-weight="700" text-anchor="middle">АТЕ</text>
+  <path d="M140.0 136.0 210.0 188.0" stroke="#0b7d86" stroke-width="2" fill="none" stroke-linecap="round" marker-end="url(#arrow)"/>
+  <text x="140.0" y="262.0" fill="#5f6e73" font-family="Arial,sans-serif" font-size="13" text-anchor="middle">единые законы, гражданство,</text>
+  <text x="140.0" y="280.0" fill="#5f6e73" font-family="Arial,sans-serif" font-size="13" text-anchor="middle">суд и финансы</text>
+  <rect x="330" y="90" width="140" height="46" rx="14" fill="#d6f1f5" stroke="#0b7d86" stroke-width="2"/>
+  <text x="400.0" y="119.0" fill="#07555c" font-family="Arial,sans-serif" font-size="17" font-weight="700" text-anchor="middle">Федерация</text>
+  <rect x="300" y="190" width="60" height="40" rx="10" fill="#e6e2f6" stroke="#7e6fc6" stroke-width="2"/>
+  <text x="330.0" y="216.0" fill="#302268" font-family="Arial,sans-serif" font-size="13" font-weight="700" text-anchor="middle">субъект</text>
+  <path d="M360 142 330 186" stroke="#0b7d86" stroke-width="2" fill="none" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
+  <rect x="370" y="190" width="60" height="40" rx="10" fill="#e6e2f6" stroke="#7e6fc6" stroke-width="2"/>
+  <text x="400.0" y="216.0" fill="#302268" font-family="Arial,sans-serif" font-size="13" font-weight="700" text-anchor="middle">субъект</text>
+  <path d="M400 142 400 186" stroke="#0b7d86" stroke-width="2" fill="none" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
+  <rect x="440" y="190" width="60" height="40" rx="10" fill="#e6e2f6" stroke="#7e6fc6" stroke-width="2"/>
+  <text x="470.0" y="216.0" fill="#302268" font-family="Arial,sans-serif" font-size="13" font-weight="700" text-anchor="middle">субъект</text>
+  <path d="M440 142 470 186" stroke="#0b7d86" stroke-width="2" fill="none" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
+  <text x="400.0" y="262.0" fill="#5f6e73" font-family="Arial,sans-serif" font-size="13" text-anchor="middle">разграничение полномочий,</text>
+  <text x="400.0" y="280.0" fill="#5f6e73" font-family="Arial,sans-serif" font-size="13" text-anchor="middle">свои органы у субъектов</text>
+  <rect x="560" y="90" width="60" height="40" rx="10" fill="#e6e2f6" stroke="#7e6fc6" stroke-width="2"/>
+  <text x="590.0" y="116.0" fill="#302268" font-family="Arial,sans-serif" font-size="13" font-weight="700" text-anchor="middle">гос-во</text>
+  <path d="M590.0 130.0 660.0 188.0" stroke="#5f6e73" stroke-width="2" fill="none" stroke-linecap="round" stroke-dasharray="5 5"/>
+  <rect x="630" y="90" width="60" height="40" rx="10" fill="#e6e2f6" stroke="#7e6fc6" stroke-width="2"/>
+  <text x="660.0" y="116.0" fill="#302268" font-family="Arial,sans-serif" font-size="13" font-weight="700" text-anchor="middle">гос-во</text>
+  <path d="M660.0 130.0 660.0 188.0" stroke="#5f6e73" stroke-width="2" fill="none" stroke-linecap="round" stroke-dasharray="5 5"/>
+  <rect x="700" y="90" width="60" height="40" rx="10" fill="#e6e2f6" stroke="#7e6fc6" stroke-width="2"/>
+  <text x="730.0" y="116.0" fill="#302268" font-family="Arial,sans-serif" font-size="13" font-weight="700" text-anchor="middle">гос-во</text>
+  <path d="M730.0 130.0 660.0 188.0" stroke="#5f6e73" stroke-width="2" fill="none" stroke-linecap="round" stroke-dasharray="5 5"/>
+  <rect x="590" y="190" width="140" height="44" rx="14" fill="#ffffff" stroke="#8bcbd4" stroke-width="2"/>
+  <text x="660.0" y="218.0" fill="#333333" font-family="Arial,sans-serif" font-size="14" font-weight="700" text-anchor="middle">общие задачи</text>
+  <text x="660.0" y="262.0" fill="#5f6e73" font-family="Arial,sans-serif" font-size="13" text-anchor="middle">договор, каждый участник</text>
+  <text x="660.0" y="280.0" fill="#5f6e73" font-family="Arial,sans-serif" font-size="13" text-anchor="middle">сохраняет суверенитет</text>
+  <path d="M260.0 30.0 260.0 290.0" stroke="#c8e5e9" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <path d="M520.0 30.0 520.0 290.0" stroke="#c8e5e9" stroke-width="2" fill="none" stroke-linecap="round"/>
+
+</svg>

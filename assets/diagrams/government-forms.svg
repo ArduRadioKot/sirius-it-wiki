@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="390" viewBox="0 0 800 390" role="img" aria-labelledby="title desc">
+  <title id="title">Формы правления</title>
+  <desc id="desc">Схема: монархия делится на абсолютную и ограниченную, ограниченная — на дуалистическую и парламентскую. Республика бывает парламентской, президентской и смешанной. Для каждой формы указаны примеры из лекции.</desc>
+  <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 10 5 0 10Z" fill="#0b7d86"/></marker>
+  <marker id="arrowv" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 10 5 0 10Z" fill="#7e6fc6"/></marker></defs>
+  <rect width="800" height="390" rx="22" fill="#f0f9fb"/>
+  <text x="32.0" y="40.0" fill="#07555c" font-family="Arial,sans-serif" font-size="20" font-weight="700" text-anchor="start">Формы правления</text>
+  <rect x="130" y="66" width="220" height="52" rx="14" fill="#e6e2f6" stroke="#7e6fc6" stroke-width="2"/>
+  <text x="240.0" y="98.0" fill="#302268" font-family="Arial,sans-serif" font-size="19" font-weight="700" text-anchor="middle">Монархия</text>
+  <rect x="470" y="66" width="220" height="52" rx="14" fill="#d6f1f5" stroke="#0b7d86" stroke-width="2"/>
+  <text x="580.0" y="98.0" fill="#07555c" font-family="Arial,sans-serif" font-size="19" font-weight="700" text-anchor="middle">Республика</text>
+  <path d="M190 118 V137.0 H125 V154" stroke="#7e6fc6" stroke-width="2.5" fill="none" marker-end="url(#arrowv)"/>
+  <path d="M290 118 V137.0 H330 V154" stroke="#7e6fc6" stroke-width="2.5" fill="none" marker-end="url(#arrowv)"/>
+  <rect x="26" y="156" width="198" height="58" rx="14" fill="#ffffff" stroke="#8bcbd4" stroke-width="2"/>
+  <text x="125.0" y="182.0" fill="#333333" font-family="Arial,sans-serif" font-size="17" font-weight="700" text-anchor="middle">абсолютная</text>
+  <text x="125.0" y="203.0" fill="#5f6e73" font-family="Arial,sans-serif" font-size="14" text-anchor="middle">Оман, Саудовская Аравия</text>
+  <rect x="244" y="156" width="172" height="58" rx="14" fill="#ffffff" stroke="#8bcbd4" stroke-width="2"/>
+  <text x="330.0" y="191.0" fill="#333333" font-family="Arial,sans-serif" font-size="17" font-weight="700" text-anchor="middle">ограниченная</text>
+  <path d="M300 214 V234.0 H215 V252" stroke="#7e6fc6" stroke-width="2.5" fill="none" marker-end="url(#arrowv)"/>
+  <path d="M360 214 V234.0 H425 V252" stroke="#7e6fc6" stroke-width="2.5" fill="none" marker-end="url(#arrowv)"/>
+  <rect x="126" y="254" width="178" height="58" rx="14" fill="#ffffff" stroke="#8bcbd4" stroke-width="2"/>
+  <text x="215.0" y="280.0" fill="#333333" font-family="Arial,sans-serif" font-size="17" font-weight="700" text-anchor="middle">дуалистическая</text>
+  <text x="215.0" y="301.0" fill="#5f6e73" font-family="Arial,sans-serif" font-size="14" text-anchor="middle">Марокко, Иордания</text>
+  <rect x="320" y="254" width="210" height="58" rx="14" fill="#ffffff" stroke="#8bcbd4" stroke-width="2"/>
+  <text x="425.0" y="280.0" fill="#333333" font-family="Arial,sans-serif" font-size="17" font-weight="700" text-anchor="middle">парламентская</text>
+  <text x="425.0" y="301.0" fill="#5f6e73" font-family="Arial,sans-serif" font-size="14" text-anchor="middle">Великобритания, Япония</text>
+  <rect x="572" y="156" width="206" height="54" rx="14" fill="#ffffff" stroke="#8bcbd4" stroke-width="2"/>
+  <text x="675.0" y="180.0" fill="#333333" font-family="Arial,sans-serif" font-size="17" font-weight="700" text-anchor="middle">парламентская</text>
+  <text x="675.0" y="201.0" fill="#5f6e73" font-family="Arial,sans-serif" font-size="14" text-anchor="middle">Германия, Италия</text>
+  <path d="M548 118 V183 H570" stroke="#0b7d86" stroke-width="2.5" fill="none" marker-end="url(#arrow)"/>
+  <rect x="572" y="222" width="206" height="54" rx="14" fill="#ffffff" stroke="#8bcbd4" stroke-width="2"/>
+  <text x="675.0" y="246.0" fill="#333333" font-family="Arial,sans-serif" font-size="17" font-weight="700" text-anchor="middle">президентская</text>
+  <text x="675.0" y="267.0" fill="#5f6e73" font-family="Arial,sans-serif" font-size="14" text-anchor="middle">США, Бразилия</text>
+  <path d="M548 118 V249 H570" stroke="#0b7d86" stroke-width="2.5" fill="none" marker-end="url(#arrow)"/>
+  <rect x="572" y="288" width="206" height="54" rx="14" fill="#ffffff" stroke="#8bcbd4" stroke-width="2"/>
+  <text x="675.0" y="312.0" fill="#333333" font-family="Arial,sans-serif" font-size="17" font-weight="700" text-anchor="middle">смешанная</text>
+  <text x="675.0" y="333.0" fill="#5f6e73" font-family="Arial,sans-serif" font-size="14" text-anchor="middle">Франция, Португалия</text>
+  <path d="M548 118 V315 H570" stroke="#0b7d86" stroke-width="2.5" fill="none" marker-end="url(#arrow)"/>
+  <text x="400.0" y="366.0" fill="#5f6e73" font-family="Arial,sans-serif" font-size="15" text-anchor="middle">«Монарх царствует, но не правит» — парламентская монархия</text>
+
+</svg>

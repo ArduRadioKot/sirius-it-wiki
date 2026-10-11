@@ -21,7 +21,7 @@
   --text: #1f2a2e;
   --muted: #5f6e73;
   --line: #e1e8ea;
-  --accent: #4bbecf;
+  --accent: #05dbd0;
   --accent-dark: #0b7d86;
   --accent-deep: #07555c;
   --accent-soft: #e0f4f7;
@@ -294,7 +294,7 @@ kbd {
 .page-top h1::selection,
 .article-head h1::selection {
   background: var(--accent);
-  color: #fff;
+  color: #04313a;
 }
 .hero-lead {
   max-width: 720px;
@@ -1895,7 +1895,7 @@ button:disabled {
   --muted: #667075;
   --line: #e0e6e8;
   --outline: #bdbdbd;
-  --accent: #4bbecf;
+  --accent: #05dbd0;
   --accent-dark: #0b7d86;
   --accent-deep: #07555c;
   --accent-soft: #e3f5f8;
@@ -1915,7 +1915,7 @@ button:disabled {
   --muted: #9aa5a8;
   --line: #22292b;
   --outline: #3b4447;
-  --accent: #4bbecf;
+  --accent: #05dbd0;
   --accent-dark: #6dd0de;
   --accent-deep: #a2e3ec;
   --accent-soft: #0e2226;
@@ -2638,7 +2638,7 @@ a:focus-visible .round-arrow .icon {
   width: 82%;
   aspect-ratio: 1;
   border-radius: 50%;
-  background: #7dd3df;
+  background: #05dbd0;
 }
 [data-theme="dark"] .hero-deco-circles {
   background: #232b2e;
@@ -2658,7 +2658,7 @@ a:focus-visible .round-arrow .icon {
   bottom: 20px;
   width: 150px;
   height: 120px;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 150 120' fill='none' stroke='%237dd3df' stroke-width='5'%3E%3Cellipse cx='92' cy='58' rx='62' ry='26' transform='rotate(-32 92 58)'/%3E%3Cellipse cx='100' cy='70' rx='62' ry='26' transform='rotate(-32 100 70)'/%3E%3Cellipse cx='108' cy='82' rx='62' ry='26' transform='rotate(-32 108 82)'/%3E%3C/svg%3E") center / contain no-repeat;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 150 120' fill='none' stroke='%2305dbd0' stroke-width='5'%3E%3Cellipse cx='92' cy='58' rx='62' ry='26' transform='rotate(-32 92 58)'/%3E%3Cellipse cx='100' cy='70' rx='62' ry='26' transform='rotate(-32 100 70)'/%3E%3Cellipse cx='108' cy='82' rx='62' ry='26' transform='rotate(-32 108 82)'/%3E%3C/svg%3E") center / contain no-repeat;
 }
 
 .hero-banner h1,
@@ -2728,7 +2728,7 @@ a:focus-visible .round-arrow .icon {
   transition: box-shadow 0.3s ease;
 }
 .hero-cta:hover {
-  box-shadow: 0 0 0 2px #7dd3df;
+  box-shadow: 0 0 0 2px #05dbd0;
 }
 [data-theme="dark"] .hero-cta {
   background: #fff;
@@ -2737,7 +2737,7 @@ a:focus-visible .round-arrow .icon {
 .hero-chevrons {
   width: 64px;
   height: 40px;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 40' fill='none' stroke='%237dd3df' stroke-width='2' stroke-dasharray='3 3' stroke-linecap='round'%3E%3Cpath d='M4 4l18 16L4 36M22 4l18 16-18 16M40 4l18 16-18 16'/%3E%3C/svg%3E") center / contain no-repeat;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 40' fill='none' stroke='%2305dbd0' stroke-width='2' stroke-dasharray='3 3' stroke-linecap='round'%3E%3Cpath d='M4 4l18 16L4 36M22 4l18 16-18 16M40 4l18 16-18 16'/%3E%3C/svg%3E") center / contain no-repeat;
 }
 
 @media (max-width: 640px) {
@@ -2984,7 +2984,7 @@ a:focus-visible .round-arrow .icon {
 .quiz-option.is-correct .quiz-letter {
   border-color: var(--accent);
   background: var(--accent);
-  color: #fff;
+  color: #04313a;
 }
 .quiz-option.is-incorrect {
   border-color: #d9826f;
@@ -3246,7 +3246,7 @@ a:focus-visible .round-arrow .icon {
   cursor: pointer;
 }
 .review-restart:hover {
-  box-shadow: 0 0 0 2px #7dd3df;
+  box-shadow: 0 0 0 2px #05dbd0;
 }
 .review-theory {
   color: #fff;

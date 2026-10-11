@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="740" height="460" viewBox="0 0 740 460" role="img" aria-labelledby="title desc">
+  <title id="title">От стратегии к конкретному проекту</title>
+  <desc id="desc">Цепочка: стратегия научно-технологического развития, национальные цели, национальные проекты, научные центры и программы, конкретные проекты. Национальные проекты реализуются на федеральном, региональном и муниципальном уровнях.</desc>
+  <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 10 5 0 10Z" fill="#0b7d86"/></marker>
+  <marker id="arrowv" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 10 5 0 10Z" fill="#7e6fc6"/></marker></defs>
+  <rect width="740" height="460" rx="22" fill="#f0f9fb"/>
+  <text x="32.0" y="40.0" fill="#07555c" font-family="Arial,sans-serif" font-size="20" font-weight="700" text-anchor="start">От стратегии к проекту</text>
+  <rect x="40" y="64" width="400" height="58" rx="14" fill="#d6f1f5" stroke="#0b7d86" stroke-width="2"/>
+  <text x="240.0" y="90.0" fill="#07555c" font-family="Arial,sans-serif" font-size="17" font-weight="700" text-anchor="middle">Стратегия НТР</text>
+  <text x="240.0" y="111.0" fill="#5f6e73" font-family="Arial,sans-serif" font-size="14" text-anchor="middle">Указ № 145, 28.02.2024</text>
+  <path d="M240.0 122.0 240.0 140.0" stroke="#0b7d86" stroke-width="2.5" fill="none" stroke-linecap="round" marker-end="url(#arrow)"/>
+  <rect x="40" y="142" width="400" height="58" rx="14" fill="#ffffff" stroke="#8bcbd4" stroke-width="2"/>
+  <text x="240.0" y="168.0" fill="#333333" font-family="Arial,sans-serif" font-size="17" font-weight="700" text-anchor="middle">Национальные цели</text>
+  <text x="240.0" y="189.0" fill="#5f6e73" font-family="Arial,sans-serif" font-size="14" text-anchor="middle">Указ № 309, до 2030 года</text>
+  <path d="M240.0 200.0 240.0 218.0" stroke="#0b7d86" stroke-width="2.5" fill="none" stroke-linecap="round" marker-end="url(#arrow)"/>
+  <rect x="40" y="220" width="400" height="58" rx="14" fill="#ffffff" stroke="#8bcbd4" stroke-width="2"/>
+  <text x="240.0" y="246.0" fill="#333333" font-family="Arial,sans-serif" font-size="17" font-weight="700" text-anchor="middle">Национальные проекты</text>
+  <text x="240.0" y="267.0" fill="#5f6e73" font-family="Arial,sans-serif" font-size="14" text-anchor="middle">19 проектов, 2025–2030</text>
+  <path d="M240.0 278.0 240.0 296.0" stroke="#0b7d86" stroke-width="2.5" fill="none" stroke-linecap="round" marker-end="url(#arrow)"/>
+  <rect x="40" y="298" width="400" height="58" rx="14" fill="#ffffff" stroke="#8bcbd4" stroke-width="2"/>
+  <text x="240.0" y="324.0" fill="#333333" font-family="Arial,sans-serif" font-size="17" font-weight="700" text-anchor="middle">Научные центры и программы</text>
+  <text x="240.0" y="345.0" fill="#5f6e73" font-family="Arial,sans-serif" font-size="14" text-anchor="middle">например, университет «Сириус»</text>
+  <path d="M240.0 356.0 240.0 374.0" stroke="#0b7d86" stroke-width="2.5" fill="none" stroke-linecap="round" marker-end="url(#arrow)"/>
+  <rect x="40" y="376" width="400" height="58" rx="14" fill="#d6f1f5" stroke="#0b7d86" stroke-width="2"/>
+  <text x="240.0" y="402.0" fill="#07555c" font-family="Arial,sans-serif" font-size="17" font-weight="700" text-anchor="middle">Конкретные проекты</text>
+  <text x="240.0" y="423.0" fill="#5f6e73" font-family="Arial,sans-serif" font-size="14" text-anchor="middle">исследования и разработки</text>
+  <text x="600.0" y="80.0" fill="#07555c" font-family="Arial,sans-serif" font-size="17" font-weight="700" text-anchor="middle">Уровни реализации</text>
+  <rect x="500" y="100" width="200" height="58" rx="14" fill="#e6e2f6" stroke="#7e6fc6" stroke-width="2"/>
+  <text x="600.0" y="126.0" fill="#302268" font-family="Arial,sans-serif" font-size="16" font-weight="700" text-anchor="middle">федеральный</text>
+  <text x="600.0" y="147.0" fill="#5f6e73" font-family="Arial,sans-serif" font-size="14" text-anchor="middle">задаёт цели и показатели</text>
+  <path d="M600.0 158.0 600.0 190.0" stroke="#7e6fc6" stroke-width="2.5" fill="none" stroke-linecap="round" marker-end="url(#arrowv)"/>
+  <rect x="500" y="192" width="200" height="58" rx="14" fill="#e6e2f6" stroke="#7e6fc6" stroke-width="2"/>
+  <text x="600.0" y="218.0" fill="#302268" font-family="Arial,sans-serif" font-size="16" font-weight="700" text-anchor="middle">региональный</text>
+  <text x="600.0" y="239.0" fill="#5f6e73" font-family="Arial,sans-serif" font-size="14" text-anchor="middle">адаптирует к региону</text>
+  <path d="M600.0 250.0 600.0 282.0" stroke="#7e6fc6" stroke-width="2.5" fill="none" stroke-linecap="round" marker-end="url(#arrowv)"/>
+  <rect x="500" y="284" width="200" height="58" rx="14" fill="#e6e2f6" stroke="#7e6fc6" stroke-width="2"/>
+  <text x="600.0" y="310.0" fill="#302268" font-family="Arial,sans-serif" font-size="16" font-weight="700" text-anchor="middle">муниципальный</text>
+  <text x="600.0" y="331.0" fill="#5f6e73" font-family="Arial,sans-serif" font-size="14" text-anchor="middle">мероприятия и графики</text>
+
+</svg>

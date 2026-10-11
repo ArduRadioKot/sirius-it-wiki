@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="770" height="380" viewBox="0 0 770 380" role="img" aria-labelledby="title desc">
+  <title id="title">Как кризис стал мировой войной</title>
+  <desc id="desc">Цепочка: напряжённая международная система, локальный кризис на Балканах, союзные обязательства, мобилизация, взаимное ускорение, большая война 1914–1918 годов.</desc>
+  <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 10 5 0 10Z" fill="#0b7d86"/></marker>
+  <marker id="arrowv" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 10 5 0 10Z" fill="#7e6fc6"/></marker></defs>
+  <rect width="770" height="380" rx="22" fill="#f0f9fb"/>
+  <text x="32.0" y="40.0" fill="#07555c" font-family="Arial,sans-serif" font-size="20" font-weight="700" text-anchor="start">От кризиса к мировой войне</text>
+  <rect x="40" y="70" width="320" height="62" rx="14" fill="#ffffff" stroke="#8bcbd4" stroke-width="2"/>
+  <text x="200.0" y="98.0" fill="#333333" font-family="Arial,sans-serif" font-size="17" font-weight="700" text-anchor="middle">Напряжённая система держав</text>
+  <text x="200.0" y="119.0" fill="#5f6e73" font-family="Arial,sans-serif" font-size="14" text-anchor="middle">накопленные противоречия</text>
+  <rect x="410" y="70" width="320" height="62" rx="14" fill="#ffffff" stroke="#8bcbd4" stroke-width="2"/>
+  <text x="570.0" y="98.0" fill="#333333" font-family="Arial,sans-serif" font-size="17" font-weight="700" text-anchor="middle">Локальный кризис</text>
+  <text x="570.0" y="119.0" fill="#5f6e73" font-family="Arial,sans-serif" font-size="14" text-anchor="middle">Балканы и Сербия</text>
+  <rect x="40" y="170" width="320" height="62" rx="14" fill="#ffffff" stroke="#8bcbd4" stroke-width="2"/>
+  <text x="200.0" y="198.0" fill="#333333" font-family="Arial,sans-serif" font-size="17" font-weight="700" text-anchor="middle">Союзные обязательства</text>
+  <text x="200.0" y="219.0" fill="#5f6e73" font-family="Arial,sans-serif" font-size="14" text-anchor="middle">в конфликт втягиваются союзники</text>
+  <rect x="410" y="170" width="320" height="62" rx="14" fill="#ffffff" stroke="#8bcbd4" stroke-width="2"/>
+  <text x="570.0" y="198.0" fill="#333333" font-family="Arial,sans-serif" font-size="17" font-weight="700" text-anchor="middle">Мобилизация</text>
+  <text x="570.0" y="219.0" fill="#5f6e73" font-family="Arial,sans-serif" font-size="14" text-anchor="middle">сигнал о скорой войне</text>
+  <rect x="40" y="270" width="320" height="62" rx="14" fill="#ffffff" stroke="#8bcbd4" stroke-width="2"/>
+  <text x="200.0" y="298.0" fill="#333333" font-family="Arial,sans-serif" font-size="17" font-weight="700" text-anchor="middle">Взаимное ускорение</text>
+  <text x="200.0" y="319.0" fill="#5f6e73" font-family="Arial,sans-serif" font-size="14" text-anchor="middle">каждый боится опоздать</text>
+  <rect x="410" y="270" width="320" height="62" rx="14" fill="#e6e2f6" stroke="#7e6fc6" stroke-width="2"/>
+  <text x="570.0" y="298.0" fill="#302268" font-family="Arial,sans-serif" font-size="17" font-weight="700" text-anchor="middle">Большая война</text>
+  <text x="570.0" y="319.0" fill="#5f6e73" font-family="Arial,sans-serif" font-size="14" text-anchor="middle">1914–1918</text>
+  <path d="M360.0 101.0 408.0 101.0" stroke="#0b7d86" stroke-width="2.5" fill="none" stroke-linecap="round" marker-end="url(#arrow)"/>
+  <path d="M570 132 V151 H200 V168" stroke="#0b7d86" stroke-width="2.5" fill="none" marker-end="url(#arrow)"/>
+  <path d="M360.0 201.0 408.0 201.0" stroke="#0b7d86" stroke-width="2.5" fill="none" stroke-linecap="round" marker-end="url(#arrow)"/>
+  <path d="M570 232 V251 H200 V268" stroke="#0b7d86" stroke-width="2.5" fill="none" marker-end="url(#arrow)"/>
+  <path d="M360.0 301.0 408.0 301.0" stroke="#0b7d86" stroke-width="2.5" fill="none" stroke-linecap="round" marker-end="url(#arrow)"/>
+
+</svg>

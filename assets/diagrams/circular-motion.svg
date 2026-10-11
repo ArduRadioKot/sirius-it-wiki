@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="780" height="350" viewBox="0 0 780 350" role="img" aria-labelledby="title desc">
+  <title id="title">Равномерное движение по окружности</title>
+  <desc id="desc">Точка движется по окружности радиуса R с угловой скоростью ω. Координаты x = R cos ωt, y = R sin ωt, скорость направлена по касательной и по модулю равна ωR.</desc>
+  <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 10 5 0 10Z" fill="#0b7d86"/></marker>
+  <marker id="arrowv" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 10 5 0 10Z" fill="#7e6fc6"/></marker></defs>
+  <rect width="780" height="350" rx="22" fill="#f0f9fb"/>
+  <text x="32.0" y="40.0" fill="#07555c" font-family="Arial,sans-serif" font-size="20" font-weight="700" text-anchor="start">Движение по окружности</text>
+  <path d="M105.0 205.0 385.0 205.0" stroke="#5f6e73" stroke-width="1.6" fill="none" stroke-linecap="round" marker-end="url(#arrow)"/>
+  <path d="M240.0 330.0 240.0 70.0" stroke="#5f6e73" stroke-width="1.6" fill="none" stroke-linecap="round" marker-end="url(#arrow)"/>
+  <circle cx="240.0" cy="205.0" r="105.0" fill="none" stroke="#8bcbd4" stroke-width="2.5"/>
+  <path d="M240.0 205.0 320.4 137.5" stroke="#7e6fc6" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <path d="M320.4 137.5 320.4 205.0" stroke="#5f6e73" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-dasharray="5 5"/>
+  <path d="M320.4 137.5 240.0 137.5" stroke="#5f6e73" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-dasharray="5 5"/>
+  <path d="M270.0 205.0 A30 30 0 0 0 263.0 185.7" stroke="#0b7d86" stroke-width="2.2" fill="none"/>
+  <text x="285.1" y="194.2" fill="#0b7d86" font-family="Arial,sans-serif" font-size="16" font-weight="700" font-style="italic" text-anchor="middle">ωt</text>
+  <path d="M320.4 137.5 269.0 76.2" stroke="#0b7d86" stroke-width="3.5" fill="none" stroke-linecap="round" marker-end="url(#arrow)"/>
+  <circle cx="320.4" cy="137.5" r="6" fill="#7e6fc6"/>
+  <text x="268.2" y="163.9" fill="#7e6fc6" font-family="Arial,sans-serif" font-size="19" font-weight="700" font-style="italic" text-anchor="middle">R</text>
+  <text x="320.4" y="229.0" fill="#5f6e73" font-family="Arial,sans-serif" font-size="16" font-weight="700" text-anchor="middle">x</text>
+  <text x="222.0" y="142.5" fill="#5f6e73" font-family="Arial,sans-serif" font-size="16" font-weight="700" text-anchor="middle">y</text>
+  <text x="263.0" y="64.2" fill="#0b7d86" font-family="Arial,sans-serif" font-size="19" font-weight="700" text-anchor="middle">v</text>
+  <text x="470.0" y="120.0" fill="#333333" font-family="Arial,sans-serif" font-size="18" text-anchor="start">x(t) = R cos ωt</text>
+  <text x="470.0" y="148.0" fill="#333333" font-family="Arial,sans-serif" font-size="18" text-anchor="start">y(t) = R sin ωt</text>
+  <text x="470.0" y="190.0" fill="#5f6e73" font-family="Arial,sans-serif" font-size="17" text-anchor="start">vₓ = −ωR sin ωt</text>
+  <text x="470.0" y="216.0" fill="#5f6e73" font-family="Arial,sans-serif" font-size="17" text-anchor="start">vᵧ = ωR cos ωt</text>
+  <text x="470.0" y="260.0" fill="#07555c" font-family="Arial,sans-serif" font-size="21" font-weight="700" text-anchor="start">|v| = ωR</text>
+  <text x="470.0" y="284.0" fill="#5f6e73" font-family="Arial,sans-serif" font-size="14" text-anchor="start">скорость направлена по касательной</text>
+
+</svg>

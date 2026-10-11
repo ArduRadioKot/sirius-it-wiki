@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="648" height="444" viewBox="0 0 648 444" role="img" aria-labelledby="title desc">
+  <title id="title">Теорема Дезарга</title>
+  <desc id="desc">Прямые AA₁, BB₁, CC₁ проходят через одну точку O. Тогда точки P, Q, R пересечения соответственных сторон треугольников лежат на одной прямой.</desc>
+  <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 10 5 0 10Z" fill="#0b7d86"/></marker>
+  <marker id="arrowv" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 10 5 0 10Z" fill="#7e6fc6"/></marker></defs>
+  <rect width="648" height="444" rx="22" fill="#f0f9fb"/>
+  <text x="32.0" y="40.0" fill="#07555c" font-family="Arial,sans-serif" font-size="20" font-weight="700" text-anchor="start">Теорема Дезарга</text>
+  <path d="M90.0 158.3 388.4 90.6" stroke="#8bcbd4" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <path d="M90.0 158.3 479.0 89.6" stroke="#8bcbd4" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <path d="M90.0 158.3 506.1 209.1" stroke="#8bcbd4" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <path d="M209.0 131.3 598.6 90.0" stroke="#5f6e73" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-dasharray="5 6"/>
+  <path d="M370.8 94.5 598.6 90.0" stroke="#5f6e73" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-dasharray="5 6"/>
+  <path d="M209.0 131.3 560.9 276.4" stroke="#5f6e73" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-dasharray="5 6"/>
+  <path d="M370.8 94.5 560.9 276.4" stroke="#5f6e73" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-dasharray="5 6"/>
+  <path d="M294.0 122.3 535.0 404.8" stroke="#5f6e73" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-dasharray="5 6"/>
+  <path d="M461.3 92.7 535.0 404.8" stroke="#5f6e73" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-dasharray="5 6"/>
+  <path d="M209.0 131.3 294.0 122.3 352.0 190.3Z" fill="#e6e2f6" stroke="#7e6fc6" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M370.8 94.5 461.3 92.7 488.2 206.9Z" fill="#d6f1f5" stroke="#0b7d86" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M529.0 434.2 604.6 60.6" stroke="#7e6fc6" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <circle cx="598.6" cy="90.0" r="6" fill="#7e6fc6"/>
+  <circle cx="560.9" cy="276.4" r="6" fill="#7e6fc6"/>
+  <circle cx="535.0" cy="404.8" r="6" fill="#7e6fc6"/>
+  <circle cx="90.0" cy="158.3" r="6" fill="#0b7d86"/>
+  <text x="74.0" y="148.9" fill="#0b7d86" font-family="Arial,sans-serif" font-size="19" font-weight="700" font-style="italic" text-anchor="middle">O</text>
+  <text x="193.0" y="121.9" fill="#333333" font-family="Arial,sans-serif" font-size="19" font-weight="700" font-style="italic" text-anchor="middle">A</text>
+  <text x="298.0" y="108.9" fill="#333333" font-family="Arial,sans-serif" font-size="19" font-weight="700" font-style="italic" text-anchor="middle">B</text>
+  <text x="342.0" y="220.9" fill="#333333" font-family="Arial,sans-serif" font-size="19" font-weight="700" font-style="italic" text-anchor="middle">C</text>
+  <text x="364.8" y="79.2" fill="#333333" font-family="Arial,sans-serif" font-size="19" font-weight="700" text-anchor="middle">A₁</text>
+  <text x="475.3" y="77.4" fill="#333333" font-family="Arial,sans-serif" font-size="19" font-weight="700" text-anchor="middle">B₁</text>
+  <text x="514.2" y="219.5" fill="#333333" font-family="Arial,sans-serif" font-size="19" font-weight="700" text-anchor="middle">C₁</text>
+  <text x="618.6" y="82.7" fill="#7e6fc6" font-family="Arial,sans-serif" font-size="19" font-weight="700" font-style="italic" text-anchor="middle">P</text>
+  <text x="582.9" y="279.1" fill="#7e6fc6" font-family="Arial,sans-serif" font-size="19" font-weight="700" font-style="italic" text-anchor="middle">Q</text>
+  <text x="557.0" y="407.4" fill="#7e6fc6" font-family="Arial,sans-serif" font-size="19" font-weight="700" font-style="italic" text-anchor="middle">R</text>
+  <text x="40.0" y="416.0" fill="#7e6fc6" font-family="Arial,sans-serif" font-size="16" font-weight="700" text-anchor="start">P, Q, R лежат на одной прямой</text>
+
+</svg>

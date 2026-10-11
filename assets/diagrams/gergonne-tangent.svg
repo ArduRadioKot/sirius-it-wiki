@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="330" viewBox="0 0 800 330" role="img" aria-labelledby="title desc">
+  <title id="title">Точка Жергона и тангенс</title>
+  <desc id="desc">Слева отрезки от вершин треугольника к точкам касания вписанной окружности пересекаются в точке Жергона G. Справа луч под углом α пересекает прямую x = 1 на высоте tan α.</desc>
+  <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 10 5 0 10Z" fill="#0b7d86"/></marker>
+  <marker id="arrowv" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 10 5 0 10Z" fill="#7e6fc6"/></marker></defs>
+  <rect width="800" height="330" rx="22" fill="#f0f9fb"/>
+  <text x="32.0" y="40.0" fill="#07555c" font-family="Arial,sans-serif" font-size="20" font-weight="700" text-anchor="start">Точка Жергона</text>
+  <text x="530.0" y="40.0" fill="#07555c" font-family="Arial,sans-serif" font-size="20" font-weight="700" text-anchor="start">Тангенс на окружности</text>
+  <path d="M490.0 26.0 490.0 300.0" stroke="#c8e5e9" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <path d="M230.0 64.0 60.0 280.0 420.0 280.0Z" fill="#e6e2f6" stroke="#7e6fc6" stroke-width="3" stroke-linejoin="round"/>
+  <circle cx="233.6" cy="195.7" r="84.3" fill="#ffffff" stroke="#0b7d86" stroke-width="2.5"/>
+  <path d="M230.0 64.0 233.6 280.0" stroke="#0b7d86" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+  <path d="M60.0 280.0 296.9 140.0" stroke="#0b7d86" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+  <path d="M420.0 280.0 167.4 143.6" stroke="#0b7d86" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+  <circle cx="233.6" cy="280.0" r="5" fill="#0b7d86"/>
+  <circle cx="296.9" cy="140.0" r="5" fill="#0b7d86"/>
+  <circle cx="167.4" cy="143.6" r="5" fill="#0b7d86"/>
+  <circle cx="231.9" cy="178.4" r="6" fill="#7e6fc6"/>
+  <text x="245.9" y="173.1" fill="#7e6fc6" font-family="Arial,sans-serif" font-size="19" font-weight="700" font-style="italic" text-anchor="middle">G</text>
+  <text x="229.0" y="48.7" fill="#333333" font-family="Arial,sans-serif" font-size="19" font-weight="700" font-style="italic" text-anchor="middle">A</text>
+  <text x="39.6" y="295.0" fill="#333333" font-family="Arial,sans-serif" font-size="19" font-weight="700" font-style="italic" text-anchor="middle">B</text>
+  <text x="440.5" y="294.7" fill="#333333" font-family="Arial,sans-serif" font-size="19" font-weight="700" font-style="italic" text-anchor="middle">C</text>
+  <text x="233.6" y="310.6" fill="#333333" font-family="Arial,sans-serif" font-size="19" font-weight="700" text-anchor="middle">A₁</text>
+  <text x="320.9" y="140.7" fill="#333333" font-family="Arial,sans-serif" font-size="19" font-weight="700" text-anchor="middle">B₁</text>
+  <text x="143.4" y="144.2" fill="#333333" font-family="Arial,sans-serif" font-size="19" font-weight="700" text-anchor="middle">C₁</text>
+  <path d="M490.0 190.0 740.0 190.0" stroke="#5f6e73" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+  <path d="M600.0 294.0 600.0 76.0" stroke="#5f6e73" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+  <circle cx="600.0" cy="190.0" r="90.0" fill="none" stroke="#8bcbd4" stroke-width="2.5"/>
+  <path d="M690.0 244.0 690.0 77.5" stroke="#0b7d86" stroke-width="2" fill="none" stroke-linecap="round" stroke-dasharray="6 5"/>
+  <path d="M600.0 190.0 701.0 111.1" stroke="#7e6fc6" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <path d="M690.0 190.0 690.0 119.7" stroke="#0b7d86" stroke-width="4" fill="none" stroke-linecap="round"/>
+  <path d="M626.0 190.0 A26 26 0 0 0 620.5 174.0" stroke="#0b7d86" stroke-width="2.2" fill="none"/>
+  <text x="639.7" y="182.3" fill="#0b7d86" font-family="Arial,sans-serif" font-size="17" font-weight="700" font-style="italic" text-anchor="middle">α</text>
+  <circle cx="690.0" cy="119.7" r="5" fill="#7e6fc6"/>
+  <circle cx="690.0" cy="190.0" r="4" fill="#0b7d86"/>
+  <text x="702.0" y="160.8" fill="#0b7d86" font-family="Arial,sans-serif" font-size="17" font-weight="700" text-anchor="start">tan α</text>
+  <text x="700.0" y="212.0" fill="#5f6e73" font-family="Arial,sans-serif" font-size="15" text-anchor="start">1</text>
+  <text x="630.0" y="312.0" fill="#5f6e73" font-family="Arial,sans-serif" font-size="14" text-anchor="middle">x = 1 — линия тангенсов</text>
+
+</svg>

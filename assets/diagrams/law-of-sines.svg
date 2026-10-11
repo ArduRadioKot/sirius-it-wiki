@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="820" height="320" viewBox="0 0 820 320" role="img" aria-labelledby="title desc">
+  <title id="title">Доказательство теоремы синусов</title>
+  <desc id="desc">В описанной окружности проведён диаметр BD. Вписанные углы A и D опираются на дугу BC и равны α, угол BCD прямой, поэтому sin α = a / 2R.</desc>
+  <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 10 5 0 10Z" fill="#0b7d86"/></marker>
+  <marker id="arrowv" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 10 5 0 10Z" fill="#7e6fc6"/></marker></defs>
+  <rect width="820" height="320" rx="22" fill="#f0f9fb"/>
+  <text x="32.0" y="40.0" fill="#07555c" font-family="Arial,sans-serif" font-size="20" font-weight="700" text-anchor="start">a / sin α = 2R</text>
+  <circle cx="250.0" cy="170.0" r="125.0" fill="none" stroke="#8bcbd4" stroke-width="2.5"/>
+  <path d="M228.3 46.9 144.0 236.2 352.4 241.7Z" fill="#e6e2f6" stroke="#7e6fc6" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M144.0 236.2 356.0 103.8" stroke="#0b7d86" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-dasharray="8 6"/>
+  <path d="M352.4 241.7 356.0 103.8" stroke="#0b7d86" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <circle cx="250.0" cy="170.0" r="4" fill="#5f6e73"/>
+  <path d="M339.4 241.4 339.7 228.4 352.7 228.7" stroke="#0b7d86" stroke-width="2" fill="none"/>
+  <path d="M216.1 74.3 A30 30 0 0 0 244.4 72.2" stroke="#0b7d86" stroke-width="2.2" fill="none"/>
+  <path d="M330.6 119.7 A30 30 0 0 0 355.2 133.7" stroke="#0b7d86" stroke-width="2.2" fill="none"/>
+  <text x="231.7" y="99.1" fill="#0b7d86" font-family="Arial,sans-serif" font-size="18" font-weight="700" font-style="italic" text-anchor="middle">α</text>
+  <text x="333.2" y="150.0" fill="#0b7d86" font-family="Arial,sans-serif" font-size="18" font-weight="700" font-style="italic" text-anchor="middle">α</text>
+  <text x="224.5" y="31.9" fill="#333333" font-family="Arial,sans-serif" font-size="19" font-weight="700" font-style="italic" text-anchor="middle">A</text>
+  <text x="125.3" y="254.5" fill="#333333" font-family="Arial,sans-serif" font-size="19" font-weight="700" font-style="italic" text-anchor="middle">B</text>
+  <text x="370.4" y="261.0" fill="#333333" font-family="Arial,sans-serif" font-size="19" font-weight="700" font-style="italic" text-anchor="middle">C</text>
+  <text x="374.7" y="98.8" fill="#333333" font-family="Arial,sans-serif" font-size="19" font-weight="700" font-style="italic" text-anchor="middle">D</text>
+  <text x="246.0" y="197.6" fill="#5f6e73" font-family="Arial,sans-serif" font-size="16" font-weight="700" font-style="italic" text-anchor="middle">O</text>
+  <text x="248.2" y="267.6" fill="#302268" font-family="Arial,sans-serif" font-size="19" font-weight="700" font-style="italic" text-anchor="middle">a</text>
+  <text x="560.0" y="110.0" fill="#333333" font-family="Arial,sans-serif" font-size="17" text-anchor="start">BD — диаметр, BD = 2R</text>
+  <text x="560.0" y="145.0" fill="#333333" font-family="Arial,sans-serif" font-size="17" text-anchor="start">∠BAC = ∠BDC = α</text>
+  <text x="560.0" y="165.0" fill="#5f6e73" font-family="Arial,sans-serif" font-size="14" text-anchor="start">(опираются на дугу BC)</text>
+  <text x="560.0" y="200.0" fill="#333333" font-family="Arial,sans-serif" font-size="17" text-anchor="start">∠BCD = 90°</text>
+  <text x="560.0" y="220.0" fill="#5f6e73" font-family="Arial,sans-serif" font-size="14" text-anchor="start">(опирается на диаметр)</text>
+  <text x="560.0" y="256.0" fill="#07555c" font-family="Arial,sans-serif" font-size="19" font-weight="700" text-anchor="start">sin α = a / 2R</text>
+
+</svg>

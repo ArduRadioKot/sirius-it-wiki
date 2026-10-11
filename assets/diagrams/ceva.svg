@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="336" viewBox="0 0 760 336" role="img" aria-labelledby="title desc">
+  <title id="title">Теорема Чевы</title>
+  <desc id="desc">Три чевианы AA₁, BB₁ и CC₁ треугольника ABC пересекаются в точке M тогда и только тогда, когда произведение отношений отрезков равно единице.</desc>
+  <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 10 5 0 10Z" fill="#0b7d86"/></marker>
+  <marker id="arrowv" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 10 5 0 10Z" fill="#7e6fc6"/></marker></defs>
+  <rect width="760" height="336" rx="22" fill="#f0f9fb"/>
+  <text x="32.0" y="40.0" fill="#07555c" font-family="Arial,sans-serif" font-size="20" font-weight="700" text-anchor="start">Чевианы пересекаются в одной точке</text>
+  <path d="M400.0 80.0 90.0 250.0 640.0 250.0Z" fill="#e6e2f6" stroke="#7e6fc6" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M400.0 80.0 341.4 250.0" stroke="#0b7d86" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <path d="M90.0 250.0 523.9 167.7" stroke="#0b7d86" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <path d="M640.0 250.0 226.8 175.0" stroke="#0b7d86" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <circle cx="359.0" cy="199.0" r="6" fill="#7e6fc6"/>
+  <circle cx="341.4" cy="250.0" r="5" fill="#0b7d86"/>
+  <circle cx="523.9" cy="167.7" r="5" fill="#0b7d86"/>
+  <circle cx="226.8" cy="175.0" r="5" fill="#0b7d86"/>
+  <text x="404.4" y="65.1" fill="#333333" font-family="Arial,sans-serif" font-size="19" font-weight="700" font-style="italic" text-anchor="middle">A</text>
+  <text x="68.4" y="260.9" fill="#333333" font-family="Arial,sans-serif" font-size="19" font-weight="700" font-style="italic" text-anchor="middle">B</text>
+  <text x="661.5" y="261.3" fill="#333333" font-family="Arial,sans-serif" font-size="19" font-weight="700" font-style="italic" text-anchor="middle">C</text>
+  <text x="341.4" y="280.6" fill="#333333" font-family="Arial,sans-serif" font-size="19" font-weight="700" text-anchor="middle">A₁</text>
+  <text x="547.9" y="168.4" fill="#333333" font-family="Arial,sans-serif" font-size="19" font-weight="700" text-anchor="middle">B₁</text>
+  <text x="202.8" y="175.7" fill="#333333" font-family="Arial,sans-serif" font-size="19" font-weight="700" text-anchor="middle">C₁</text>
+  <text x="377.0" y="191.7" fill="#7e6fc6" font-family="Arial,sans-serif" font-size="19" font-weight="700" font-style="italic" text-anchor="middle">M</text>
+  <text x="380.0" y="314.0" fill="#07555c" font-family="Arial,sans-serif" font-size="19" font-weight="700" text-anchor="middle">AC₁/C₁B · BA₁/A₁C · CB₁/B₁A = 1</text>
+
+</svg>
