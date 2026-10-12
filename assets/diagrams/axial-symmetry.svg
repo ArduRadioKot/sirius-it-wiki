@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="300" viewBox="0 0 760 300" role="img" aria-labelledby="title desc">
+  <title id="title">Отражение точек относительно прямой l</title>
+  <desc id="desc">Ось l проходит через середины отрезков MM штрих и NN штрих и перпендикулярна этим отрезкам.</desc>
+  <rect width="760" height="300" rx="22" fill="#f0f9fb"/>
+  <path d="M80 150H680" stroke="#07555c" stroke-width="4"/>
+  <path d="M230 67V233M520 100V200" stroke="#7e6fc6" stroke-width="2" stroke-dasharray="7 6"/>
+  <path d="M230 67 520 100" stroke="#7e6fc6" stroke-width="4"/>
+  <path d="M230 233 520 200" stroke="#0b7d86" stroke-width="4"/>
+  <path d="M230 150h15v15M520 150h15v15" fill="none" stroke="#07555c" stroke-width="2"/>
+  <g fill="#7e6fc6"><circle cx="230" cy="67" r="7"/><circle cx="520" cy="100" r="7"/></g>
+  <g fill="#0b7d86"><circle cx="230" cy="233" r="7"/><circle cx="520" cy="200" r="7"/></g>
+  <g fill="#07555c"><circle cx="230" cy="150" r="5"/><circle cx="520" cy="150" r="5"/></g>
+  <g fill="#173c43" font-family="Arial,sans-serif" font-size="21" font-weight="700">
+    <text x="204" y="58">M</text><text x="530" y="96">N</text><text x="195" y="260">M′</text><text x="530" y="217">N′</text><text x="202" y="143">H</text><text x="541" y="145">K</text><text x="692" y="157">l</text>
+  </g>
+  <g fill="#536d73" font-family="Arial,sans-serif" font-size="16" text-anchor="middle">
+    <text x="380" y="38">MH = HM′, NK = KN′</text>
+    <text x="380" y="280">MN = M′N′</text>
+  </g>
+</svg>

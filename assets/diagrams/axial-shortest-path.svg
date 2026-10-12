@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="330" viewBox="0 0 760 330" role="img" aria-labelledby="title desc">
+  <title id="title">Кратчайший путь через точку на прямой</title>
+  <desc id="desc">Точка M отражена относительно прямой a в M штрих. Прямой отрезок M штрих N пересекает a в искомой точке P.</desc>
+  <rect width="760" height="330" rx="22" fill="#f0f9fb"/>
+  <path d="M70 172H690" stroke="#07555c" stroke-width="4"/>
+  <path d="M150 76 365 172 610 64" fill="none" stroke="#7e6fc6" stroke-width="4"/>
+  <path d="M150 268 365 172 610 64" fill="none" stroke="#0b7d86" stroke-width="4"/>
+  <path d="M150 76V268" stroke="#46666c" stroke-width="2" stroke-dasharray="7 6"/>
+  <g fill="#7e6fc6"><circle cx="150" cy="76" r="7"/><circle cx="610" cy="64" r="7"/></g>
+  <g fill="#0b7d86"><circle cx="150" cy="268" r="7"/></g>
+  <circle cx="365" cy="172" r="7" fill="#07555c"/>
+  <g fill="#173c43" font-family="Arial,sans-serif" font-size="21" font-weight="700">
+    <text x="124" y="66">M</text><text x="118" y="296">M′</text><text x="620" y="62">N</text><text x="372" y="163">P</text><text x="696" y="180">a</text>
+  </g>
+  <g fill="#536d73" font-family="Arial,sans-serif" font-size="16" text-anchor="middle">
+    <text x="380" y="38">MP = M′P</text>
+    <text x="380" y="314">MP + PN = M′N в точке минимума</text>
+  </g>
+</svg>

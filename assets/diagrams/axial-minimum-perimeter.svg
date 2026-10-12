@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="340" viewBox="0 0 760 340" role="img" aria-labelledby="title desc">
+  <title id="title">Треугольник наименьшего периметра через отражение</title>
+  <desc id="desc">Точка A внутри острого угла отражается относительно его сторон в A один и A два. Прямой отрезок между отраженными точками проходит через B и C на сторонах угла.</desc>
+  <rect width="760" height="340" rx="22" fill="#f0f9fb"/>
+  <path d="M380 283 271 65M380 283 489 65" fill="none" stroke="#07555c" stroke-width="3"/>
+  <path d="M380 182 350 222 410 222Z" fill="#e6e2f6" stroke="#7e6fc6" stroke-width="3"/>
+  <path d="M299 222H461" fill="none" stroke="#0b7d86" stroke-width="5"/>
+  <path d="M380 182 299 222M380 182 461 222" fill="none" stroke="#7e6fc6" stroke-width="2" stroke-dasharray="6 6"/>
+  <g fill="#0b7d86"><circle cx="299" cy="222" r="6"/><circle cx="461" cy="222" r="6"/></g>
+  <g fill="#173c43" font-family="Arial,sans-serif" font-size="20" font-weight="700">
+    <text x="366" y="172">A</text><text x="325" y="247">B</text><text x="413" y="247">C</text><text x="264" y="214">A₁</text><text x="470" y="214">A₂</text><text x="386" y="300">O</text>
+  </g>
+  <g fill="#536d73" font-family="Arial,sans-serif" font-size="16" text-anchor="middle">
+    <text x="380" y="38">A₁–B–C–A₂ лежат на одной прямой</text>
+    <text x="380" y="324">AB + BC + CA = A₁A₂</text>
+  </g>
+</svg>
