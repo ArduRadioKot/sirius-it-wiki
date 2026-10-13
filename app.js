@@ -445,8 +445,7 @@ async function loadIndex() {
   }
 }
 
-const ROUND_ARROW = '<span class="round-arrow" aria-hidden="true"><span class="icon icon-arrow-sirius"></span></span>';
-const TILE_ART = ["21", "23", "26", "22", "24"];
+const ROW_ARROW = '<span class="row-arrow" aria-hidden="true"><span class="icon icon-arrow-right"></span></span>';
 
 function home() {
   // Newest dated notes first; notes without a confirmed date never count as "latest".
@@ -455,38 +454,34 @@ function home() {
     .sort((a, b) => b.day.localeCompare(a.day) || a.title.localeCompare(b.title, "ru"))
     .slice(0, 6);
   app.innerHTML = `
-    <section class="hero">
-      <div class="hero-banner">
-        <span class="hero-deco hero-deco-circles" aria-hidden="true"></span>
-        <span class="hero-deco hero-deco-plus" aria-hidden="true"></span>
-        <span class="hero-deco hero-deco-rings" aria-hidden="true"></span>
-        <h1><span>Университет</span> <span>Сириус</span></h1>
-        <p class="hero-tagline">Вики про учёбу и жизнь</p>
-        <p class="hero-text">Инструкции, конспекты, полезные места и ответы на вопросы, которые обычно приходится искать в чатах.</p>
-        <div class="hero-actions"><a class="hero-cta" href="#/schedule">Открыть расписание</a><span class="hero-chevrons" aria-hidden="true"></span></div>
-      </div>
-      <a class="section-card study" href="#/study">
-        <img class="card-art" src="assets/cards/study.svg" alt="" loading="lazy">
-        <h2>Учёба</h2>${ROUND_ARROW}
-      </a>
-      <a class="section-card life" href="#/life">
-        <img class="card-art" src="assets/cards/campus.png" alt="" loading="lazy">
-        <h2>Жизнь</h2>${ROUND_ARROW}
-      </a>
-    </section>
-    <section class="latest">
-      <div class="section-heading"><h2>Последние материалы</h2><p>${index.articles.length} материалов в учебной базе</p></div>
-      <div class="article-list">${latest.map(tile).join("") || '<div class="empty-state">Пока нет статей.</div>'}</div>
+    <section class="page home-page">
+      <header class="home-intro">
+        <p class="kicker">База знаний студентов</p>
+        <h1>Учёба и жизнь в Университете Сириус</h1>
+        <p class="home-lead">Конспекты, расписание, самопроверка и пошаговые инструкции — то, что обычно приходится искать в чатах.</p>
+        <a class="home-quick" href="#/schedule">Расписание на сегодня<span class="icon icon-arrow-right" aria-hidden="true"></span></a>
+      </header>
+      <nav class="home-sections" aria-label="Разделы вики">
+        <a class="home-section" href="#/study">
+          <img class="home-section-art" src="assets/cards/study.svg" alt="" loading="lazy">
+          <span class="home-section-num">01</span>
+          <h2>Учёба</h2>
+          <p>Конспекты по дням и предметам, разборы теорем и тесты для самопроверки.</p>
+          ${ROW_ARROW.replace('class="row-arrow"', 'class="row-arrow home-section-arrow"')}
+        </a>
+        <a class="home-section" href="#/life">
+          <img class="home-section-art" src="assets/cards/campus.png" alt="" loading="lazy">
+          <span class="home-section-num">02</span>
+          <h2>Жизнь</h2>
+          <p>Кампус, документы, транспорт, сервисы и советы тех, кто уже освоился.</p>
+          ${ROW_ARROW.replace('class="row-arrow"', 'class="row-arrow home-section-arrow"')}
+        </a>
+      </nav>
+      <section class="latest">
+        <div class="section-head"><h2>Последние материалы</h2><span class="section-meta">${index.articles.length} в учебной базе</span></div>
+        <div class="entries">${latest.map((x) => entryRow(x)).join("") || '<div class="empty-state">Пока нет статей.</div>'}</div>
+      </section>
     </section>`;
-}
-
-function tile(item, i = 0) {
-  const meta =
-    item.type === "life"
-      ? '<span class="tile-subject">Жизнь</span>'
-      : `<span class="tile-subject">${esc(item.subject || "Другое")}</span><span class="tile-date">${formatDate(item.day)}</span>`;
-  const art = TILE_ART[i % TILE_ART.length];
-  return `<a class="article-tile" href="${routeFor(item)}"><div class="tile-meta">${meta}</div><div class="tile-body"><h3>${esc(item.title)}</h3><p>${esc(item.description || "")}</p></div><div class="tile-foot">${ROUND_ARROW}<img class="tile-art" src="assets/cards/pattern-${art}.svg" alt="" loading="lazy"></div></a>`;
 }
 
 function lifePage() {
@@ -576,7 +571,7 @@ function studyPage({ day = null, subject = null, view = "day" } = {}) {
           .join("");
 
   app.innerHTML = `<section class="page"><div class="page-top"><div><span class="eyebrow">Раздел 01</span><h1>Учёба</h1></div><p class="page-description">Конспекты и учебные материалы по дням и предметам. Выберите нужную дату или дисциплину в списке.</p></div>
-  <a class="study-review" href="#/study/review"><img class="study-review-art" src="assets/cards/pattern-23.svg" alt="" loading="lazy"><div class="study-review-text"><span class="study-review-title">Самопроверка</span><p>Короткие тесты по конспектам с разбором каждого ответа</p><span class="study-review-meta">${questionsLabel(questionCount)} · ${subjectCount} ${plural(subjectCount, "предмет", "предмета", "предметов")}</span></div>${ROUND_ARROW}</a>
+  <a class="study-review" href="#/study/review"><img class="study-review-art" src="assets/cards/pattern-23.svg" alt="" loading="lazy"><div class="study-review-text"><span class="study-review-title">Самопроверка</span><p>Короткие тесты по конспектам с разбором каждого ответа</p><span class="study-review-meta">${questionsLabel(questionCount)} · ${subjectCount} ${plural(subjectCount, "предмет", "предмета", "предметов")}</span></div>${ROW_ARROW}</a>
   <div class="study-switch" role="group" aria-label="Способ сортировки"><button type="button" class="study-switch-button ${studyView === "day" ? "active" : ""}" aria-pressed="${studyView === "day"}" data-view="day">По дням</button><button type="button" class="study-switch-button ${studyView === "subject" ? "active" : ""}" aria-pressed="${studyView === "subject"}" data-view="subject">По предметам</button></div>
   <div class="content-layout"><aside class="sidebar"><p class="sidebar-title">${studyView === "subject" ? "По предметам" : "По дням"}</p>${sidebarItems}</aside><div class="entries">${items.map((x) => entryRow(x, studyView)).join("") || '<div class="empty-state">Пока нет учебных материалов.</div>'}</div></div></section>`;
 
@@ -712,10 +707,21 @@ function notFound() {
     '<section class="article-page"><h1>404</h1><p>Такой страницы нет.</p><p><a class="back-link" href="#/"><span class="icon icon-arrow-left" aria-hidden="true"></span>На главную</a></p></section>';
 }
 
+function markActiveNav(section) {
+  document
+    .querySelectorAll(".desktop-nav a, .mobile-menu a")
+    .forEach((a) => {
+      const target = a.getAttribute("href")?.slice(2) || "";
+      if (target && target === section) a.setAttribute("aria-current", "page");
+      else a.removeAttribute("aria-current");
+    });
+}
+
 async function router() {
   const raw = location.hash.slice(1) || "/";
   const [path, qs] = raw.split("?");
   const parts = path.split("/").filter(Boolean).map(safeDecode);
+  markActiveNav(parts[0] || "");
 
   // The schedule lives in its own module, so it opens without waiting for the article index.
   if (parts[0] !== "schedule") await indexReady;
