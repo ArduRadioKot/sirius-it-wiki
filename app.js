@@ -736,6 +736,10 @@ async function router() {
       view: p.get("view") || (p.get("subject") ? "subject" : "day"),
     });
   } else if (parts[0] === "study" && parts[1] && parts[2]) {
+    if (parts[1] === "2026-10-10" && parts[2] === "plane-motions-and-mappings") {
+      location.hash = "#/study/2026-10-14/plane-motions-and-mappings";
+      return;
+    }
     await articlePage(
       index.articles.find((x) => x.day === parts[1] && x.slug === parts[2]),
     );

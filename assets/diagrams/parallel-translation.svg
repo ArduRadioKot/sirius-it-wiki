@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="300" viewBox="0 0 760 300" role="img" aria-labelledby="title desc">
+  <title id="title">Параллельный перенос точек A и B</title>
+  <desc id="desc">Отрезок AB переносится в A штрих B штрих. Векторы AA штрих и BB штрих равны.</desc>
+  <rect width="760" height="300" rx="22" fill="#f0f9fb"/>
+  <path d="M120 215 320 215 540 105 340 105Z" fill="#e6e2f6" stroke="#7e6fc6" stroke-width="3"/>
+  <path d="M120 215 340 105M320 215 540 105" stroke="#0b7d86" stroke-width="4" marker-end="url(#arrow)"/>
+  <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10Z" fill="#0b7d86"/></marker></defs>
+  <g fill="#173c43" font-family="Arial,sans-serif" font-size="21" font-weight="700">
+    <text x="93" y="238">A</text><text x="319" y="240">B</text><text x="319" y="91">A′</text><text x="548" y="111">B′</text>
+  </g>
+  <g fill="#536d73" font-family="Arial,sans-serif" font-size="18" text-anchor="middle">
+    <text x="380" y="40">Обе точки сдвинуты на один вектор v</text>
+    <text x="380" y="277">AA′ = BB′ = v, AB = A′B′</text>
+  </g>
+</svg>

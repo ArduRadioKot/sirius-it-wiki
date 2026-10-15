@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="310" viewBox="0 0 760 310" role="img" aria-labelledby="title desc">
+  <title id="title">Вспомогательный треугольник для построения трапеции</title>
+  <desc id="desc">В трапеции ABCD на основании AB отмечена E с AE равным разности оснований. Треугольник AED имеет стороны c, d и a минус b.</desc>
+  <rect width="760" height="310" rx="22" fill="#f0f9fb"/>
+  <path d="M110 246 610 246 475 100 265 100Z" fill="#e6e2f6" stroke="#7e6fc6" stroke-width="3"/>
+  <path d="M110 246 400 246 265 100Z" fill="#b7edf0" stroke="#0b7d86" stroke-width="3"/>
+  <path d="M400 246 265 100M610 246 475 100" stroke="#07555c" stroke-width="3" stroke-dasharray="7 6"/>
+  <g fill="#173c43" font-family="Arial,sans-serif" font-size="21" font-weight="700">
+    <text x="86" y="270">A</text><text x="613" y="270">B</text><text x="476" y="90">C</text><text x="244" y="90">D</text><text x="394" y="274">E</text>
+  </g>
+  <g fill="#536d73" font-family="Arial,sans-serif" font-size="17" text-anchor="middle">
+    <text x="380" y="39">AE = a − b, AD = c, ED = d</text>
+    <text x="380" y="298">Перенос на вектор DC переводит E в B</text>
+  </g>
+</svg>
