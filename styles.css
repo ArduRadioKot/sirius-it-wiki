@@ -3399,3 +3399,44 @@ a:focus-visible .round-arrow .icon {
   font-size: 13px;
   line-height: 1.6;
 }
+
+/* Markdown tables */
+.markdown .table-wrap {
+  margin: 1.4em 0;
+  overflow-x: auto;
+  border-radius: 16px;
+  border: 1px solid var(--line);
+}
+.markdown .table-wrap table {
+  display: table;
+  width: 100%;
+  margin: 0;
+  border-collapse: collapse;
+  font-size: 0.95em;
+}
+.markdown .table-wrap th,
+.markdown .table-wrap td {
+  padding: 10px 14px;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  vertical-align: top;
+}
+.markdown .table-wrap th {
+  background: var(--panel);
+  font-weight: 700;
+}
+.markdown .table-wrap tr:last-child td {
+  border-bottom: 0;
+}
+.markdown h4 {
+  margin: 1.6em 0 0.5em;
+  font-size: 18px;
+  line-height: 1.35;
+}
+.markdown h5,
+.markdown h6 {
+  margin: 1.4em 0 0.4em;
+  font-size: 16px;
+  line-height: 1.4;
+}

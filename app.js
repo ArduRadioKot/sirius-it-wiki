@@ -98,7 +98,18 @@ function parseMarkdown(md) {
     codeLang = "",
     codeBuf = [],
     download = null,
-    quiz = null;
+    quiz = null,
+    table = null;
+  const splitRow = (row) => row.trim().replace(/^\|/, "").replace(/\|$/, "").split("|").map((cell) => cell.trim());
+  const flushTable = () => {
+    if (!table) return;
+    const rows = table.map(splitRow);
+    const hasHead = rows.length > 1 && rows[1].every((cell) => /^:?-{2,}:?$/.test(cell));
+    const head = hasHead ? `<thead><tr>${rows[0].map((c) => `<th>${inlineMarkdown(c)}</th>`).join("")}</tr></thead>` : "";
+    const body = (hasHead ? rows.slice(2) : rows).map((r) => `<tr>${r.map((c) => `<td>${inlineMarkdown(c)}</td>`).join("")}</tr>`).join("");
+    out += `<div class="table-wrap"><table>${head}<tbody>${body}</tbody></table></div>`;
+    table = null;
+  };
   const flushPara = () => {
     if (para.length) {
       out += `<p>${inlineMarkdown(para.join(" "))}</p>`;
@@ -165,13 +176,20 @@ function parseMarkdown(md) {
       codeBuf.push(line);
       continue;
     }
+    if (/^\s*\|.*\|\s*$/.test(line)) {
+      flushPara();
+      closeList();
+      (table ||= []).push(line);
+      continue;
+    }
+    flushTable();
     if (!line.trim()) {
       flushPara();
       closeList();
       continue;
     }
     let m;
-    if ((m = line.match(/^(#{1,3})\s+(.+)$/))) {
+    if ((m = line.match(/^(#{1,6})\s+(.+)$/))) {
       flushPara();
       closeList();
       const n = m[1].length;
@@ -213,6 +231,7 @@ function parseMarkdown(md) {
     para.push(line.trim());
   }
 
+  flushTable();
   flushPara();
   closeList();
   if (code) out += `<pre><code>${esc(codeBuf.join("\n"))}</code></pre>`;
