@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="425" viewBox="0 0 1000 425" role="img" aria-labelledby="title desc">
+  <title id="title">Поворот двух вписанных правильных треугольников</title>
+  <desc id="desc">Два правильных треугольника вписаны в общую окружность и имеют одинаковое направление обхода. Пересечения пар соответствующих сторон образуют третий правильный треугольник; поворот на 120 градусов переводит эти пересечения друг в друга.</desc>
+  <defs><style>.t{font:700 24px Arial,sans-serif;fill:#173c43}.h{font:700 18px Arial,sans-serif;fill:#173c43}.s{font:16px Arial,sans-serif;fill:#546e74}.v{font:700 17px Arial,sans-serif;fill:#173c43}</style></defs>
+  <rect width="1000" height="425" rx="24" fill="#f0f9fb"/>
+  <text x="40" y="43" class="t">Задача 1 · общий поворот на 120°</text>
+  <rect x="30" y="65" width="465" height="330" rx="18" fill="#fff" stroke="#d8e9ed"/>
+  <circle cx="270" cy="210" r="160" fill="none" stroke="#b7cbd1" stroke-width="2"/>
+  <path d="M270 370 408.6 130 131.4 130Z" fill="#d7f0ed" fill-opacity=".32" stroke="#16909b" stroke-width="3"/>
+  <path d="M350 348.6 350 71.4 110 210Z" fill="#e5dff3" fill-opacity=".22" stroke="#8c71bf" stroke-width="3"/>
+  <path d="M248.6 130 211.4 268.6 350 231.4Z" fill="#ffe2bd" fill-opacity=".45" stroke="#df8b39" stroke-width="3.5"/>
+  <g fill="#173c43">
+    <circle cx="270" cy="210" r="4"/><circle cx="248.6" cy="130" r="5" fill="#df8b39"/><circle cx="211.4" cy="268.6" r="5" fill="#df8b39"/><circle cx="350" cy="231.4" r="5" fill="#df8b39"/>
+    <text x="278" y="208" class="s">O</text><text x="254" y="390" class="v">A</text><text x="414" y="130" class="v">B</text><text x="112" y="119" class="v">C</text>
+    <text x="357" y="358" class="v" fill="#7354a9">A₁</text><text x="355" y="69" class="v" fill="#7354a9">B₁</text><text x="79" y="216" class="v" fill="#7354a9">C₁</text>
+    <text x="236" y="117" class="v" fill="#b66921">A₂</text><text x="180" y="285" class="v" fill="#b66921">B₂</text><text x="358" y="237" class="v" fill="#b66921">C₂</text>
+  </g>
+  <rect x="518" y="65" width="452" height="330" rx="18" fill="#fff" stroke="#d8e9ed"/>
+  <text x="548" y="109" class="h">Одинаковый обход вершин</text>
+  <text x="548" y="141" class="s">A → B → C → A</text>
+  <text x="548" y="171" class="s">A₁ → B₁ → C₁ → A₁</text>
+  <path d="M548 193h375" stroke="#d8e9ed" stroke-width="2"/>
+  <text x="548" y="232" class="h" fill="#b66921">A₂ → B₂ → C₂ → A₂</text>
+  <text x="548" y="267" class="s">Поворот сохраняет пересечение</text>
+  <text x="548" y="293" class="s">соответствующих прямых.</text>
+  <text x="548" y="348" class="h">Три хорды равны → треугольник правильный</text>
+</svg>

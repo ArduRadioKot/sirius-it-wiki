@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="445" viewBox="0 0 1000 445" role="img" aria-labelledby="title desc">
+  <title id="title">Правильный треугольник из двух середин</title>
+  <desc id="desc">На отрезках AB и BC по одну сторону прямой построены правильные треугольники ABM и BCP. K — середина AP, E — середина MC. Поворот вокруг B по часовой стрелке на 60 градусов переводит A в M, P в C и K в E.</desc>
+  <defs><style>.t{font:700 24px Arial,sans-serif;fill:#173c43}.s{font:16px Arial,sans-serif;fill:#546e74}.v{font:700 19px Arial,sans-serif;fill:#173c43}</style></defs>
+  <rect width="1000" height="445" rx="24" fill="#f0f9fb"/>
+  <text x="38" y="42" class="t">Задача 2 · поворот переводит середину в середину</text>
+  <rect x="30" y="65" width="940" height="340" rx="18" fill="#fff" stroke="#d8e9ed"/>
+  <path d="M130 340 390 340 260 115Z" fill="#d7f0ed" fill-opacity=".6" stroke="#16909b" stroke-width="3"/>
+  <path d="M390 340 650 340 520 115Z" fill="#e5dff3" fill-opacity=".6" stroke="#8c71bf" stroke-width="3"/>
+  <path d="M130 340 520 115M260 115 650 340" fill="none" stroke="#9eb5bb" stroke-width="2" stroke-dasharray="8 7"/>
+  <path d="M390 340 325 227.5 455 227.5Z" fill="#ffe2bd" fill-opacity=".7" stroke="#df8b39" stroke-width="3.5"/>
+  <circle cx="325" cy="227.5" r="5" fill="#df8b39"/><circle cx="455" cy="227.5" r="5" fill="#df8b39"/>
+  <g class="v"><text x="112" y="367">A</text><text x="382" y="368">B</text><text x="652" y="367">C</text><text x="247" y="105">M</text><text x="523" y="105">P</text><text x="299" y="218" fill="#b66921">K</text><text x="462" y="218" fill="#b66921">E</text></g>
+  <text x="74" y="391" class="s">ABM и BCP — правильные</text>
+  <text x="685" y="112" class="s">R(B, −60°): A → M, P → C</text>
+  <text x="685" y="142" class="s">Поэтому середина K → E.</text>
+  <text x="685" y="172" class="s">BK = BE, ∠KBE = 60°.</text>
+  <text x="685" y="203" class="s">Значит, BKE — правильный.</text>
+</svg>

@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="425" viewBox="0 0 1000 425" role="img" aria-labelledby="title desc">
+  <title id="title">Медиана прямоугольного треугольника и отражённая гипотенуза</title>
+  <desc id="desc">Прямоугольный треугольник ABC с вершиной C в начале координат отражён относительно биссектрисы y равно x. Медиана CM перпендикулярна отрезку A1B1 отражённого треугольника.</desc>
+  <defs><style>.t{font:700 24px Arial,sans-serif;fill:#173c43}.h{font:700 18px Arial,sans-serif;fill:#173c43}.s{font:16px Arial,sans-serif;fill:#546e74}.v{font:700 18px Arial,sans-serif;fill:#173c43}</style></defs>
+  <rect width="1000" height="425" rx="24" fill="#f0f9fb"/>
+  <text x="40" y="43" class="t">Задача 3 · отражение и перпендикулярность</text>
+  <rect x="30" y="65" width="495" height="330" rx="18" fill="#fff" stroke="#d8e9ed"/>
+  <path d="M150 350 390 350 150 190Z" fill="#d7f0ed" fill-opacity=".5" stroke="#16909b" stroke-width="3"/>
+  <path d="M150 350 310 350 150 110Z" fill="#e5dff3" fill-opacity=".36" stroke="#8c71bf" stroke-width="3"/>
+  <path d="M150 350 390 110" fill="none" stroke="#9eb5bb" stroke-width="2" stroke-dasharray="8 7"/>
+  <path d="M150 350 270 270" fill="none" stroke="#df8b39" stroke-width="4"/>
+  <circle cx="270" cy="270" r="5" fill="#df8b39"/>
+  <g class="v"><text x="125" y="375">C</text><text x="396" y="357">A</text><text x="128" y="180">B</text><text x="132" y="102" fill="#7354a9">A₁</text><text x="313" y="369" fill="#7354a9">B₁</text><text x="278" y="266" fill="#b66921">M</text></g>
+  <text x="405" y="125" class="s">y = x</text>
+  <rect x="548" y="65" width="422" height="330" rx="18" fill="#fff" stroke="#d8e9ed"/>
+  <text x="578" y="110" class="h">C = (0, 0)</text>
+  <text x="578" y="145" class="s">A = (a, 0),  B = (0, b)</text>
+  <text x="578" y="177" class="s">A₁ = (0, a),  B₁ = (b, 0)</text>
+  <path d="M578 200h360" stroke="#d8e9ed" stroke-width="2"/>
+  <text x="578" y="240" class="h">CM = (a/2, b/2)</text>
+  <text x="578" y="274" class="h">A₁B₁ = (b, −a)</text>
+  <text x="578" y="328" class="h" fill="#b66921">ab/2 − ab/2 = 0</text>
+  <text x="578" y="356" class="s">Нулевое скалярное произведение.</text>
+</svg>

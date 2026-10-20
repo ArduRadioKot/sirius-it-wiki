@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="445" viewBox="0 0 1000 445" role="img" aria-labelledby="title desc">
+  <title id="title">Расстояние до центра квадрата на гипотенузе</title>
+  <desc id="desc">Прямоугольный треугольник ABC имеет катеты a и b при вершине C. На гипотенузе AB наружу построен квадрат ABED. Его центр S имеет координаты ((a+b)/2, (a+b)/2), поэтому CS равно (a+b)/корень из двух.</desc>
+  <defs><style>.t{font:700 24px Arial,sans-serif;fill:#173c43}.h{font:700 18px Arial,sans-serif;fill:#173c43}.s{font:16px Arial,sans-serif;fill:#546e74}.v{font:700 18px Arial,sans-serif;fill:#173c43}</style></defs>
+  <rect width="1000" height="445" rx="24" fill="#f0f9fb"/>
+  <text x="40" y="43" class="t">Задача 4 · центр внешнего квадрата</text>
+  <rect x="30" y="65" width="555" height="340" rx="18" fill="#fff" stroke="#d8e9ed"/>
+  <path d="M160 365 330 365 160 265Z" fill="#d7f0ed" fill-opacity=".65" stroke="#16909b" stroke-width="3"/>
+  <path d="M330 365 160 265 260 95 430 195Z" fill="#e5dff3" fill-opacity=".55" stroke="#8c71bf" stroke-width="3"/>
+  <path d="M160 365 295 230" stroke="#df8b39" stroke-width="3.5" stroke-dasharray="8 6"/>
+  <circle cx="295" cy="230" r="6" fill="#df8b39"/>
+  <g class="v"><text x="133" y="389">C</text><text x="335" y="389">A</text><text x="135" y="265">B</text><text x="257" y="87" fill="#7354a9">E</text><text x="436" y="202" fill="#7354a9">D</text><text x="305" y="226" fill="#b66921">S</text></g>
+  <text x="240" y="389" class="s">a</text><text x="123" y="320" class="s">b</text>
+  <rect x="608" y="65" width="362" height="340" rx="18" fill="#fff" stroke="#d8e9ed"/>
+  <text x="638" y="110" class="h">C = (0, 0)</text>
+  <text x="638" y="146" class="s">A = (a, 0),  B = (0, b)</text>
+  <text x="638" y="180" class="s">Наружный сдвиг: (b, a)</text>
+  <path d="M638 205h300" stroke="#d8e9ed" stroke-width="2"/>
+  <text x="638" y="245" class="h">S = ((a+b)/2, (a+b)/2)</text>
+  <text x="638" y="285" class="s">a + b = m</text>
+  <text x="638" y="338" class="h" fill="#b66921">CS = m/√2</text>
+</svg>
