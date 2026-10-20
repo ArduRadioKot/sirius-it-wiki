@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="335" viewBox="0 0 1000 335" role="img" aria-labelledby="title desc">
+  <title id="title">Стоимость bisect и insort</title>
+  <desc id="desc">Двоичный поиск находит позицию числа 25 между 20 и 30 за логарифмическое время. Чтобы вставить 25 в список, значения 30 и 40 приходится сдвинуть, что в общем случае стоит линейное время.</desc>
+  <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 10 5 0 10Z" fill="#167f8a"/></marker><style>.t{font:700 24px Arial,sans-serif;fill:#183b43}.h{font:700 17px Arial,sans-serif;fill:#183b43}.s{font:15px Arial,sans-serif;fill:#526b70}.v{font:700 20px Arial,sans-serif;fill:#183b43}</style></defs>
+  <rect width="1000" height="335" rx="24" fill="#eff8fa"/>
+  <text x="40" y="43" class="t">bisect: найти место быстро, вставить — сдвинуть</text>
+  <rect x="35" y="65" width="930" height="235" rx="18" fill="#fff" stroke="#d9e9ed"/>
+  <text x="64" y="99" class="h">1. Поиск места для 25 · O(log n)</text>
+  <g text-anchor="middle"><rect x="250" y="112" width="100" height="55" rx="9" fill="#d7f0ed"/><rect x="355" y="112" width="100" height="55" rx="9" fill="#d7f0ed"/><rect x="460" y="112" width="100" height="55" rx="9" fill="#e6e0f4"/><rect x="565" y="112" width="100" height="55" rx="9" fill="#e6e0f4"/>
+    <text x="300" y="147" class="v">10</text><text x="405" y="147" class="v">20</text><text x="510" y="147" class="v">30</text><text x="615" y="147" class="v">40</text>
+  </g>
+  <path d="M458 116v48" stroke="#d79655" stroke-width="3" stroke-dasharray="5 4"/>
+  <text x="713" y="146" class="s">позиция 2</text>
+  <text x="64" y="216" class="h">2. Вставка в list · O(n)</text>
+  <g text-anchor="middle"><rect x="250" y="229" width="100" height="55" rx="9" fill="#d7f0ed"/><rect x="355" y="229" width="100" height="55" rx="9" fill="#d7f0ed"/><rect x="460" y="229" width="100" height="55" rx="9" fill="#ffe2bd" stroke="#d79655"/><rect x="565" y="229" width="100" height="55" rx="9" fill="#e6e0f4"/><rect x="670" y="229" width="100" height="55" rx="9" fill="#e6e0f4"/>
+    <text x="300" y="264" class="v">10</text><text x="405" y="264" class="v">20</text><text x="510" y="264" class="v">25</text><text x="615" y="264" class="v">30</text><text x="720" y="264" class="v">40</text>
+  </g>
+  <path d="M509 171 609 222M614 171 714 222" stroke="#167f8a" stroke-width="2.5" fill="none" marker-end="url(#arrow)"/>
+  <text x="800" y="264" class="s">сдвиг хвоста</text>
+  <text x="45" y="322" class="s">Итого insort: O(log n) + O(n) = O(n)</text>
+</svg>

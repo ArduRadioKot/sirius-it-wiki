@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="305" viewBox="0 0 1000 305" role="img" aria-labelledby="title desc">
+  <title id="title">Двусторонняя очередь deque</title>
+  <desc id="desc">Deque состоит из блоков элементов. Добавление и удаление по краям быстрое, а доступ к элементу в середине требует прохода вдоль блоков.</desc>
+  <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 10 5 0 10Z" fill="#167f8a"/></marker><style>.t{font:700 24px Arial,sans-serif;fill:#183b43}.h{font:700 17px Arial,sans-serif;fill:#183b43}.s{font:15px Arial,sans-serif;fill:#526b70}.v{font:700 20px Arial,sans-serif;fill:#183b43}</style></defs>
+  <rect width="1000" height="305" rx="24" fill="#eff8fa"/>
+  <text x="40" y="43" class="t">deque — быстрые края</text>
+  <rect x="35" y="65" width="930" height="205" rx="18" fill="#fff" stroke="#d9e9ed"/>
+  <text x="78" y="98" class="h">popleft() · O(1)</text><text x="795" y="98" class="h">append(x) · O(1)</text>
+  <path d="M220 110H91" stroke="#167f8a" stroke-width="3" marker-end="url(#arrow)"/><path d="M764 110h130" stroke="#167f8a" stroke-width="3" marker-end="url(#arrow)"/>
+  <g text-anchor="middle">
+    <rect x="80" y="132" width="260" height="70" rx="10" fill="#d7f0ed" stroke="#64b9b0"/><rect x="370" y="132" width="260" height="70" rx="10" fill="#e6e0f4" stroke="#ad9ccc"/><rect x="660" y="132" width="260" height="70" rx="10" fill="#d7f0ed" stroke="#64b9b0"/>
+    <text x="210" y="163" class="s">блок 1</text><text x="500" y="163" class="s">блок 2</text><text x="790" y="163" class="s">блок 3</text>
+    <text x="210" y="189" class="v">A  ·  B  ·  C</text><text x="500" y="189" class="v">D  ·  E  ·  F</text><text x="790" y="189" class="v">G  ·  H  ·  I</text>
+  </g>
+  <path d="M342 168h26M632 168h26" stroke="#8aa6ad" stroke-width="4"/>
+  <path d="M501 208v22" stroke="#d79655" stroke-width="3" marker-end="url(#arrow)"/>
+  <text x="500" y="253" class="s" text-anchor="middle">Индекс в середине: нужно пройти блоки · O(n)</text>
+</svg>

@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="365" viewBox="0 0 1000 365" role="img" aria-labelledby="title desc">
+  <title id="title">Поиск в хеш-таблице Python</title>
+  <desc id="desc">Ключ проходит через хеш-функцию, которая выбирает начальную ячейку. Если ячейка занята другим ключом, таблица пробует следующую позицию и проверяет равенство ключей.</desc>
+  <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 10 5 0 10Z" fill="#167f8a"/></marker><style>.t{font:700 24px Arial,sans-serif;fill:#183b43}.h{font:700 18px Arial,sans-serif;fill:#183b43}.s{font:15px Arial,sans-serif;fill:#526b70}.v{font:700 18px Arial,sans-serif;fill:#183b43}</style></defs>
+  <rect width="1000" height="365" rx="24" fill="#eff8fa"/>
+  <text x="40" y="43" class="t">dict и set — поиск начинается с хеша</text>
+  <rect x="35" y="74" width="930" height="250" rx="18" fill="#fff" stroke="#d9e9ed"/>
+  <rect x="65" y="135" width="120" height="70" rx="12" fill="#e6e0f4" stroke="#ad9ccc"/>
+  <text x="125" y="162" class="s" text-anchor="middle">ключ</text><text x="125" y="188" class="h" text-anchor="middle">«кот»</text>
+  <path d="M188 170h58" stroke="#167f8a" stroke-width="3" marker-end="url(#arrow)"/>
+  <rect x="253" y="135" width="148" height="70" rx="12" fill="#d7f0ed" stroke="#64b9b0"/>
+  <text x="327" y="163" class="h" text-anchor="middle">hash(key)</text><text x="327" y="187" class="s" text-anchor="middle">→ позиция 2</text>
+  <path d="M404 170h59" stroke="#167f8a" stroke-width="3" marker-end="url(#arrow)"/>
+  <g font-family="Arial,sans-serif" text-anchor="middle">
+    <text x="483" y="119" class="s">0</text><text x="574" y="119" class="s">1</text><text x="665" y="119" class="s">2</text><text x="756" y="119" class="s">3</text><text x="847" y="119" class="s">4</text>
+    <rect x="443" y="137" width="80" height="66" rx="9" fill="#f2f5f6" stroke="#b8cbd0"/><rect x="534" y="137" width="80" height="66" rx="9" fill="#f2f5f6" stroke="#b8cbd0"/>
+    <rect x="625" y="137" width="80" height="66" rx="9" fill="#ffe2bd" stroke="#d79655"/><rect x="716" y="137" width="80" height="66" rx="9" fill="#d7f0ed" stroke="#64b9b0"/><rect x="807" y="137" width="80" height="66" rx="9" fill="#f2f5f6" stroke="#b8cbd0"/>
+    <text x="665" y="177" class="v">«кит»</text><text x="756" y="177" class="v">«кот»</text>
+  </g>
+  <path d="M665 207q45 32 91 0" fill="none" stroke="#d79655" stroke-width="3" marker-end="url(#arrow)"/>
+  <text x="548" y="268" class="s">2 занята другим ключом → коллизия → пробуем 3</text>
+  <text x="79" y="271" class="s">Затем сравниваем ключи:</text>
+  <text x="79" y="295" class="h">hash и == работают вместе</text>
+  <text x="40" y="348" class="s">Упрощённая схема · обычно O(1), при множестве коллизий возможно O(n)</text>
+</svg>
