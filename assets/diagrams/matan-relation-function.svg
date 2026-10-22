@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 440" role="img" aria-labelledby="title desc"><title id="title">Отношение и функция</title><desc id="desc">Отношение допускает несколько стрелок и элементы без образа</desc><rect width="1000" height="440" fill="#fbfaf6"/>
+<text x="45" y="58" font-family="Arial,Helvetica,sans-serif" font-size="31" font-weight="700" fill="#17243c" text-anchor="start">Отношение и функция</text>
+<text x="45" y="91" font-family="Arial,Helvetica,sans-serif" font-size="20" font-weight="500" fill="#546276" text-anchor="start">R = {(1,u), (2,u), (2,v)}</text>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#546276"/></marker></defs>
+<rect x="100" y="120" width="160" height="270" rx="18" fill="#e4eefb" stroke="none" stroke-width="2"/>
+<rect x="740" y="120" width="160" height="270" rx="18" fill="#e4eefb" stroke="none" stroke-width="2"/>
+<circle cx="180" cy="170" r="22" fill="white" stroke="#315fc0" stroke-width="2"/>
+<text x="180" y="178" font-family="Arial,Helvetica,sans-serif" font-size="23" font-weight="700" fill="#17243c" text-anchor="middle">1</text>
+<circle cx="180" cy="245" r="22" fill="white" stroke="#315fc0" stroke-width="2"/>
+<text x="180" y="253" font-family="Arial,Helvetica,sans-serif" font-size="23" font-weight="700" fill="#17243c" text-anchor="middle">2</text>
+<circle cx="180" cy="320" r="22" fill="white" stroke="#315fc0" stroke-width="2"/>
+<text x="180" y="328" font-family="Arial,Helvetica,sans-serif" font-size="23" font-weight="700" fill="#17243c" text-anchor="middle">3</text>
+<circle cx="820" cy="195" r="22" fill="white" stroke="#137e87" stroke-width="2"/>
+<text x="820" y="203" font-family="Arial,Helvetica,sans-serif" font-size="23" font-weight="700" fill="#17243c" text-anchor="middle">u</text>
+<circle cx="820" cy="295" r="22" fill="white" stroke="#137e87" stroke-width="2"/>
+<text x="820" y="303" font-family="Arial,Helvetica,sans-serif" font-size="23" font-weight="700" fill="#17243c" text-anchor="middle">v</text>
+<line x1="205" y1="170" x2="790" y2="195" stroke="#315fc0" stroke-width="3" stroke-linecap="round" marker-end="url(#arrow)"/>
+<line x1="205" y1="245" x2="790" y2="195" stroke="#315fc0" stroke-width="3" stroke-linecap="round" marker-end="url(#arrow)"/>
+<line x1="205" y1="245" x2="790" y2="295" stroke="#315fc0" stroke-width="3" stroke-linecap="round" marker-end="url(#arrow)"/>
+<text x="500" y="415" font-family="Arial,Helvetica,sans-serif" font-size="24" font-weight="700" fill="#d35943" text-anchor="middle">У 2 два образа; у 3 нет образа</text>
+</svg>

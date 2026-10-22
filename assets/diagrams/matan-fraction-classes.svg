@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 410" role="img" aria-labelledby="title desc">
+  <title id="title">Разные дроби в одном классе эквивалентности</title>
+  <desc id="desc">Дроби одна вторая, две четвёртых и три шестых имеют разные записи, но равное значение и один класс эквивалентности.</desc>
+  <rect width="1000" height="410" fill="#fbfaf6"/>
+  <text x="46" y="58" font-family="Arial, sans-serif" font-size="33" font-weight="700" fill="#17243c">Один класс — разные записи</text>
+  <text x="46" y="94" font-family="Arial, sans-serif" font-size="21" fill="#546276">(a,b) ~ (c,d), если ad = bc</text>
+  <rect x="54" y="140" width="254" height="126" rx="21" fill="#e4eefb" stroke="#315fc0" stroke-width="2"/>
+  <rect x="374" y="140" width="254" height="126" rx="21" fill="#e1f3f0" stroke="#137e87" stroke-width="2"/>
+  <rect x="694" y="140" width="254" height="126" rx="21" fill="#fdebe7" stroke="#d35943" stroke-width="2"/>
+  <text x="181" y="219" font-family="Arial, sans-serif" font-size="44" font-weight="700" fill="#17243c" text-anchor="middle">1/2</text>
+  <text x="501" y="219" font-family="Arial, sans-serif" font-size="44" font-weight="700" fill="#17243c" text-anchor="middle">2/4</text>
+  <text x="821" y="219" font-family="Arial, sans-serif" font-size="44" font-weight="700" fill="#17243c" text-anchor="middle">3/6</text>
+  <text x="341" y="219" font-family="Arial, sans-serif" font-size="36" fill="#546276" text-anchor="middle">=</text>
+  <text x="661" y="219" font-family="Arial, sans-serif" font-size="36" fill="#546276" text-anchor="middle">=</text>
+  <rect x="245" y="305" width="510" height="69" rx="18" fill="#17243c"/>
+  <text x="500" y="350" font-family="Arial, sans-serif" font-size="27" font-weight="700" fill="#fff" text-anchor="middle">класс [(1,2)] — число 1/2</text>
+</svg>

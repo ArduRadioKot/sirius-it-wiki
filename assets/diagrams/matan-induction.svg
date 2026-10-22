@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 440" role="img" aria-labelledby="title desc"><title id="title">Математическая индукция</title><desc id="desc">База запускает цепочку, шаг переносит истинность</desc><rect width="1000" height="440" fill="#fbfaf6"/>
+<text x="45" y="58" font-family="Arial,Helvetica,sans-serif" font-size="31" font-weight="700" fill="#17243c" text-anchor="start">Математическая индукция</text>
+<text x="45" y="91" font-family="Arial,Helvetica,sans-serif" font-size="20" font-weight="500" fill="#546276" text-anchor="start">База + переход n → n+1</text>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#546276"/></marker></defs>
+<rect x="110" y="180" width="120" height="120" rx="18" fill="#e1f3f0" stroke="#137e87" stroke-width="2"/>
+<text x="170" y="250" font-family="Arial,Helvetica,sans-serif" font-size="25" font-weight="700" fill="#17243c" text-anchor="middle">P(1)</text>
+<rect x="290" y="180" width="120" height="120" rx="18" fill="#e4eefb" stroke="#315fc0" stroke-width="2"/>
+<text x="350" y="250" font-family="Arial,Helvetica,sans-serif" font-size="25" font-weight="700" fill="#17243c" text-anchor="middle">P(2)</text>
+<rect x="470" y="180" width="120" height="120" rx="18" fill="#e4eefb" stroke="#315fc0" stroke-width="2"/>
+<text x="530" y="250" font-family="Arial,Helvetica,sans-serif" font-size="25" font-weight="700" fill="#17243c" text-anchor="middle">P(3)</text>
+<rect x="650" y="180" width="120" height="120" rx="18" fill="#e4eefb" stroke="#315fc0" stroke-width="2"/>
+<text x="710" y="250" font-family="Arial,Helvetica,sans-serif" font-size="25" font-weight="700" fill="#17243c" text-anchor="middle">P(n)</text>
+<rect x="830" y="180" width="120" height="120" rx="18" fill="#e4eefb" stroke="#315fc0" stroke-width="2"/>
+<text x="890" y="250" font-family="Arial,Helvetica,sans-serif" font-size="25" font-weight="700" fill="#17243c" text-anchor="middle">P(n+1)</text>
+<line x1="238" y1="240" x2="280" y2="240" stroke="#546276" stroke-width="3" stroke-linecap="round" marker-end="url(#arrow)"/>
+<line x1="418" y1="240" x2="460" y2="240" stroke="#546276" stroke-width="3" stroke-linecap="round" marker-end="url(#arrow)"/>
+<line x1="598" y1="240" x2="640" y2="240" stroke="#546276" stroke-width="3" stroke-linecap="round" marker-end="url(#arrow)"/>
+<line x1="778" y1="240" x2="820" y2="240" stroke="#546276" stroke-width="3" stroke-linecap="round" marker-end="url(#arrow)"/>
+<text x="80" y="365" font-family="Arial,Helvetica,sans-serif" font-size="22" font-weight="700" fill="#137e87" text-anchor="start">Проверь начало</text>
+<text x="570" y="365" font-family="Arial,Helvetica,sans-serif" font-size="22" font-weight="700" fill="#315fc0" text-anchor="start">Докажи передачу</text>
+</svg>

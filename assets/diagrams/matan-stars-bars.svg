@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 440" role="img" aria-labelledby="title desc"><title id="title">Звёзды и перегородки</title><desc id="desc">Пять предметов из трёх типов как последовательность звёзд и черт</desc><rect width="1000" height="440" fill="#fbfaf6"/>
+<text x="45" y="58" font-family="Arial,Helvetica,sans-serif" font-size="31" font-weight="700" fill="#17243c" text-anchor="start">Метод перегородок</text>
+<text x="45" y="91" font-family="Arial,Helvetica,sans-serif" font-size="20" font-weight="500" fill="#546276" text-anchor="start">2 предмета первого типа, 0 второго, 3 третьего</text>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#546276"/></marker></defs>
+<rect x="55" y="145" width="890" height="160" rx="18" fill="#e4eefb" stroke="none" stroke-width="2"/>
+<text x="500" y="242" font-family="Arial,Helvetica,sans-serif" font-size="52" font-weight="700" fill="#315fc0" text-anchor="middle">★  ★   │   │   ★  ★  ★</text>
+<text x="175" y="365" font-family="Arial,Helvetica,sans-serif" font-size="26" font-weight="700" fill="#17243c" text-anchor="middle">тип 1: 2</text>
+<text x="500" y="365" font-family="Arial,Helvetica,sans-serif" font-size="26" font-weight="700" fill="#17243c" text-anchor="middle">тип 2: 0</text>
+<text x="825" y="365" font-family="Arial,Helvetica,sans-serif" font-size="26" font-weight="700" fill="#17243c" text-anchor="middle">тип 3: 3</text>
+</svg>

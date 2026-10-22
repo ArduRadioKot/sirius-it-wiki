@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="420" viewBox="0 0 1000 420" role="img" aria-labelledby="title desc">
+  <title id="title">Классификация движений плоскости по теореме Шаля</title>
+  <desc id="desc">Движения делятся на сохраняющие и меняющие ориентацию. Среди сохраняющих есть поворот при наличии неподвижной точки и ненулевой перенос без неё. Среди меняющих есть отражение с неподвижными точками и скользящая симметрия без них.</desc>
+  <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 10 5 0 10Z" fill="#9bb4ba"/></marker><style>.t{font:700 24px Arial,sans-serif;fill:#173c43}.h{font:700 20px Arial,sans-serif;fill:#173c43}.s{font:15px Arial,sans-serif;fill:#526b70}.v{font:700 18px Arial,sans-serif;fill:#173c43}</style></defs>
+  <rect width="1000" height="420" rx="24" fill="#f0f9fb"/>
+  <text x="40" y="43" class="t">Теорема Шаля · четыре вида движений</text>
+  <rect x="365" y="69" width="270" height="54" rx="14" fill="#173c43"/>
+  <text x="500" y="103" text-anchor="middle" font-family="Arial,sans-serif" font-size="19" font-weight="700" fill="#fff">Движение плоскости</text>
+  <path d="M410 124 245 165M590 124 755 165" fill="none" stroke="#9bb4ba" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <rect x="60" y="169" width="370" height="62" rx="14" fill="#d7f0ed" stroke="#64b9b0"/>
+  <rect x="570" y="169" width="370" height="62" rx="14" fill="#e6e0f4" stroke="#ad9ccc"/>
+  <text x="245" y="194" text-anchor="middle" class="h">Сохраняет ориентацию</text>
+  <text x="245" y="217" text-anchor="middle" class="s">собственное</text>
+  <text x="755" y="194" text-anchor="middle" class="h">Меняет ориентацию</text>
+  <text x="755" y="217" text-anchor="middle" class="s">несобственное</text>
+  <path d="M160 232v28M330 232v28M670 232v28M840 232v28" stroke="#9bb4ba" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <g text-anchor="middle">
+    <rect x="47" y="267" width="225" height="105" rx="14" fill="#fff" stroke="#64b9b0"/>
+    <rect x="282" y="267" width="225" height="105" rx="14" fill="#fff" stroke="#64b9b0"/>
+    <rect x="517" y="267" width="225" height="105" rx="14" fill="#fff" stroke="#ad9ccc"/>
+    <rect x="752" y="267" width="225" height="105" rx="14" fill="#fff" stroke="#ad9ccc"/>
+    <text x="160" y="296" class="s">есть неподвижная точка</text><text x="160" y="334" class="v">Поворот</text>
+    <text x="395" y="296" class="s">нет неподвижных точек</text><text x="395" y="334" class="v">Перенос</text>
+    <text x="630" y="296" class="s">есть неподвижные точки</text><text x="630" y="334" class="v">Отражение</text>
+    <text x="865" y="296" class="s">нет неподвижных точек</text><text x="865" y="331" class="v">Скользящая</text><text x="865" y="352" class="v">симметрия</text>
+  </g>
+  <text x="500" y="401" text-anchor="middle" class="s">Нулевой перенос — тождественное движение; нулевой сдвиг скользящей симметрии — отражение.</text>
+</svg>

@@ -67,6 +67,17 @@ $$
 
 В первом случае элементов нет вообще, во втором — есть один элемент, которым является $\varnothing$.
 
+Можно продолжить вложение: $\{\varnothing,\{\varnothing\}\}$ содержит **два** элемента — пустое множество и одноэлементное множество, внутри которого лежит пустое. Фигурные скобки здесь меняют объект: $\varnothing$, $\{\varnothing\}$ и $\{\{\varnothing\}\}$ — три разных множества.
+
+:::quiz
+question: Сколько элементов у множества $\{\varnothing,\{\varnothing\}\}$?
+option: 2
+option: 1
+option: 0
+answer: 1
+explanation: Его элементы — $\varnothing$ и $\{\varnothing\}$; это разные объекты.
+:::
+
 ---
 
 # 3. Как задать множество
@@ -240,6 +251,62 @@ $$
 $$
 
 Эти свойства позволяют преобразовывать выражения с множествами почти так же последовательно, как алгебраические выражения.
+
+## Что ещё есть в записи: законы для трёх множеств
+
+В рукописном продолжении приведены также ассоциативность объединения, дистрибутивность и два закона для разности:
+
+$$
+(A\cup B)\cup C=A\cup(B\cup C),
+$$
+
+$$
+A\cap(B\cup C)=(A\cap B)\cup(A\cap C),
+\qquad
+A\cup(B\cap C)=(A\cup B)\cap(A\cup C),
+$$
+
+$$
+A\setminus(B\cap C)=(A\setminus B)\cup(A\setminus C),
+\qquad
+A\setminus(B\cup C)=(A\setminus B)\cap(A\setminus C).
+$$
+
+Для последних двух формул полезно помнить, что $A\setminus B=A\cap B^{\mathsf c}$: это обычные законы де Моргана внутри множества $A$. Например, $x$ лежит в $A\setminus(B\cup C)$, когда $x\in A$ и одновременно $x\notin B$, $x\notin C$.
+
+![Разность множества с объединением и пересечением](assets/diagrams/matan-set-difference-laws.svg)
+
+*При отрицании условия «в $B$ или $C$» появляется «не в $B$ и не в $C$».* [Открыть схему крупно](assets/diagrams/matan-set-difference-laws.svg).
+
+Чтобы доказать равенство множеств, можно взять произвольный $x$ и проверить, что он принадлежит левой части тогда и только тогда, когда правой. Например,
+
+$$
+\begin{aligned}
+x\in A\setminus(B\cap C)
+&\Longleftrightarrow x\in A\ \land\ \neg(x\in B\land x\in C)\\
+&\Longleftrightarrow (x\in A\land x\notin B)\ \lor\ (x\in A\land x\notin C).
+\end{aligned}
+$$
+
+Последняя строка и означает $x\in(A\setminus B)\cup(A\setminus C)$.
+
+:::quiz
+question: Чему равно $A\setminus(B\cup C)$?
+option: $(A\setminus B)\cap(A\setminus C)$
+option: $(A\setminus B)\cup(A\setminus C)$
+option: $(A\cup B)\setminus C$
+answer: 1
+explanation: Чтобы не быть в объединении, элемент должен не входить ни в $B$, ни в $C$.
+:::
+
+:::quiz
+question: Какой способ доказывает равенство двух множеств?
+option: Для произвольного $x$ доказать эквивалентность принадлежности обеим частям
+option: Проверить только один элемент
+option: Сравнить запись названий множеств
+answer: 1
+explanation: Равенство множеств означает совпадение принадлежности для каждого элемента.
+:::
 
 ---
 

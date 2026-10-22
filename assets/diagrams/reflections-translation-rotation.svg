@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="390" viewBox="0 0 1000 390" role="img" aria-labelledby="title desc">
+  <title id="title">Два отражения: параллельные и пересекающиеся оси</title>
+  <desc id="desc">В левом примере две параллельные вертикальные оси дают перенос вправо на удвоенное расстояние между ними. В правом примере отражения относительно пересекающихся под 45 градусов осей дают поворот на 90 градусов.</desc>
+  <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 10 5 0 10Z" fill="#167f8a"/></marker><style>.t{font:700 24px Arial,sans-serif;fill:#173c43}.h{font:700 18px Arial,sans-serif;fill:#173c43}.s{font:15px Arial,sans-serif;fill:#526b70}.v{font:700 17px Arial,sans-serif;fill:#173c43}</style></defs>
+  <rect width="1000" height="390" rx="24" fill="#f0f9fb"/>
+  <text x="39" y="43" class="t">Две осевые симметрии</text>
+  <rect x="30" y="65" width="455" height="290" rx="18" fill="#fff" stroke="#d8e9ed"/>
+  <text x="55" y="101" class="h">Параллельные оси → перенос</text>
+  <path d="M160 126v168M260 126v168" stroke="#8c71bf" stroke-width="3" stroke-dasharray="8 6"/>
+  <text x="143" y="120" class="s">ℓ₁</text><text x="244" y="120" class="s">ℓ₂</text>
+  <circle cx="120" cy="205" r="6" fill="#df8b39"/><circle cx="200" cy="205" r="6" fill="#8c71bf"/><circle cx="320" cy="205" r="6" fill="#16909b"/>
+  <path d="M128 205h64M208 205h104" stroke="#8c71bf" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <text x="101" y="235" class="v">M</text><text x="184" y="235" class="v">M₁</text><text x="306" y="235" class="v">M₂</text>
+  <path d="M128 270h184" stroke="#167f8a" stroke-width="3" marker-end="url(#arrow)"/>
+  <text x="332" y="275" class="s">2d</text>
+  <text x="55" y="326" class="s">От ℓ₁ к ℓ₂: расстояние d, сдвиг 2d.</text>
+  <rect x="515" y="65" width="455" height="290" rx="18" fill="#fff" stroke="#d8e9ed"/>
+  <text x="540" y="101" class="h">Пересекающиеся оси → поворот</text>
+  <path d="M600 215h330M632 318 847 103" stroke="#8c71bf" stroke-width="3" stroke-dasharray="8 6"/>
+  <circle cx="735" cy="215" r="5" fill="#173c43"/>
+  <circle cx="840" cy="215" r="6" fill="#df8b39"/><circle cx="735" cy="110" r="6" fill="#16909b"/>
+  <path d="M743 215h88M735 206v-87" stroke="#167f8a" stroke-width="3" marker-end="url(#arrow)"/>
+  <path d="M781 215 A46 46 0 0 0 767 182" fill="none" stroke="#df8b39" stroke-width="2.5"/>
+  <text x="747" y="172" class="s">45°</text><text x="843" y="221" class="v">M</text><text x="740" y="108" class="v">M′</text><text x="717" y="238" class="v">O</text>
+  <text x="540" y="326" class="s">Угол между осями 45°, поворот 90°.</text>
+</svg>

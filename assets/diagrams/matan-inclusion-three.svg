@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 440" role="img" aria-labelledby="title desc"><title id="title">Включения и исключения для трёх множеств</title><desc id="desc">Чередование знаков возвращает тройное пересечение</desc><rect width="1000" height="440" fill="#fbfaf6"/>
+<text x="45" y="58" font-family="Arial,Helvetica,sans-serif" font-size="31" font-weight="700" fill="#17243c" text-anchor="start">Три множества</text>
+<text x="45" y="91" font-family="Arial,Helvetica,sans-serif" font-size="20" font-weight="500" fill="#546276" text-anchor="start">Один объект в A ∩ B ∩ C</text>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#546276"/></marker></defs>
+<circle cx="415" cy="205" r="105" fill="#b9e2dc" stroke="#17243c" stroke-width="2"/>
+<circle cx="585" cy="205" r="105" fill="#f3c5b9" stroke="#17243c" stroke-width="2"/>
+<circle cx="500" cy="290" r="105" fill="#d9ddf6" stroke="#17243c" stroke-width="2"/>
+<text x="500" y="250" font-family="Arial,Helvetica,sans-serif" font-size="23" font-weight="700" fill="#17243c" text-anchor="middle">A ∩ B ∩ C</text>
+<rect x="135" y="365" width="730" height="56" rx="18" fill="#e4eefb" stroke="none" stroke-width="2"/>
+<text x="500" y="402" font-family="Arial,Helvetica,sans-serif" font-size="25" font-weight="700" fill="#315fc0" text-anchor="middle">3 раза сложили − 3 раза вычли + 1 = 1</text>
+</svg>

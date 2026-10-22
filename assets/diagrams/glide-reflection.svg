@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="350" viewBox="0 0 1000 350" role="img" aria-labelledby="title desc">
+  <title id="title">Скользящая симметрия как отражение и перенос</title>
+  <desc id="desc">Точка M над горизонтальной осью отражается в точку под осью, затем сдвигается вправо в M штрих. Второе применение возвращает точку наверх и сдвигает её в сумме на удвоенный вектор.</desc>
+  <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 10 5 0 10Z" fill="#167f8a"/></marker><style>.t{font:700 24px Arial,sans-serif;fill:#173c43}.h{font:700 18px Arial,sans-serif;fill:#173c43}.s{font:15px Arial,sans-serif;fill:#526b70}.v{font:700 18px Arial,sans-serif;fill:#173c43}</style></defs>
+  <rect width="1000" height="350" rx="24" fill="#f0f9fb"/>
+  <text x="40" y="43" class="t">Скользящая симметрия = отражение + сдвиг вдоль оси</text>
+  <rect x="30" y="65" width="940" height="250" rx="18" fill="#fff" stroke="#d8e9ed"/>
+  <path d="M85 190h825" stroke="#8c71bf" stroke-width="3"/>
+  <text x="885" y="178" class="s">ось ℓ</text>
+  <circle cx="225" cy="115" r="6" fill="#df8b39"/>
+  <circle cx="225" cy="265" r="6" fill="#8c71bf"/>
+  <circle cx="445" cy="265" r="6" fill="#16909b"/>
+  <circle cx="665" cy="115" r="6" fill="#df8b39"/>
+  <path d="M225 124v131" stroke="#8c71bf" stroke-width="2.5" stroke-dasharray="7 5" marker-end="url(#arrow)"/>
+  <path d="M234 265h201" stroke="#167f8a" stroke-width="3" marker-end="url(#arrow)"/>
+  <path d="M454 265 654 122" stroke="#167f8a" stroke-width="2.5" stroke-dasharray="7 5" marker-end="url(#arrow)"/>
+  <text x="201" y="104" class="v">M</text><text x="175" y="289" class="v">Sℓ(M)</text><text x="445" y="289" class="v">W(M)</text><text x="663" y="105" class="v">W²(M)</text>
+  <text x="315" y="250" class="s">+v</text><text x="538" y="228" class="s">ещё раз W</text>
+  <path d="M230 145h425" stroke="#df8b39" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <text x="395" y="137" class="s">итог: перенос на 2v</text>
+  <text x="40" y="337" class="s">Для ℓ: y=0 и v=(a,0): W(x,y)=(x+a,−y),  W²(x,y)=(x+2a,y).</text>
+</svg>

@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 440" role="img" aria-labelledby="title desc"><title id="title">Равномощность натуральных и целых чисел</title><desc id="desc">Последовательность целых 0, 1, минус 1, 2, минус 2 соответствует натуральным индексам</desc><rect width="1000" height="440" fill="#fbfaf6"/>
+<text x="45" y="58" font-family="Arial,Helvetica,sans-serif" font-size="31" font-weight="700" fill="#17243c" text-anchor="start">Биекция между ℕ и ℤ</text>
+<text x="45" y="91" font-family="Arial,Helvetica,sans-serif" font-size="20" font-weight="500" fill="#546276" text-anchor="start">Каждому номеру соответствует одно целое</text>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#546276"/></marker></defs>
+<circle cx="140" cy="170" r="34" fill="#e4eefb" stroke="#315fc0" stroke-width="2"/>
+<text x="140" y="180" font-family="Arial,Helvetica,sans-serif" font-size="26" font-weight="700" fill="#17243c" text-anchor="middle">0</text>
+<line x1="140" y1="208" x2="140" y2="265" stroke="#546276" stroke-width="2" stroke-linecap="round" marker-end="url(#arrow)"/>
+<circle cx="285" cy="170" r="34" fill="#e4eefb" stroke="#315fc0" stroke-width="2"/>
+<text x="285" y="180" font-family="Arial,Helvetica,sans-serif" font-size="26" font-weight="700" fill="#17243c" text-anchor="middle">1</text>
+<line x1="285" y1="208" x2="285" y2="265" stroke="#546276" stroke-width="2" stroke-linecap="round" marker-end="url(#arrow)"/>
+<circle cx="430" cy="170" r="34" fill="#e4eefb" stroke="#315fc0" stroke-width="2"/>
+<text x="430" y="180" font-family="Arial,Helvetica,sans-serif" font-size="26" font-weight="700" fill="#17243c" text-anchor="middle">2</text>
+<line x1="430" y1="208" x2="430" y2="265" stroke="#546276" stroke-width="2" stroke-linecap="round" marker-end="url(#arrow)"/>
+<circle cx="575" cy="170" r="34" fill="#e4eefb" stroke="#315fc0" stroke-width="2"/>
+<text x="575" y="180" font-family="Arial,Helvetica,sans-serif" font-size="26" font-weight="700" fill="#17243c" text-anchor="middle">3</text>
+<line x1="575" y1="208" x2="575" y2="265" stroke="#546276" stroke-width="2" stroke-linecap="round" marker-end="url(#arrow)"/>
+<circle cx="720" cy="170" r="34" fill="#e4eefb" stroke="#315fc0" stroke-width="2"/>
+<text x="720" y="180" font-family="Arial,Helvetica,sans-serif" font-size="26" font-weight="700" fill="#17243c" text-anchor="middle">4</text>
+<line x1="720" y1="208" x2="720" y2="265" stroke="#546276" stroke-width="2" stroke-linecap="round" marker-end="url(#arrow)"/>
+<circle cx="865" cy="170" r="34" fill="#e4eefb" stroke="#315fc0" stroke-width="2"/>
+<text x="865" y="180" font-family="Arial,Helvetica,sans-serif" font-size="26" font-weight="700" fill="#17243c" text-anchor="middle">5</text>
+<line x1="865" y1="208" x2="865" y2="265" stroke="#546276" stroke-width="2" stroke-linecap="round" marker-end="url(#arrow)"/>
+<circle cx="140" cy="310" r="34" fill="#e1f3f0" stroke="#137e87" stroke-width="2"/>
+<text x="140" y="320" font-family="Arial,Helvetica,sans-serif" font-size="26" font-weight="700" fill="#17243c" text-anchor="middle">0</text>
+<circle cx="285" cy="310" r="34" fill="#e1f3f0" stroke="#137e87" stroke-width="2"/>
+<text x="285" y="320" font-family="Arial,Helvetica,sans-serif" font-size="26" font-weight="700" fill="#17243c" text-anchor="middle">1</text>
+<circle cx="430" cy="310" r="34" fill="#e1f3f0" stroke="#137e87" stroke-width="2"/>
+<text x="430" y="320" font-family="Arial,Helvetica,sans-serif" font-size="26" font-weight="700" fill="#17243c" text-anchor="middle">−1</text>
+<circle cx="575" cy="310" r="34" fill="#e1f3f0" stroke="#137e87" stroke-width="2"/>
+<text x="575" y="320" font-family="Arial,Helvetica,sans-serif" font-size="26" font-weight="700" fill="#17243c" text-anchor="middle">2</text>
+<circle cx="720" cy="310" r="34" fill="#e1f3f0" stroke="#137e87" stroke-width="2"/>
+<text x="720" y="320" font-family="Arial,Helvetica,sans-serif" font-size="26" font-weight="700" fill="#17243c" text-anchor="middle">−2</text>
+<circle cx="865" cy="310" r="34" fill="#e1f3f0" stroke="#137e87" stroke-width="2"/>
+<text x="865" y="320" font-family="Arial,Helvetica,sans-serif" font-size="26" font-weight="700" fill="#17243c" text-anchor="middle">3</text>
+<text x="38" y="180" font-family="Arial,Helvetica,sans-serif" font-size="27" font-weight="700" fill="#315fc0" text-anchor="start">ℕ</text>
+<text x="38" y="320" font-family="Arial,Helvetica,sans-serif" font-size="27" font-weight="700" fill="#137e87" text-anchor="start">ℤ</text>
+</svg>
