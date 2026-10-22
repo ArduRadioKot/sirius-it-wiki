@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 470" role="img" aria-labelledby="title desc"><title id="title">Силы на бруске при тяге вверх под углом</title><desc id="desc">Вертикальная составляющая силы тяги уменьшает реакцию опоры; трение направлено против движения</desc><rect width="1000" height="470" fill="#fbfaf6"/><defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="context-stroke"/></marker></defs>
+<text x="42" y="60" font-family="Arial,Helvetica,sans-serif" font-size="32" font-weight="700" fill="#17243c" text-anchor="start">Тяга под углом</text>
+<text x="42" y="95" font-family="Arial,Helvetica,sans-serif" font-size="20" font-weight="500" fill="#546276" text-anchor="start">Вертикальная составляющая уменьшает нормальную реакцию</text>
+<line x1="65" y1="355" x2="940" y2="355" stroke="#17243c" stroke-width="4" stroke-linecap="round"/>
+<rect x="410" y="260" width="190" height="95" rx="8" fill="#e4eefb" stroke="#315fc0" stroke-width="2"/>
+<text x="505" y="320" font-family="Arial,Helvetica,sans-serif" font-size="36" font-weight="700" fill="#17243c" text-anchor="middle">m</text>
+<line x1="505" y1="257" x2="505" y2="165" stroke="#137e87" stroke-width="4" stroke-linecap="round" marker-end="url(#arrow)"/>
+<text x="524" y="177" font-family="Arial,Helvetica,sans-serif" font-size="26" font-weight="700" fill="#137e87" text-anchor="start">N</text>
+<line x1="505" y1="314" x2="505" y2="420" stroke="#d35943" stroke-width="4" stroke-linecap="round" marker-end="url(#arrow)"/>
+<text x="521" y="423" font-family="Arial,Helvetica,sans-serif" font-size="24" font-weight="700" fill="#d35943" text-anchor="start">mg</text>
+<line x1="600" y1="270" x2="785" y2="172" stroke="#315fc0" stroke-width="5" stroke-linecap="round" marker-end="url(#arrow)"/>
+<text x="797" y="172" font-family="Arial,Helvetica,sans-serif" font-size="28" font-weight="700" fill="#315fc0" text-anchor="start">F</text>
+<line x1="610" y1="270" x2="780" y2="270" stroke="#315fc0" stroke-width="2" stroke-linecap="round" marker-end="url(#arrow)" stroke-dasharray="8 7"/>
+<line x1="785" y1="267" x2="785" y2="172" stroke="#315fc0" stroke-width="2" stroke-linecap="round" marker-end="url(#arrow)" stroke-dasharray="8 7"/>
+<text x="690" y="300" font-family="Arial,Helvetica,sans-serif" font-size="22" font-weight="700" fill="#315fc0" text-anchor="middle">F cos α</text>
+<text x="811" y="232" font-family="Arial,Helvetica,sans-serif" font-size="22" font-weight="700" fill="#315fc0" text-anchor="start">F sin α</text>
+<line x1="408" y1="325" x2="290" y2="325" stroke="#d35943" stroke-width="4" stroke-linecap="round" marker-end="url(#arrow)"/>
+<text x="275" y="317" font-family="Arial,Helvetica,sans-serif" font-size="22" font-weight="700" fill="#d35943" text-anchor="end">Fтр</text>
+<rect x="146" y="95" width="255" height="74" rx="18" fill="#e1f3f0" stroke="none" stroke-width="2"/>
+<text x="274" y="142" font-family="Arial,Helvetica,sans-serif" font-size="22" font-weight="700" fill="#137e87" text-anchor="middle">N = mg − F sin α</text>
+</svg>

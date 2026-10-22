@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="380" viewBox="0 0 760 380" role="img" aria-labelledby="title desc">
+  <title id="title">Построение СДНФ и СКНФ по таблице</title>
+  <desc id="desc">Строки 01 и 10 со значением один дают минтермы СДНФ. Строки 00 и 11 со значением ноль дают макстермы СКНФ.</desc>
+  <rect width="760" height="380" rx="22" fill="#f0f9fb"/>
+  <text x="380" y="37" text-anchor="middle" fill="#173c43" font-family="Arial,sans-serif" font-size="21" font-weight="700">Одна таблица → две совершенные формы</text>
+  <rect x="270" y="65" width="220" height="220" rx="15" fill="#fff" stroke="#bdd4d8" stroke-width="2"/>
+  <rect x="280" y="148" width="200" height="38" rx="8" fill="#d7f2f0" fill-opacity=".65"/>
+  <rect x="280" y="190" width="200" height="38" rx="8" fill="#d7f2f0" fill-opacity=".65"/>
+  <rect x="280" y="106" width="200" height="38" rx="8" fill="#efe6dc" fill-opacity=".6"/>
+  <rect x="280" y="232" width="200" height="38" rx="8" fill="#efe6dc" fill-opacity=".6"/>
+  <path d="M384 103V272" stroke="#c2d5d9" stroke-width="1.5"/>
+  <g fill="#173c43" font-family="Arial,sans-serif" font-size="19" text-anchor="middle">
+    <text x="325" y="96">x,y</text><text x="435" y="96">F</text>
+    <text x="325" y="136">0,0</text><text x="435" y="136">0</text>
+    <text x="325" y="178">0,1</text><text x="435" y="178">1</text>
+    <text x="325" y="220">1,0</text><text x="435" y="220">1</text>
+    <text x="325" y="262">1,1</text><text x="435" y="262">0</text>
+  </g>
+  <path d="M270 168H222M270 210H222M490 126H538M490 252H538" stroke="#6c9ba1" stroke-width="2.2"/>
+  <rect x="22" y="112" width="200" height="115" rx="15" fill="#d7f2f0" stroke="#0b7d86" stroke-width="2"/>
+  <text x="122" y="147" text-anchor="middle" fill="#07555c" font-family="Arial,sans-serif" font-size="20" font-weight="700">СДНФ: строки с 1</text>
+  <text x="122" y="182" text-anchor="middle" fill="#173c43" font-family="Arial,sans-serif" font-size="17">¬x∧y</text>
+  <text x="122" y="209" text-anchor="middle" fill="#173c43" font-family="Arial,sans-serif" font-size="17">∨ x∧¬y</text>
+  <rect x="538" y="112" width="200" height="145" rx="15" fill="#efe6dc" stroke="#a5734e" stroke-width="2"/>
+  <text x="638" y="147" text-anchor="middle" fill="#87532e" font-family="Arial,sans-serif" font-size="20" font-weight="700">СКНФ: строки с 0</text>
+  <text x="638" y="183" text-anchor="middle" fill="#173c43" font-family="Arial,sans-serif" font-size="17">(x∨y)</text>
+  <text x="638" y="211" text-anchor="middle" fill="#173c43" font-family="Arial,sans-serif" font-size="17">∧ (¬x∨¬y)</text>
+  <text x="380" y="339" text-anchor="middle" fill="#536d73" font-family="Arial,sans-serif" font-size="18">Минтерм отмечает одну единицу; макстерм исключает один ноль</text>
+</svg>

@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="370" viewBox="0 0 760 370" role="img" aria-labelledby="title desc">
+  <title id="title">Критерий логического следования по нулевым строкам</title>
+  <desc id="desc">Для Гамма равно P и Q множество её нулевых наборов содержит 00, 01, 10. Для H равно P нулевые наборы 00 и 01 составляют подмножество этого множества. Набор 11 находится снаружи.</desc>
+  <rect width="760" height="370" rx="22" fill="#f0f9fb"/>
+  <text x="380" y="38" text-anchor="middle" fill="#173c43" font-family="Arial,sans-serif" font-size="21" font-weight="700">Γ ⊨ H  ⇔  Z(H) ⊆ Z(Γ)</text>
+  <rect x="80" y="75" width="600" height="240" rx="18" fill="#fff" stroke="#c5dadd" stroke-width="2"/>
+  <text x="100" y="102" fill="#536d73" font-family="Arial,sans-serif" font-size="16">Все наборы P,Q</text>
+  <ellipse cx="355" cy="200" rx="230" ry="97" fill="#e6e1f5" stroke="#7e6fc6" stroke-width="3"/>
+  <text x="230" y="144" fill="#63539f" font-family="Arial,sans-serif" font-size="19" font-weight="700">Z(Γ), Γ=P∧Q</text>
+  <ellipse cx="315" cy="213" rx="135" ry="61" fill="#b7edf0" stroke="#0b7d86" stroke-width="3"/>
+  <text x="255" y="199" fill="#07555c" font-family="Arial,sans-serif" font-size="18" font-weight="700">Z(H), H=P</text>
+  <text x="245" y="235" fill="#173c43" font-family="Arial,sans-serif" font-size="20">00</text>
+  <text x="370" y="235" fill="#173c43" font-family="Arial,sans-serif" font-size="20">01</text>
+  <text x="505" y="231" fill="#173c43" font-family="Arial,sans-serif" font-size="20">10</text>
+  <text x="619" y="202" fill="#173c43" font-family="Arial,sans-serif" font-size="20">11</text>
+  <text x="380" y="344" text-anchor="middle" fill="#536d73" font-family="Arial,sans-serif" font-size="17">Всякий ноль заключения уже является нулём посылок</text>
+</svg>

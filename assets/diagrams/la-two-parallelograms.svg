@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="360" viewBox="0 0 760 360" role="img" aria-labelledby="title desc">
+  <title id="title">Два параллелограмма с общим центром</title>
+  <desc id="desc">Большой параллелограмм MNPQ и внутренний ABCD имеют общий центр диагоналей O.</desc>
+  <rect width="760" height="360" rx="22" fill="#f0f9fb"/>
+  <text x="380" y="34" text-anchor="middle" fill="#173c43" font-family="Arial,sans-serif" font-size="21" font-weight="700">Две пары диагоналей — одна середина</text>
+  <path d="M110 275 470 275 550 75 190 75Z" fill="#e5f3f5" stroke="#0b7d86" stroke-width="3"/>
+  <path d="M150 175 290 275 510 175 370 75Z" fill="#e9e4f7" fill-opacity=".82" stroke="#7e6fc6" stroke-width="3"/>
+  <path d="M110 275 550 75M470 275 190 75" stroke="#0b7d86" stroke-width="1.8" stroke-dasharray="6 6"/>
+  <path d="M150 175 510 175M290 275 370 75" stroke="#7e6fc6" stroke-width="2" stroke-dasharray="7 5"/>
+  <circle cx="330" cy="175" r="8" fill="#173c43"/>
+  <g fill="#173c43" font-family="Arial,sans-serif" font-size="18" font-weight="700">
+    <text x="80" y="305">M</text><text x="475" y="305">N</text><text x="565" y="80">P</text><text x="163" y="65">Q</text>
+    <text x="120" y="170">A</text><text x="280" y="306">B</text><text x="514" y="177">C</text><text x="362" y="66">D</text><text x="340" y="165">O</text>
+  </g>
+  <text x="380" y="337" text-anchor="middle" fill="#536d73" font-family="Arial,sans-serif" font-size="17">(A + C) / 2 = (M + P) / 2</text>
+</svg>

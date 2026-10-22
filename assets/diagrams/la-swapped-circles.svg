@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="360" viewBox="0 0 760 360" role="img" aria-labelledby="title desc">
+  <title id="title">Две окружности, переставляемые отражением</title>
+  <desc id="desc">Равные окружности по обе стороны вертикальной оси пересекаются в двух точках S и M на этой оси.</desc>
+  <rect width="760" height="360" rx="22" fill="#f0f9fb"/>
+  <text x="380" y="35" text-anchor="middle" fill="#173c43" font-family="Arial,sans-serif" font-size="21" font-weight="700">Отражение меняет окружности местами</text>
+  <circle cx="285" cy="185" r="145" fill="#e9e4f7" fill-opacity=".45" stroke="#7e6fc6" stroke-width="3"/>
+  <circle cx="475" cy="185" r="145" fill="#b7edf0" fill-opacity=".48" stroke="#0b7d86" stroke-width="3"/>
+  <path d="M380 49V321" stroke="#315b63" stroke-width="2.5" stroke-dasharray="7 6"/>
+  <circle cx="285" cy="185" r="5" fill="#7e6fc6"/><circle cx="475" cy="185" r="5" fill="#0b7d86"/>
+  <circle cx="380" cy="75" r="7" fill="#173c43"/><circle cx="380" cy="295" r="7" fill="#173c43"/>
+  <g fill="#173c43" font-family="Arial,sans-serif" font-size="18" font-weight="700">
+    <text x="395" y="76">S</text><text x="395" y="301">M</text><text x="269" y="175">O₁</text><text x="482" y="175">O₂</text><text x="390" y="54">l</text>
+  </g>
+  <text x="380" y="341" text-anchor="middle" fill="#536d73" font-family="Arial,sans-serif" font-size="17">Обе общие точки остаются на оси l</text>
+</svg>

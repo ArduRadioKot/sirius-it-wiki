@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="350" viewBox="0 0 760 350" role="img" aria-labelledby="title desc">
+  <title id="title">Равносильность проверяется по всем строкам</title>
+  <desc id="desc">Слева столбцы P импликация Q и не P или Q одинаковы во всех четырёх строках. Справа для другой пары формул, P и P и Q, различие в одной строке служит контрпримером.</desc>
+  <rect width="760" height="350" rx="22" fill="#f0f9fb"/>
+  <text x="380" y="38" text-anchor="middle" fill="#173c43" font-family="Arial,sans-serif" font-size="21" font-weight="700">Сравни итоговые столбцы</text>
+  <rect x="48" y="66" width="310" height="226" rx="16" fill="#e9f5f6" stroke="#a9d9dc" stroke-width="2"/>
+  <text x="202" y="97" text-anchor="middle" fill="#07555c" font-family="Arial,sans-serif" font-size="18" font-weight="700">P→Q  и  ¬P∨Q</text>
+  <g fill="#173c43" font-family="Arial,sans-serif" font-size="18" text-anchor="middle">
+    <text x="100" y="135">P,Q</text><text x="218" y="135">F</text><text x="297" y="135">H</text>
+    <text x="100" y="166">0,0</text><text x="218" y="166">1</text><text x="297" y="166">1</text>
+    <text x="100" y="198">0,1</text><text x="218" y="198">1</text><text x="297" y="198">1</text>
+    <text x="100" y="230">1,0</text><text x="218" y="230">0</text><text x="297" y="230">0</text>
+    <text x="100" y="262">1,1</text><text x="218" y="262">1</text><text x="297" y="262">1</text>
+  </g>
+  <path d="M172 142V270M256 142V270" stroke="#b7d4d8" stroke-width="1.5"/>
+  <rect x="401" y="66" width="310" height="226" rx="16" fill="#f7f1ec" stroke="#e8cab4" stroke-width="2"/>
+  <text x="556" y="97" text-anchor="middle" fill="#87532e" font-family="Arial,sans-serif" font-size="18" font-weight="700">Хватит одного различия</text>
+  <text x="555" y="137" text-anchor="middle" fill="#173c43" font-family="Arial,sans-serif" font-size="16">Другой пример: F=P, H=P∧Q</text>
+  <text x="555" y="161" text-anchor="middle" fill="#173c43" font-family="Arial,sans-serif" font-size="18">P=1, Q=0</text>
+  <rect x="441" y="173" width="230" height="55" rx="11" fill="#fff"/>
+  <text x="555" y="207" text-anchor="middle" fill="#87532e" font-family="Arial,sans-serif" font-size="21" font-weight="700">F=1  ≠  H=0</text>
+  <text x="555" y="264" text-anchor="middle" fill="#87532e" font-family="Arial,sans-serif" font-size="17">контрпример к F≡H</text>
+  <text x="380" y="328" text-anchor="middle" fill="#536d73" font-family="Arial,sans-serif" font-size="17">Совпадение во всех строках доказывает равносильность</text>
+</svg>

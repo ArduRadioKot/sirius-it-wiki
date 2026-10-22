@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="350" viewBox="0 0 760 350" role="img" aria-labelledby="title desc">
+  <title id="title">Сравнение переноса и осевого отражения</title>
+  <desc id="desc">Слева треугольник сдвинут вправо на одинаковый вектор. Справа треугольник отражён относительно вертикальной оси.</desc>
+  <defs><marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M1 1 7 4 1 7" fill="none" stroke="#0b7d86" stroke-width="1.5"/></marker></defs>
+  <rect width="760" height="350" rx="22" fill="#f0f9fb"/>
+  <path d="M380 45V315" stroke="#d0e4e7" stroke-width="2"/>
+  <g font-family="Arial,sans-serif" text-anchor="middle" fill="#173c43" font-size="21" font-weight="700"><text x="190" y="39">Перенос</text><text x="570" y="39">Отражение</text></g>
+  <path d="M48 245 130 96 156 245Z" fill="#e9e4f7" stroke="#7e6fc6" stroke-width="3"/>
+  <path d="M200 245 282 96 308 245Z" fill="#b7edf0" stroke="#0b7d86" stroke-width="3"/>
+  <path d="M130 281H275" stroke="#0b7d86" stroke-width="3" marker-end="url(#arr)"/>
+  <text x="203" y="310" text-anchor="middle" fill="#536d73" font-family="Arial,sans-serif" font-size="17">все точки: +v</text>
+  <path d="M565 65V275" stroke="#315b63" stroke-width="2.5" stroke-dasharray="7 6"/>
+  <path d="M422 245 443 105 510 245Z" fill="#e9e4f7" stroke="#7e6fc6" stroke-width="3"/>
+  <path d="M620 245 687 105 708 245Z" fill="#b7edf0" stroke="#0b7d86" stroke-width="3"/>
+  <path d="M510 165H620" stroke="#8aa9ae" stroke-width="2" stroke-dasharray="5 5"/>
+  <circle cx="565" cy="165" r="5" fill="#315b63"/>
+  <text x="565" y="300" text-anchor="middle" fill="#536d73" font-family="Arial,sans-serif" font-size="17">ось неподвижна</text>
+</svg>

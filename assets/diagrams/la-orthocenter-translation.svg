@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="405" viewBox="0 0 760 405" role="img" aria-labelledby="title desc">
+  <title id="title">Перенос ортоцентра в задаче с прямоугольником</title>
+  <desc id="desc">Треугольник ABE над прямоугольником ABCD. Две высоты треугольника переносятся вниз на AD и пересекаются в P; H и P лежат на вертикальной высоте из E.</desc>
+  <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M1 1 7 4 1 7" fill="none" stroke="#0b7d86" stroke-width="1.5"/></marker></defs>
+  <rect width="760" height="405" rx="22" fill="#f0f9fb"/>
+  <text x="380" y="37" text-anchor="middle" fill="#173c43" font-family="Arial,sans-serif" font-size="21" font-weight="700">Перенеси две высоты на вектор AD</text>
+  <path d="M250 255H510V350H250Z" fill="#e5f3f5" stroke="#0b7d86" stroke-width="3"/>
+  <path d="M250 255 355 75 510 255Z" fill="#e9e4f7" stroke="#7e6fc6" stroke-width="3"/>
+  <path d="M355 75V378" stroke="#315b63" stroke-width="2.5" stroke-dasharray="7 6"/>
+  <path d="M250 255 445 88M510 255 300 133" stroke="#a88ad7" stroke-width="2.5" stroke-dasharray="6 5"/>
+  <path d="M250 350 450 179M510 350 300 228" stroke="#0b9ca6" stroke-width="2.5" stroke-dasharray="6 5"/>
+  <path d="M575 265V342" stroke="#0b7d86" stroke-width="3" marker-end="url(#arrow)"/>
+  <text x="595" y="309" fill="#0b7d86" font-family="Arial,sans-serif" font-size="18" font-weight="700">AD</text>
+  <circle cx="355" cy="165" r="7" fill="#7e6fc6"/><circle cx="355" cy="260" r="7" fill="#0b7d86"/>
+  <g fill="#173c43" font-family="Arial,sans-serif" font-size="18" font-weight="700">
+    <text x="232" y="246">A</text><text x="516" y="250">B</text><text x="516" y="364">C</text><text x="230" y="365">D</text>
+    <text x="345" y="65">E</text><text x="370" y="167">H</text><text x="370" y="265">P</text>
+  </g>
+  <text x="380" y="393" text-anchor="middle" fill="#536d73" font-family="Arial,sans-serif" font-size="16">H → P; высота из E остаётся той же прямой</text>
+</svg>
