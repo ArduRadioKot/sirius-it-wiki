@@ -1,72 +1,102 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
-<title>Теорема Шаля в движении</title>
-<meta name="claude:viewport-fit-sides" content="cover">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&family=PT+Sans:wght@400;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#00a7a7">
+<title>Теорема Шаля в движении — Сириус Wiki</title>
+<script src="../../theme.js"></script>
+<link rel="stylesheet" href="../../vendor/katex/katex.min.css">
+<script src="../../vendor/katex/katex.min.js"></script>
 <style>
+@font-face{font-family:Montserrat;font-style:normal;font-weight:400 700;font-display:swap;
+  src:url("../../assets/fonts/montserrat-cyrillic.woff2") format("woff2");unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116}
+@font-face{font-family:Montserrat;font-style:normal;font-weight:400 700;font-display:swap;
+  src:url("../../assets/fonts/montserrat-latin.woff2") format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+20AC,U+2122,U+2212}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:104px}
+[hidden]:not([hidden=until-found i]){display:none!important}
+img{max-width:100%}
 /* Layout: one reading column of problem "sheets"; each sheet = statement, live drawing on graph paper, controls, step ribbon. */
 :root{
-  --bg:#F1F8F8; --sheet:#FFFFFF; --grid:#DDEBED; --ink:#1F2A2E; --muted:#586B70; --rule:#CEE0E2;
-  --move:#BD5B29; --move-soft:#FFF0E8; --center:#0B7D86; --center-soft:#DFF3F5; --res:#167752; --res-soft:#E1F4EA;
-  --btn:#1B2430; --btn-fg:#FFFFFF;
-  --f-display:"Literata",Georgia,"Times New Roman",serif;
-  --f-body:"PT Sans","Segoe UI",Arial,sans-serif;
-  --f-mono:"JetBrains Mono",ui-monospace,"Cascadia Mono",Menlo,monospace;
+  color-scheme:light;
+  --bg:#FFFFFF; --sheet:#FFFFFF; --panel:#F2F5F6; --grid:#E4ECEE; --ink:#333333; --muted:#667075; --rule:#E0E6E8; --outline:#BDBDBD;
+  --accent:#05DBD0; --accent-dark:#0B7D86; --on-accent:#05323A;
+  --move:#BD5B29; --move-soft:#FFF0E8; --center:#0B7D86; --center-soft:#E3F5F8; --res:#167752; --res-soft:#E1F4EA;
+  --btn:var(--accent); --btn-fg:var(--on-accent);
+  --f-display:Montserrat,"Segoe UI",Arial,sans-serif;
+  --f-body:Montserrat,"Segoe UI",Arial,sans-serif;
+  --f-mono:ui-monospace,SFMono-Regular,Menlo,monospace;
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
-  --bg:#102025; --sheet:#172B30; --grid:#254047; --ink:#E8F2F2; --muted:#A3B7BA; --rule:#355158;
-  --move:#FF9C69; --move-soft:#442D23; --center:#70D3DA; --center-soft:#1C444A; --res:#67D9A3; --res-soft:#1A4031;
-  --btn:#E5EAF0; --btn-fg:#11161C; color-scheme:dark}}
+  --bg:#000000; --sheet:#0F1213; --panel:#0F1213; --grid:#1E292B; --ink:#F1F4F5; --muted:#9AA5A8; --rule:#22292B; --outline:#3B4447;
+  --accent-dark:#6DD0DE; --move:#FF9C69; --move-soft:#442D23; --center:#6DD0DE; --center-soft:#0E2226; --res:#67D9A3; --res-soft:#1A4031;
+  color-scheme:dark}}
 :root[data-theme="dark"]{
-  --bg:#102025; --sheet:#172B30; --grid:#254047; --ink:#E8F2F2; --muted:#A3B7BA; --rule:#355158;
-  --move:#FF9C69; --move-soft:#442D23; --center:#70D3DA; --center-soft:#1C444A; --res:#67D9A3; --res-soft:#1A4031;
-  --btn:#E5EAF0; --btn-fg:#11161C; color-scheme:dark}
+  --bg:#000000; --sheet:#0F1213; --panel:#0F1213; --grid:#1E292B; --ink:#F1F4F5; --muted:#9AA5A8; --rule:#22292B; --outline:#3B4447;
+  --accent-dark:#6DD0DE; --move:#FF9C69; --move-soft:#442D23; --center:#6DD0DE; --center-soft:#0E2226; --res:#67D9A3; --res-soft:#1A4031;
+  color-scheme:dark}
 
-body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.5;
-  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 64px}
-.wrap{max-width:880px;margin:0 auto;display:flex;flex-direction:column;gap:28px}
-.wiki-back{align-self:flex-start;display:inline-flex;align-items:center;gap:8px;padding:7px 12px;
-  border:1px solid var(--rule);border-radius:6px;background:var(--sheet);color:var(--center);
-  font:700 13px var(--f-body);text-decoration:none}
-.wiki-back:hover{border-color:var(--center);background:var(--center-soft)}
-.wiki-back:focus-visible{outline:2px solid var(--center);outline-offset:3px}
-header{display:flex;flex-direction:column;gap:10px}
-.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
-h1{font-family:var(--f-display);font-weight:600;font-size:clamp(30px,6vw,44px);line-height:1.1;margin:0;text-wrap:balance}
-.lede{max-width:64ch;margin:0;color:var(--ink)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
+.site-header{position:sticky;top:0;z-index:20;min-height:88px;padding:16px 32px;display:flex;align-items:center;gap:24px;
+  border-bottom:1px solid var(--rule);background:var(--bg)}
+.brand{display:inline-flex;align-items:center;gap:16px;min-width:0;color:var(--ink);text-decoration:none}
+.brand img{display:block;width:178px;max-height:48px;object-fit:contain;object-position:left center}
+.brand .brand-logo-dark{display:none}
+[data-theme="dark"] .brand .brand-logo-light{display:none}
+[data-theme="dark"] .brand .brand-logo-dark{display:block}
+.brand-separator{width:1px;height:28px;background:var(--rule)}
+.brand-wiki{color:var(--accent-dark);font-size:18px;font-weight:800;letter-spacing:.12em}
+.site-actions{margin-left:auto;display:flex;align-items:center;gap:24px}
+.site-actions a{color:var(--ink);font-size:14px;font-weight:600;text-decoration:none}
+.site-actions a:hover{color:var(--accent-dark)}
+.theme-switch{display:grid;place-items:center;width:38px;height:38px;padding:0;border:1px solid var(--rule);
+  border-radius:50%;background:transparent;color:var(--ink);font-size:22px;font-weight:400}
+.theme-switch:hover{border-color:var(--accent-dark);background:var(--center-soft)}
+.wrap{width:min(100%,1180px);margin:0 auto;padding:48px 32px 100px;display:flex;flex-direction:column;gap:36px}
+main.wrap{width:100%;padding:0;margin:0;gap:36px}
+.wiki-back{align-self:flex-start;display:inline-flex;align-items:center;gap:8px;margin-bottom:22px;
+  color:var(--accent-dark);font-size:14px;font-weight:700;text-decoration:none}
+.wiki-back:hover{text-decoration:underline;text-underline-offset:3px}
+header.article-head{display:flex;flex-direction:column;gap:16px;padding-bottom:28px;border-bottom:2px solid var(--ink)}
+.eyebrow{font-size:14px;font-weight:600;color:var(--accent-dark)}
+h1{max-width:900px;font-family:var(--f-display);font-weight:700;font-size:clamp(32px,5vw,64px);letter-spacing:-.025em;
+  line-height:1.08;margin:0;overflow-wrap:break-word;text-wrap:balance}
+.lede{max-width:850px;margin:0;color:var(--muted);font-size:19px;line-height:1.55}
 .legend{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:14px;color:var(--muted)}
 .legend span{display:inline-flex;align-items:center;gap:6px}
 .sw{width:12px;height:12px;border-radius:50%;display:inline-block}
-nav{display:flex;flex-wrap:wrap;gap:6px}
-nav a{font-family:var(--f-mono);font-size:13px;color:var(--ink);text-decoration:none;border:1px solid var(--rule);
-  background:var(--sheet);border-radius:999px;padding:4px 11px}
-nav a:hover{border-color:var(--ink)}
-nav a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid var(--center);outline-offset:2px}
+#nav{display:flex;flex-wrap:wrap;gap:8px}
+#nav a{font-size:13px;font-weight:600;color:var(--ink);text-decoration:none;border:1px solid var(--rule);
+  background:var(--sheet);border-radius:999px;padding:8px 14px}
+#nav a:hover{border-color:var(--accent-dark);background:var(--center-soft);color:var(--accent-dark)}
+a:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible{outline:2px solid var(--accent-dark);outline-offset:3px}
 
-section.sheet{background:var(--sheet);border:1px solid var(--rule);border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:12px;scroll-margin-top:16px;box-shadow:0 8px 28px rgba(12,74,81,.05)}
-.sheet h2{font-family:var(--f-display);font-weight:600;font-size:23px;line-height:1.2;margin:0;text-wrap:balance}
-.sheet .num{font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--move)}
+section.sheet{background:var(--sheet);border:1px solid var(--outline);border-radius:0;padding:32px;display:flex;
+  flex-direction:column;gap:16px;scroll-margin-top:104px;box-shadow:9px 9px 0 var(--panel);margin:0 9px 9px 0}
+.sheet h2{font-family:var(--f-display);font-weight:700;font-size:clamp(23px,3vw,32px);letter-spacing:-.025em;line-height:1.2;margin:0;text-wrap:balance}
+.sheet .num{font-size:13px;font-weight:700;color:var(--accent-dark)}
 .sheet p{margin:0;max-width:68ch}
 .sheet .watch{color:var(--muted);font-size:15px}
-.fig{position:relative;border:1px solid var(--rule);border-radius:6px;overflow:hidden;background:var(--sheet);touch-action:none}
+.fig{position:relative;border:1px solid var(--rule);border-radius:0;overflow:hidden;background:var(--bg);touch-action:none}
 .fig svg{display:block;width:100%;height:auto;max-height:520px;user-select:none;-webkit-user-select:none}
 .controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
-button{font-family:var(--f-body);font-size:15px;font-weight:700;border-radius:6px;padding:7px 14px;cursor:pointer;
+button{font-family:var(--f-body);font-size:14px;font-weight:600;border-radius:999px;min-height:40px;padding:8px 16px;cursor:pointer;
   border:1px solid var(--btn);background:var(--btn);color:var(--btn-fg)}
-button.ghost{background:transparent;color:var(--ink);border-color:var(--rule);font-weight:400}
-button.ghost:hover{border-color:var(--ink)}
+button:not(.ghost):not(.theme-switch):hover{filter:brightness(.95)}
+button.ghost{background:transparent;color:var(--ink);border-color:var(--rule);font-weight:600}
+button.ghost:hover{border-color:var(--accent-dark);background:var(--center-soft)}
 button:disabled{opacity:.45;cursor:default}
-.param{display:inline-flex;align-items:center;gap:8px;font-family:var(--f-mono);font-size:13px;color:var(--muted)}
-.param input{width:130px;accent-color:var(--move)}
+.param{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--muted)}
+.param input{width:130px;accent-color:var(--accent-dark)}
 .param output{min-width:44px;color:var(--ink);font-variant-numeric:tabular-nums}
-.steps{display:flex;flex-wrap:wrap;gap:6px;font-family:var(--f-display);font-size:15px}
-.step{border:1px solid var(--rule);border-radius:5px;padding:2px 9px;color:var(--muted);background:var(--sheet)}
+.steps{display:flex;flex-wrap:wrap;gap:6px;font-size:14px}
+.step{border:1px solid var(--rule);border-radius:0;padding:5px 10px;color:var(--muted);background:var(--sheet)}
 .step.on{border-color:var(--move);color:var(--ink);background:var(--move-soft)}
 .step.done{color:var(--ink)}
 .step.done::before{content:"✓ ";color:var(--res);font-family:var(--f-body)}
-.info{font-family:var(--f-mono);font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
-.msg{border-left:3px solid var(--res);background:var(--res-soft);padding:8px 12px;border-radius:0 6px 6px 0;font-size:15px}
+.info{font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.msg{border-left:3px solid var(--res);background:var(--res-soft);padding:10px 14px;font-size:15px}
 .msg:empty{display:none}
 i.v{font-family:var(--f-display);font-style:italic}
 sub,sup{font-size:70%;line-height:0}
@@ -104,24 +134,26 @@ text.tc{fill:var(--center)} text.tr{fill:var(--res)} text.tm{fill:var(--move)} t
 text.up{font-style:normal;font-family:var(--f-body)}
 
 /* solutions */
-details.sol{border-top:1px solid var(--rule);padding-top:10px}
-details.sol summary{font-family:var(--f-display);font-weight:600;font-size:19px;cursor:pointer;list-style:none;display:flex;align-items:center;gap:8px}
+details.sol{border-top:1px solid var(--rule);padding-top:16px}
+details.sol summary{font-family:var(--f-display);font-weight:700;font-size:19px;cursor:pointer;list-style:none;display:flex;align-items:center;gap:8px}
 details.sol summary::-webkit-details-marker{display:none}
 details.sol summary::before{content:"▸";font-family:var(--f-body);font-size:14px;color:var(--muted);transition:transform .15s}
 details.sol[open] summary::before{transform:rotate(90deg)}
-.solbody{display:flex;flex-direction:column;gap:10px;margin-top:10px;max-width:70ch}
+.solbody{display:flex;flex-direction:column;gap:12px;margin-top:14px;max-width:76ch;line-height:1.65}
 .solbody p{margin:0}
 .solbody ol{margin:0;padding:0;list-style:none;counter-reset:st;display:flex;flex-direction:column;gap:8px}
 .solbody li{counter-increment:st;display:grid;grid-template-columns:28px minmax(0,1fr);gap:4px}
-.solbody li::before{content:counter(st);font-family:var(--f-mono);font-size:12px;color:var(--center);border:1px solid var(--center);border-radius:50%;
+.solbody li::before{content:counter(st);font-family:var(--f-body);font-weight:700;font-size:12px;color:var(--center);border:1px solid var(--center);border-radius:50%;
   width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center;margin-top:2px}
-.tag{font-family:var(--f-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;margin-right:8px;color:var(--muted)}
+.tag{font-family:var(--f-body);font-size:12px;font-weight:700;margin-right:8px;color:var(--accent-dark)}
 .idea{color:var(--ink)}
-.onfig{border-left:3px solid var(--move);background:var(--move-soft);padding:8px 12px;border-radius:0 6px 6px 0;font-size:15px}
+.onfig{border-left:3px solid var(--move);background:var(--move-soft);padding:10px 14px;font-size:15px}
 .onfig .tag{color:var(--move)}
-.ans{border-left:3px solid var(--res);background:var(--res-soft);padding:8px 12px;border-radius:0 6px 6px 0}
+.ans{border-left:3px solid var(--res);background:var(--res-soft);padding:10px 14px}
 .ans .tag{color:var(--res)}
 .m{font-family:var(--f-display);white-space:normal}
+.katex{font-size:1em}
+.solbody .katex{font-size:1.04em}
 .m i{font-style:italic}
 .m .up{font-style:normal}
 .ss{display:inline-flex;flex-direction:column;vertical-align:-0.42em;font-size:72%;line-height:1.02;margin-left:1px}
@@ -133,14 +165,41 @@ details.sol[open] summary::before{transform:rotate(90deg)}
 .frac>span:first-child{border-bottom:1px solid currentColor;padding:0 2px}
 .rad{border-top:1px solid currentColor;padding-top:1px}
 .notation{display:flex;flex-wrap:wrap;gap:4px 18px;font-size:14px;color:var(--muted);margin:0;padding:0;list-style:none}
-@media (max-width:520px){section.sheet{padding:14px}.sheet h2{font-size:20px}}
+@media (max-width:680px){
+  .site-header{min-height:70px;padding:12px 16px}
+  .brand img{width:132px}
+  .brand-separator{height:22px}
+  .brand-wiki{font-size:14px}
+  .site-actions{gap:12px}
+  .site-actions a{display:none}
+  .wrap{padding:32px 16px 72px;gap:28px}
+  main.wrap{gap:28px}
+  section.sheet{padding:18px;gap:14px}
+  .sheet h2{font-size:22px}
+  .lede{font-size:16px}
+  .fig svg{max-height:420px}
+}
 @media (prefers-reduced-motion:reduce){*{scroll-behavior:auto}}
 </style>
+</head>
+<body>
 
+<div class="site-header">
+  <a class="brand" href="../../index.html#/" aria-label="На главную Сириус Wiki">
+    <img class="brand-logo-light" src="../../assets/sirius-logo.svg" alt="Университет Сириус">
+    <img class="brand-logo-dark" src="../../assets/sirius-logo-dark.svg" alt="" aria-hidden="true">
+    <span class="brand-separator"></span><span class="brand-wiki">WIKI</span>
+  </a>
+  <nav class="site-actions" aria-label="Разделы вики">
+    <a href="../../index.html#/study">Учёба</a>
+    <a href="../../index.html#/study/2026-10-27/challes-motion-problems">Конспект</a>
+    <button class="theme-switch" type="button" data-theme-toggle aria-label="Сменить тему">◐</button>
+  </nav>
+</div>
 <div class="wrap">
-  <a class="wiki-back" href="../../index.html#/study/2026-10-27/challes-motion-problems">← К конспекту на вики</a>
-  <header>
-    <div class="eyebrow">Композиции движений плоскости</div>
+  <header class="article-head">
+    <a class="wiki-back" href="../../index.html#/study/2026-10-27/challes-motion-problems">← К конспекту на вики</a>
+    <div class="eyebrow">Линейная алгебра · 27 октября</div>
     <h1>Теорема Шаля в движении</h1>
     <p class="lede">Живые чертежи к задачам листка. Перетаскивайте точки с белой серединой — построение пересчитывается сразу. Кнопка «Запустить» выполняет повороты по очереди: оранжевый флажок показывает, куда переходит точка и как поворачивается плоскость. Под каждым чертежом — решение по шагам и пояснение, что именно видно на анимации.</p>
     <div class="legend">
@@ -151,7 +210,7 @@ details.sol[open] summary::before{transform:rotate(90deg)}
     <ul class="notation" id="notation"></ul>
     <nav id="nav" aria-label="Задачи"></nav>
   </header>
-  <main id="main" class="wrap" style="gap:28px"></main>
+  <main id="main" class="wrap"></main>
 </div>
 
 <script id="geo">
@@ -422,7 +481,11 @@ function mathHTML(s){s=s.replace(/\^\{\\circ\}/g,'°').replace(/\^\\circ/g,'°')
       else out+=base}
     return out}
   return seq(false).replace(/(\s|&thinsp;)+(?= )/g,'').replace(/ {2,}/g,' ').trim()}
-const tex=str=>str.replace(/\$([^$]+)\$/g,(m,x)=>`<span class="m">${mathHTML(x)}</span>`);
+const tex=str=>str.replace(/\$([^$]+)\$/g,(m,x)=>`<span class="m">${
+  typeof katex!=='undefined'
+    ? katex.renderToString(x,{throwOnError:false,strict:'ignore',macros:{'\\id':'\\operatorname{id}'}})
+    : mathHTML(x)
+}</span>`);
 
 /* ---------- solutions ---------- */
 const SOL={
