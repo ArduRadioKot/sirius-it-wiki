@@ -642,6 +642,24 @@ kbd {
   text-decoration-color: var(--accent);
   text-underline-offset: 3px;
 }
+.markdown a[href*="challes-interactive-2026-10-27.html"] {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 8px 14px;
+  border: 1px solid var(--accent-dark);
+  border-radius: 10px;
+  background: var(--accent-softer);
+  color: var(--accent-deep);
+  font-size: 0.88em;
+  font-weight: 700;
+  line-height: 1.35;
+  text-decoration: none;
+}
+.markdown a[href*="challes-interactive-2026-10-27.html"]:hover,
+.markdown a[href*="challes-interactive-2026-10-27.html"]:focus-visible {
+  background: var(--accent-soft);
+}
 .markdown ul,
 .markdown ol {
   margin: 1.2em 0;

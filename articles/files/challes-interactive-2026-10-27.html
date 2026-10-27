@@ -1,0 +1,678 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Теорема Шаля в движении</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&family=PT+Sans:wght@400;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one reading column of problem "sheets"; each sheet = statement, live drawing on graph paper, controls, step ribbon. */
+:root{
+  --bg:#F1F8F8; --sheet:#FFFFFF; --grid:#DDEBED; --ink:#1F2A2E; --muted:#586B70; --rule:#CEE0E2;
+  --move:#BD5B29; --move-soft:#FFF0E8; --center:#0B7D86; --center-soft:#DFF3F5; --res:#167752; --res-soft:#E1F4EA;
+  --btn:#1B2430; --btn-fg:#FFFFFF;
+  --f-display:"Literata",Georgia,"Times New Roman",serif;
+  --f-body:"PT Sans","Segoe UI",Arial,sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,"Cascadia Mono",Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#102025; --sheet:#172B30; --grid:#254047; --ink:#E8F2F2; --muted:#A3B7BA; --rule:#355158;
+  --move:#FF9C69; --move-soft:#442D23; --center:#70D3DA; --center-soft:#1C444A; --res:#67D9A3; --res-soft:#1A4031;
+  --btn:#E5EAF0; --btn-fg:#11161C; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#102025; --sheet:#172B30; --grid:#254047; --ink:#E8F2F2; --muted:#A3B7BA; --rule:#355158;
+  --move:#FF9C69; --move-soft:#442D23; --center:#70D3DA; --center-soft:#1C444A; --res:#67D9A3; --res-soft:#1A4031;
+  --btn:#E5EAF0; --btn-fg:#11161C; color-scheme:dark}
+
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.5;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 64px}
+.wrap{max-width:880px;margin:0 auto;display:flex;flex-direction:column;gap:28px}
+.wiki-back{align-self:flex-start;display:inline-flex;align-items:center;gap:8px;padding:7px 12px;
+  border:1px solid var(--rule);border-radius:6px;background:var(--sheet);color:var(--center);
+  font:700 13px var(--f-body);text-decoration:none}
+.wiki-back:hover{border-color:var(--center);background:var(--center-soft)}
+.wiki-back:focus-visible{outline:2px solid var(--center);outline-offset:3px}
+header{display:flex;flex-direction:column;gap:10px}
+.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+h1{font-family:var(--f-display);font-weight:600;font-size:clamp(30px,6vw,44px);line-height:1.1;margin:0;text-wrap:balance}
+.lede{max-width:64ch;margin:0;color:var(--ink)}
+.legend{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:14px;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.sw{width:12px;height:12px;border-radius:50%;display:inline-block}
+nav{display:flex;flex-wrap:wrap;gap:6px}
+nav a{font-family:var(--f-mono);font-size:13px;color:var(--ink);text-decoration:none;border:1px solid var(--rule);
+  background:var(--sheet);border-radius:999px;padding:4px 11px}
+nav a:hover{border-color:var(--ink)}
+nav a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid var(--center);outline-offset:2px}
+
+section.sheet{background:var(--sheet);border:1px solid var(--rule);border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:12px;scroll-margin-top:16px;box-shadow:0 8px 28px rgba(12,74,81,.05)}
+.sheet h2{font-family:var(--f-display);font-weight:600;font-size:23px;line-height:1.2;margin:0;text-wrap:balance}
+.sheet .num{font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--move)}
+.sheet p{margin:0;max-width:68ch}
+.sheet .watch{color:var(--muted);font-size:15px}
+.fig{position:relative;border:1px solid var(--rule);border-radius:6px;overflow:hidden;background:var(--sheet);touch-action:none}
+.fig svg{display:block;width:100%;height:auto;max-height:520px;user-select:none;-webkit-user-select:none}
+.controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+button{font-family:var(--f-body);font-size:15px;font-weight:700;border-radius:6px;padding:7px 14px;cursor:pointer;
+  border:1px solid var(--btn);background:var(--btn);color:var(--btn-fg)}
+button.ghost{background:transparent;color:var(--ink);border-color:var(--rule);font-weight:400}
+button.ghost:hover{border-color:var(--ink)}
+button:disabled{opacity:.45;cursor:default}
+.param{display:inline-flex;align-items:center;gap:8px;font-family:var(--f-mono);font-size:13px;color:var(--muted)}
+.param input{width:130px;accent-color:var(--move)}
+.param output{min-width:44px;color:var(--ink);font-variant-numeric:tabular-nums}
+.steps{display:flex;flex-wrap:wrap;gap:6px;font-family:var(--f-display);font-size:15px}
+.step{border:1px solid var(--rule);border-radius:5px;padding:2px 9px;color:var(--muted);background:var(--sheet)}
+.step.on{border-color:var(--move);color:var(--ink);background:var(--move-soft)}
+.step.done{color:var(--ink)}
+.step.done::before{content:"✓ ";color:var(--res);font-family:var(--f-body)}
+.info{font-family:var(--f-mono);font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.msg{border-left:3px solid var(--res);background:var(--res-soft);padding:8px 12px;border-radius:0 6px 6px 0;font-size:15px}
+.msg:empty{display:none}
+i.v{font-family:var(--f-display);font-style:italic}
+sub,sup{font-size:70%;line-height:0}
+footer{color:var(--muted);font-size:14px;max-width:64ch}
+
+/* drawing classes */
+.fig svg *{vector-effect:non-scaling-stroke}
+.g{stroke:var(--grid);stroke-width:1}
+.ln{stroke:var(--ink);stroke-width:1.6;fill:none}
+.thin{stroke:var(--ink);stroke-width:1;fill:none;opacity:.55}
+.aux{stroke:var(--muted);stroke-width:1;stroke-dasharray:5 4;fill:none}
+.ctrl{stroke:var(--center);stroke-width:1.3;fill:none}
+.ctrf{fill:var(--center-soft);stroke:none;opacity:.8}
+.res{stroke:var(--res);stroke-width:2.2;fill:none}
+.resd{stroke:var(--res);stroke-width:1.8;fill:none;stroke-dasharray:6 4}
+.resf{fill:var(--res-soft);stroke:none;opacity:.9}
+.softf{fill:var(--grid);stroke:none;opacity:.7}
+.mv{stroke:var(--move);stroke-width:2.2;fill:none}
+.mvf{fill:var(--move);stroke:none}
+.mvsoft{fill:var(--move-soft);stroke:none;opacity:.85}
+.trail{stroke:var(--move);stroke-width:1.4;fill:none;stroke-dasharray:2 4;opacity:.8}
+.arm{stroke:var(--move);stroke-width:1;fill:none;stroke-dasharray:4 4;opacity:.7}
+.ghost{stroke:var(--muted);stroke-width:1.2;fill:none;stroke-dasharray:3 3}
+.ghostf{fill:var(--muted);opacity:.25}
+.dot{fill:var(--ink)}
+.dotc{fill:var(--center)}
+.dotr{fill:var(--res)}
+.dotm{fill:var(--move)}
+.handle{fill:var(--sheet);stroke:var(--ink);stroke-width:2}
+.hit{fill:transparent;cursor:grab}
+.hit:hover + .handle,.handle.drag{stroke:var(--move)}
+.pulse{fill:none;stroke:var(--center);stroke-width:2}
+text{font-family:var(--f-display);font-style:italic;fill:var(--ink)}
+text.tc{fill:var(--center)} text.tr{fill:var(--res)} text.tm{fill:var(--move)} text.tmut{fill:var(--muted)}
+text.up{font-style:normal;font-family:var(--f-body)}
+
+/* solutions */
+details.sol{border-top:1px solid var(--rule);padding-top:10px}
+details.sol summary{font-family:var(--f-display);font-weight:600;font-size:19px;cursor:pointer;list-style:none;display:flex;align-items:center;gap:8px}
+details.sol summary::-webkit-details-marker{display:none}
+details.sol summary::before{content:"▸";font-family:var(--f-body);font-size:14px;color:var(--muted);transition:transform .15s}
+details.sol[open] summary::before{transform:rotate(90deg)}
+.solbody{display:flex;flex-direction:column;gap:10px;margin-top:10px;max-width:70ch}
+.solbody p{margin:0}
+.solbody ol{margin:0;padding:0;list-style:none;counter-reset:st;display:flex;flex-direction:column;gap:8px}
+.solbody li{counter-increment:st;display:grid;grid-template-columns:28px minmax(0,1fr);gap:4px}
+.solbody li::before{content:counter(st);font-family:var(--f-mono);font-size:12px;color:var(--center);border:1px solid var(--center);border-radius:50%;
+  width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center;margin-top:2px}
+.tag{font-family:var(--f-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;margin-right:8px;color:var(--muted)}
+.idea{color:var(--ink)}
+.onfig{border-left:3px solid var(--move);background:var(--move-soft);padding:8px 12px;border-radius:0 6px 6px 0;font-size:15px}
+.onfig .tag{color:var(--move)}
+.ans{border-left:3px solid var(--res);background:var(--res-soft);padding:8px 12px;border-radius:0 6px 6px 0}
+.ans .tag{color:var(--res)}
+.m{font-family:var(--f-display);white-space:normal}
+.m i{font-style:italic}
+.m .up{font-style:normal}
+.ss{display:inline-flex;flex-direction:column;vertical-align:-0.42em;font-size:72%;line-height:1.02;margin-left:1px}
+.ss sub,.ss sup,.m .ss span{font-size:100%;vertical-align:baseline}
+.m sub,.m sup{font-size:72%}
+.vec{position:relative;display:inline-block}
+.vec::after{content:"→";position:absolute;left:0;right:0;top:-0.78em;font-size:.62em;text-align:center;font-style:normal;line-height:1}
+.frac{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;font-size:88%;line-height:1.15;margin:0 2px}
+.frac>span:first-child{border-bottom:1px solid currentColor;padding:0 2px}
+.rad{border-top:1px solid currentColor;padding-top:1px}
+.notation{display:flex;flex-wrap:wrap;gap:4px 18px;font-size:14px;color:var(--muted);margin:0;padding:0;list-style:none}
+@media (max-width:520px){section.sheet{padding:14px}.sheet h2{font-size:20px}}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto}}
+</style>
+
+<div class="wrap">
+  <a class="wiki-back" href="../../index.html#/study/2026-10-27/challes-motion-problems">← К конспекту на вики</a>
+  <header>
+    <div class="eyebrow">Композиции движений плоскости</div>
+    <h1>Теорема Шаля в движении</h1>
+    <p class="lede">Живые чертежи к задачам листка. Перетаскивайте точки с белой серединой — построение пересчитывается сразу. Кнопка «Запустить» выполняет повороты по очереди: оранжевый флажок показывает, куда переходит точка и как поворачивается плоскость. Под каждым чертежом — решение по шагам и пояснение, что именно видно на анимации.</p>
+    <div class="legend">
+      <span><i class="sw" style="background:var(--move)"></i>движущийся объект</span>
+      <span><i class="sw" style="background:var(--center)"></i>центры и оси</span>
+      <span><i class="sw" style="background:var(--res)"></i>то, что доказываем</span>
+    </div>
+    <ul class="notation" id="notation"></ul>
+    <nav id="nav" aria-label="Задачи"></nav>
+  </header>
+  <main id="main" class="wrap" style="gap:28px"></main>
+</div>
+
+<script id="geo">
+/* ---------- geometry (math coordinates, y up) ---------- */
+const V=(x,y)=>({x,y});
+const add=(a,b)=>V(a.x+b.x,a.y+b.y), sub=(a,b)=>V(a.x-b.x,a.y-b.y), mul=(a,k)=>V(a.x*k,a.y*k);
+const mid=(a,b)=>mul(add(a,b),.5), cen=(a,b,c)=>V((a.x+b.x+c.x)/3,(a.y+b.y+c.y)/3);
+const len=a=>Math.hypot(a.x,a.y), dist=(a,b)=>len(sub(a,b));
+const rad=d=>d*Math.PI/180, deg=r=>r*180/Math.PI;
+const dir=d=>V(Math.cos(rad(d)),Math.sin(rad(d)));
+const angOf=v=>deg(Math.atan2(v.y,v.x));
+const cross=(a,b)=>a.x*b.y-a.y*b.x, dot=(a,b)=>a.x*b.x+a.y*b.y;
+const orient=(a,b,c)=>cross(sub(b,a),sub(c,a));
+function rot(p,o,a){const t=rad(a),c=Math.cos(t),s=Math.sin(t),dx=p.x-o.x,dy=p.y-o.y;return V(o.x+c*dx-s*dy,o.y+s*dx+c*dy)}
+function foot(p,a,b){const d=sub(b,a),t=dot(sub(p,a),d)/dot(d,d);return add(a,mul(d,t))}
+function refl(p,a,b){return sub(mul(foot(p,a,b),2),p)}
+function inter(p1,d1,p2,d2){const det=-d1.x*d2.y+d2.x*d1.y;if(Math.abs(det)<1e-9)return null;const r=sub(p2,p1);return add(p1,mul(d1,(-r.x*d2.y+d2.x*r.y)/det))}
+function angleAt(v,a,b){const x=sub(a,v),y=sub(b,v);return deg(Math.acos(Math.max(-1,Math.min(1,dot(x,y)/len(x)/len(y)))))}
+const unit=a=>mul(a,1/len(a));
+const fmt=(x,d=2)=>x.toFixed(d).replace('.',',').replace(/^-0,0+$/,'0,00');
+const SUBS={'0':'₀','1':'₁','2':'₂','3':'₃','4':'₄','5':'₅','6':'₆'};
+const nm=s=>s.replace(/(\d)/g,d=>SUBS[d]);                 // A1 -> A₁ (HTML captions)
+const R=(c,a)=>`<i class="v">R</i><sub>${nm(c)}</sub><sup>${a}°</sup>`;
+const mp=(a,b)=>`<i class="v">${nm(a)}</i> ↦ <i class="v">${nm(b)}</i>`;
+
+/* ---------- SVG helpers (world units; screen y = -y) ---------- */
+const P=p=>`${p.x.toFixed(3)},${(-p.y).toFixed(3)}`;
+const S={
+  line:(a,b,c='ln')=>`<line class="${c}" x1="${a.x.toFixed(3)}" y1="${(-a.y).toFixed(3)}" x2="${b.x.toFixed(3)}" y2="${(-b.y).toFixed(3)}"/>`,
+  full:(a,b,c='aux')=>{const d=unit(sub(b,a));return S.line(sub(a,mul(d,40)),add(a,mul(d,40)),c)},
+  poly:(pts,c='ln',closed=true)=>closed?`<polygon class="${c}" points="${pts.map(P).join(' ')}"/>`:`<polyline class="${c}" points="${pts.map(P).join(' ')}"/>`,
+  dot:(p,c='dot',r=.075)=>`<circle class="${c}" cx="${p.x.toFixed(3)}" cy="${(-p.y).toFixed(3)}" r="${r}"/>`,
+  lbl:(p,t,c='',ang=90,off=.33)=>{const q=add(p,mul(dir(ang),off));
+    const body=t.replace(/([A-Za-zА-Яа-яЁё'′]+)(\d+)/g,(m,a,d)=>`${a}<tspan dy="0.09" font-size="0.21">${d}</tspan>`);
+    return `<text class="${c}" x="${q.x.toFixed(3)}" y="${(-q.y+0.11).toFixed(3)}" font-size="0.32" text-anchor="middle">${body}</text>`},
+  txt:(p,t,c='',fs=.26)=>`<text class="${c}" x="${p.x.toFixed(3)}" y="${(-p.y).toFixed(3)}" font-size="${fs}" text-anchor="middle">${t}</text>`,
+  arc:(v,a,b,r=.55,c='ctrl')=>{let a0=angOf(sub(a,v)),a1=angOf(sub(b,v));let d=((a1-a0)%360+360)%360;if(d>180){[a0,a1]=[a1,a0];d=360-d}
+    const pts=[];for(let i=0;i<=24;i++)pts.push(add(v,mul(dir(a0+d*i/24),r)));return S.poly(pts,c,false)},
+  arcMid:(v,a,b,r)=>{let a0=angOf(sub(a,v)),a1=angOf(sub(b,v));let d=((a1-a0)%360+360)%360;if(d>180){a0=a1;d=360-d}return add(v,mul(dir(a0+d/2),r))},
+  arrow:(a,b,c='res')=>{const d=unit(sub(b,a)),n=V(-d.y,d.x),h=sub(b,mul(d,.22));
+    return S.line(a,h,c)+`<polygon class="${c==='res'?'dotr':c==='ctrl'?'dotc':'dotm'}" points="${[b,add(h,mul(n,.1)),sub(h,mul(n,.1))].map(P).join(' ')}"/>`},
+};
+const away=(p,ref)=>angOf(sub(p,ref));
+
+/* ---------- scenes ---------- */
+const SCENES=[
+{ id:'ex', num:'Упражнение', title:'Композиция двух поворотов',
+  text:`Два поворота подряд — это снова поворот, только вокруг новой точки <i class="v">O</i>₃ и на угол φ₁ + φ₂. Центр <i class="v">O</i>₃ — вершина треугольника с углами φ₁/2 и φ₂/2 при <i class="v">O</i>₁ и <i class="v">O</i>₂.`,
+  watch:'После двух поворотов пунктирный «двойник» флажка — результат одного поворота вокруг O₃ — совпадает с флажком. Если φ₁ + φ₂ = 360°, получается перенос.',
+  view:[-4.6,4.6,-4.2,2.6], free:{O1:[-2.2,-0.6],O2:[2.2,-0.2],X:[-2.2,-3.0]}, labels:{O1:'O1',O2:'O2',X:'X'},
+  params:[{id:'p1',label:'φ₁',min:10,max:350,step:5,value:100},{id:'p2',label:'φ₂',min:10,max:350,step:5,value:80}],
+  derive(F,Pm){const d=sub(F.O2,F.O1),a0=angOf(d),sum=((Pm.p1+Pm.p2)%360+360)%360;
+    const O3=(sum>0.5&&sum<359.5)?inter(F.O1,dir(a0-Pm.p1/2),F.O2,dir(a0+Pm.p2/2)):null;return {...F,O3,a0,sum}},
+  draw(W,Pm){let s=S.full(W.O1,W.O2,'aux')+S.lbl(add(W.O2,mul(unit(sub(W.O2,W.O1)),1.6)),'l','tmut',90,.25);
+    if(W.O3){s+=S.poly([W.O1,W.O2,W.O3],'ctrf')+S.full(W.O1,W.O3,'ctrl')+S.full(W.O2,W.O3,'ctrl')+S.dot(W.O3,'dotc')+S.lbl(W.O3,'O3','tc',away(W.O3,mid(W.O1,W.O2)),.36)
+      +S.arc(W.O1,W.O2,W.O3,.6,'ctrl')+S.arc(W.O2,W.O1,W.O3,.6,'ctrl')}
+    return s},
+  info(W,Pm){return W.O3?`φ₁ + φ₂ = ${Pm.p1+Pm.p2}° → поворот вокруг O₃ на ${W.sum}°`:`φ₁ + φ₂ = ${Pm.p1+Pm.p2}° кратно 360° → параллельный перенос`},
+  programs:[{name:'Запустить',
+    tracked:W=>({pts:[{p:W.X,flag:true}]}),
+    steps:(W,Pm)=>[{type:'rot',c:W.O1,a:Pm.p1,cap:R('O1',Pm.p1),cc:'O1'},{type:'rot',c:W.O2,a:Pm.p2,cap:R('O2',Pm.p2),cc:'O2'}],
+    result(W,Pm,base,cur,ctx){if(W.O3){return {svg:ctx.shape(base.map(q=>rot(q,W.O3,W.sum)),'ghost'),
+      text:`Пунктирный двойник — это исходный флажок, повёрнутый один раз вокруг O₃ на ${W.sum}°. Он совпал с результатом двух поворотов.`}}
+      return {svg:S.arrow(base[0],cur[0],'res'),text:'Сумма углов кратна 360°: флажок не повернулся, а сдвинулся. Композиция — параллельный перенос.'}}}]},
+
+{ id:'z1', num:'Задача 1', title:'Теорема Наполеона',
+  text:'На сторонах треугольника наружу построены правильные треугольники. Их центры <i class="v">A</i>₁, <i class="v">B</i>₁, <i class="v">C</i>₁ образуют правильный треугольник.',
+  watch:'Три поворота на 120° переводят C → B → A → C, и флажок возвращается в исходное положение. Значит, композиция тождественна.',
+  view:[-4.6,4.6,-5,3.4], free:{A:[-2.1,-0.7],B:[2.3,-0.8],C:[-0.2,2.1]}, labels:{A:'A',B:'B',C:'C'},
+  derive(F){const {A,B,C}=F,s=Math.sign(orient(A,B,C))||1;const X1=rot(B,A,-60*s),X2=rot(C,B,-60*s),X3=rot(A,C,-60*s);
+    return {...F,s,X1,X2,X3,C1:cen(A,B,X1),A1:cen(B,C,X2),B1:cen(C,A,X3)}},
+  draw(W){const {A,B,C,X1,X2,X3,A1,B1,C1}=W,G=cen(A1,B1,C1);
+    return S.poly([A,X1,B],'ctrf')+S.poly([B,X2,C],'ctrf')+S.poly([C,X3,A],'ctrf')+S.poly([A,X1,B],'ctrl',false)+S.poly([B,X2,C],'ctrl',false)+S.poly([C,X3,A],'ctrl',false)
+      +S.poly([A,B,C],'ln')+S.poly([A1,B1,C1],'resf')+S.poly([A1,B1,C1],'res')
+      +[['A1',A1],['B1',B1],['C1',C1]].map(([n,p])=>S.dot(p,'dotr')+S.lbl(p,n,'tr',away(p,G),.34)).join('')},
+  info(W){return `|A₁B₁| = ${fmt(dist(W.A1,W.B1))} · |B₁C₁| = ${fmt(dist(W.B1,W.C1))} · |C₁A₁| = ${fmt(dist(W.C1,W.A1))}`},
+  programs:[{name:'Запустить',tracked:W=>({pts:[{p:W.C,flag:true}]}),
+    steps:W=>[{type:'rot',c:W.A1,a:120*W.s,cap:`${R('A1',120)}: ${mp('C','B')}`},{type:'rot',c:W.C1,a:120*W.s,cap:`${R('C1',120)}: ${mp('B','A')}`},{type:'rot',c:W.B1,a:120*W.s,cap:`${R('B1',120)}: ${mp('A','C')}`}],
+    result:()=>({text:'Флажок вернулся на место: композиция трёх поворотов тождественна. Поэтому R(C₁)∘R(A₁) = R(B₁) на −120°, а по упражнению это значит, что треугольник A₁B₁C₁ правильный.'})}]},
+
+{ id:'z2', num:'Задача 2', title:'Два равнобедренных треугольника с углом 120°',
+  text:'Внутри четырёхугольника <i class="v">ABCD</i> точка <i class="v">M</i>, треугольники <i class="v">AMB</i> и <i class="v">CMD</i> равнобедренные с углом 120° при <i class="v">M</i>. Точка <i class="v">N</i>, для которой <i class="v">BNC</i> правильный, делает правильным и <i class="v">DNA</i>.',
+  watch:'f = R_M^120°, g = R_N^60°. Композиция f∘g — поворот на 180°: точка B уходит в D и возвращается. По дороге видно, что g переводит D в A.',
+  view:[-3.8,3.8,-3.4,2.6], free:{M:[0,0],A:[-2.4,-1.1],C:[1.0,1.0]}, labels:{M:'M',A:'A',C:'C'},
+  derive(F){const B=rot(F.A,F.M,120),D=rot(F.C,F.M,120);return {...F,B,D,N:rot(F.C,B,60)}},
+  draw(W){const {A,B,C,D,M,N}=W,G=mid(A,C);
+    return S.poly([A,M,B],'ctrf')+S.poly([C,M,D],'ctrf')+S.line(A,M,'ctrl')+S.line(M,B,'ctrl')+S.line(C,M,'ctrl')+S.line(M,D,'ctrl')
+      +S.poly([B,N,C],'resf')+S.poly([D,N,A],'resf')+S.poly([B,N,C],'resd')+S.poly([D,N,A],'resd')+S.poly([A,B,C,D],'ln')
+      +S.dot(B)+S.lbl(B,'B','',away(B,G))+S.dot(D)+S.lbl(D,'D','',away(D,G))+S.dot(N,'dotr')+S.lbl(N,'N','tr',away(N,M),.34)},
+  info(W){const {A,B,C,D,N}=W;return `BNC: ${fmt(dist(B,N))}, ${fmt(dist(N,C))}, ${fmt(dist(B,C))} · DNA: ${fmt(dist(D,N))}, ${fmt(dist(N,A))}, ${fmt(dist(D,A))}`},
+  programs:[{name:'Запустить',tracked:W=>({pts:[{p:W.B,flag:true}]}),
+    steps:W=>[{type:'rot',c:W.N,a:60,cap:`<i class="v">g</i>: ${mp('B','C')}`},{type:'rot',c:W.M,a:120,cap:`<i class="v">f</i>: ${mp('C','D')}`},
+              {type:'rot',c:W.N,a:60,cap:`<i class="v">g</i>: ${mp('D','A')}`},{type:'rot',c:W.M,a:120,cap:`<i class="v">f</i>: ${mp('A','B')}`}],
+    result:()=>({text:'f∘g перевела B в D, а вторая f∘g вернула D в B: это центральная симметрия. Третий шаг показал g(D) = A, значит треугольник DNA правильный.'})}]},
+
+{ id:'z3', num:'Задача 3', title:'Противоположно ориентированные треугольники',
+  text:'Два равных треугольника с противоположной ориентацией связаны скользящей симметрией: отражением в оси <i class="v">l</i> и сдвигом вдоль неё. Середины соответственных отрезков лежат на <i class="v">l</i>.',
+  watch:'Двигайте ось за две её точки и меняйте длину сдвига. Зелёные середины всегда остаются на оси.',
+  view:[-4.8,4.8,-3.9,3.6], free:{A1:[-3.3,0.9],B1:[-1.2,1.5],C1:[-2.5,2.9],L1:[-3.8,-0.6],L2:[3.6,0.5]}, labels:{A1:'A1',B1:'B1',C1:'C1',L1:'',L2:''},
+  params:[{id:'v',label:'сдвиг',min:-4,max:5,step:0.1,value:3.4}],
+  derive(F,Pm){const u=unit(sub(F.L2,F.L1)),v=mul(u,Pm.v);const T=p=>add(refl(p,F.L1,F.L2),v);
+    const A2=T(F.A1),B2=T(F.B1),C2=T(F.C1);return {...F,u,v,A2,B2,C2,mids:[mid(F.A1,A2),mid(F.B1,B2),mid(F.C1,C2)]}},
+  draw(W){const {A1,B1,C1,A2,B2,C2,u,mids}=W;const pr=[...mids].sort((a,b)=>dot(a,u)-dot(b,u));const G=cen(A2,B2,C2);
+    return S.full(W.L1,W.L2,'ctrl')+S.lbl(add(W.L2,mul(u,.4)),'l','tc',90,.3)+S.poly([A2,B2,C2],'resf')+S.poly([A2,B2,C2],'resd')
+      +S.line(A1,A2,'aux')+S.line(B1,B2,'aux')+S.line(C1,C2,'aux')+S.line(sub(pr[0],mul(u,.5)),add(pr[2],mul(u,.5)),'res')
+      +mids.map(m=>S.dot(m,'dotr',.09)).join('')+S.poly([A1,B1,C1],'ln')
+      +[['A2',A2],['B2',B2],['C2',C2]].map(([n,p])=>S.lbl(p,n,'tr',away(p,G),.34)).join('')},
+  info(W){const d=W.mids.map(m=>Math.abs(cross(W.u,sub(m,W.L1))));return `расстояния середин до оси: ${d.map(x=>fmt(x)).join(' · ')}`},
+  programs:[{name:'Запустить',tracked:W=>({pts:[{p:W.A1,flag:true},{p:W.B1},{p:W.C1}],poly:'closed'}),
+    steps:W=>[{type:'refl',a:W.L1,b:W.L2,cap:`<i class="v">S<sub>l</sub></i>`},{type:'trans',v:W.v,cap:`<i class="v">T<sub>v</sub></i>`}],
+    result:()=>({text:'Треугольник лёг на A₂B₂C₂, а флажок отразился: движение несобственное. Все три середины на оси.'})}]},
+
+{ id:'z4', num:'Задача 4', title:'Три отражения в сторонах',
+  text:'<i class="v">T</i> = <i class="v">S<sub>BC</sub></i>∘<i class="v">S<sub>AC</sub></i>∘<i class="v">S<sub>AB</sub></i> — скользящая симметрия. Расстояние |<i class="v">MT</i>(<i class="v">M</i>)| минимально на её оси — прямой <i class="v">H<sub>A</sub>H<sub>C</sub></i> через основания высот.',
+  watch:'Перетащите M и сравните |MT(M)| с минимумом. Кнопка «M на ось» ставит точку на прямую H_AH_C: тогда T(M) тоже оказывается на ней.',
+  view:[-4.5,4.5,-2.8,4.8], free:{A:[-1.76,-0.72],B:[1.76,-0.8],C:[-0.4,1.44],M:[0.05,-1.21]}, labels:{A:'A',B:'B',C:'C',M:'M'},
+  derive(F){const {A,B,C}=F,T=m=>refl(refl(refl(m,A,B),A,C),B,C);const HA=foot(A,B,C),HC=foot(C,A,B);
+    return {...F,T,HA,HC,v:sub(T(HA),HA),TM:T(F.M)}},
+  draw(W){const {A,B,C,HA,HC}=W,G=cen(A,B,C);
+    return S.poly([A,B,C],'softf')+S.poly([A,B,C],'ln')+S.line(A,HA,'aux')+S.line(C,HC,'aux')+S.full(HA,add(HA,W.v),'res')
+      +S.dot(HA,'dotr')+S.lbl(HA,'HA','tr',away(HA,G)+40,.36)+S.dot(HC,'dotr')+S.lbl(HC,'HC','tr',-60,.36)+S.dot(W.TM,'dotm',.06)+S.lbl(W.TM,'T(M)','tm',90,.3)},
+  info(W){return `|MT(M)| = ${fmt(dist(W.M,W.TM))} · минимум на оси = |v| = ${fmt(len(W.v))}`},
+  actions:[{name:'M на ось',fn:(F,W)=>{F.M=sub(W.HA,mul(W.v,.5))}}],
+  programs:[{name:'Запустить',tracked:W=>({pts:[{p:W.M,flag:true}]}),
+    steps:W=>[{type:'refl',a:W.A,b:W.B,cap:`<i class="v">S<sub>AB</sub></i>`},{type:'refl',a:W.A,b:W.C,cap:`<i class="v">S<sub>AC</sub></i>`},{type:'refl',a:W.B,b:W.C,cap:`<i class="v">S<sub>BC</sub></i>`}],
+    result:W=>({text:`|MT(M)| = ${fmt(dist(W.M,W.TM))}. Если M на оси H_AH_C, расстояние равно |v| = ${fmt(len(W.v))} — это минимум.`})}]},
+
+{ id:'z7', num:'Задача 7', title:'Две центральные симметрии',
+  text:'Центральная симметрия — это поворот на 180°. Две такие симметрии с центрами <i class="v">A</i> и <i class="v">B</i> дают параллельный перенос на 2·<i class="v">AB</i>.',
+  watch:'Флажок дважды переворачивается и в итоге смотрит в ту же сторону, что вначале: это перенос, а не поворот.',
+  view:[-4.8,4.6,-3.6,3.8], free:{A:[-1.5,-0.4],B:[0.9,0.2],X:[-3,1.4]}, labels:{A:'A',B:'B',X:'X'},
+  derive(F){return {...F}},
+  draw(W){return S.arrow(W.A,W.B,'ctrl')},
+  info(W){const X2=add(W.X,mul(sub(W.B,W.A),2));return `2·|AB| = ${fmt(2*dist(W.A,W.B))} · |XX″| = ${fmt(dist(W.X,X2))}`},
+  programs:[{name:'Запустить',tracked:W=>({pts:[{p:W.X,flag:true}]}),
+    steps:W=>[{type:'rot',c:W.A,a:180,cap:`<i class="v">Z<sub>A</sub></i>`},{type:'rot',c:W.B,a:180,cap:`<i class="v">Z<sub>B</sub></i>`}],
+    result:(W,Pm,base,cur)=>({svg:S.arrow(base[0],cur[0],'res'),text:'Точка сдвинулась на вектор 2·AB, флажок не повернулся: Z_B∘Z_A = T(2AB).'})}]},
+
+{ id:'z8', num:'Задача 8', title:'Повороты на удвоенные углы треугольника',
+  text:'Повороты против часовой стрелки на 2α, 2β, 2γ вокруг <i class="v">A</i>, <i class="v">B</i>, <i class="v">C</i> дают тождество ровно тогда, когда <i class="v">ABC</i> с углами α, β, γ ориентирован отрицательно (обход по часовой стрелке).',
+  watch:'Перетащите C выше прямой AB — ориентация сменится, и флажок перестанет возвращаться на место.',
+  view:[-4.2,4.2,-4.2,3.8], free:{A:[-2.2,1.0],B:[2.2,1.2],C:[0.2,-1.8],Q:[-0.2,0.2]}, labels:{A:'A',B:'B',C:'C',Q:''},
+  derive(F){const {A,B,C}=F;return {...F,al:angleAt(A,B,C),be:angleAt(B,C,A),ga:angleAt(C,A,B),neg:orient(A,B,C)<0}},
+  draw(W){const {A,B,C}=W,G=cen(A,B,C);
+    return S.poly([A,B,C],'ctrf')+S.poly([A,B,C],'ln')+S.arc(A,B,C,.55,'ctrl')+S.arc(B,C,A,.55,'ctrl')+S.arc(C,A,B,.5,'ctrl')
+      +S.txt(S.arcMid(A,B,C,.95),'α','tc',.3)+S.txt(S.arcMid(B,C,A,.95),'β','tc',.3)+S.txt(S.arcMid(C,A,B,.9),'γ','tc',.3)},
+  info(W){return `α = ${fmt(W.al,1)}° · β = ${fmt(W.be,1)}° · γ = ${fmt(W.ga,1)}° · обход ${W.neg?'по часовой (отрицательный)':'против часовой (положительный)'}`},
+  programs:[{name:'Запустить',tracked:W=>({pts:[{p:W.Q,flag:true}]}),
+    steps:W=>[{type:'rot',c:W.A,a:2*W.al,cap:`<i class="v">R</i><sub>A</sub><sup>2α</sup>`},{type:'rot',c:W.B,a:2*W.be,cap:`<i class="v">R</i><sub>B</sub><sup>2β</sup>`},{type:'rot',c:W.C,a:2*W.ga,cap:`<i class="v">R</i><sub>C</sub><sup>2γ</sup>`}],
+    result:(W,Pm,base,cur)=>W.neg?{text:'Флажок вернулся на место: при отрицательной ориентации композиция тождественна.'}
+      :{svg:S.arrow(base[0],cur[0],'mv'),text:`Треугольник ориентирован положительно: флажок сдвинулся на ${fmt(dist(base[0],cur[0]))}, тождества нет.`}}]},
+
+{ id:'z9', num:'Задача 9', title:'Отражения от середин сторон',
+  text:'Точку <i class="v">M</i> отражают от середин <i class="v">P</i>₁, …, <i class="v">P</i>₅ сторон пятиугольника. Нечётное число центральных симметрий — снова центральная симметрия, и её центр — вершина <i class="v">A</i>₁.',
+  watch:'После пяти отражений середина отрезка MM₁ оказывается ровно в A₁, где бы ни стояла M.',
+  view:[-4.2,4.2,-3.9,4.0], free:{A1:[-1.5,-1.2],A2:[0.9,-1.6],A3:[2.0,0.2],A4:[0.5,1.7],A5:[-1.9,0.8],M:[-2.4,-2.0]},
+  labels:{A1:'A1',A2:'A2',A3:'A3',A4:'A4',A5:'A5',M:'M'},
+  derive(F){const A=[F.A1,F.A2,F.A3,F.A4,F.A5];return {...F,A,Pm:A.map((p,i)=>mid(p,A[(i+1)%5]))}},
+  draw(W){const G=cen(W.A[0],W.A[2],W.A[3]);return S.poly(W.A,'softf')+S.poly(W.A,'ln')+W.Pm.map((p,i)=>S.dot(p,'dotc',.06)+S.lbl(p,'P'+(i+1),'tc',away(p,G),.3)).join('')},
+  info(W){const M1=W.Pm.reduce((m,p)=>sub(mul(p,2),m),W.M);const c=mid(W.M,M1);return `середина MM₁ = (${fmt(c.x)}; ${fmt(c.y)}) · A₁ = (${fmt(W.A1.x)}; ${fmt(W.A1.y)})`},
+  programs:[{name:'Запустить',tracked:W=>({pts:[{p:W.M,flag:true}]}),
+    steps:W=>W.Pm.map((p,i)=>({type:'rot',c:p,a:180,cap:`<i class="v">Z</i><sub>P${SUBS[i+1]}</sub>`})),
+    result:(W,Pm,base,cur)=>({svg:S.line(base[0],cur[0],'res')+S.dot(mid(base[0],cur[0]),'dotr',.11),text:'Середина отрезка MM₁ совпала с вершиной A₁: композиция пяти симметрий — это Z с центром A₁.'})}]},
+
+{ id:'z10', num:'Задача 10', title:'Три равносторонних треугольника',
+  text:'Ищем <i class="v">K</i>, <i class="v">L</i>, <i class="v">M</i> с правильными <i class="v">AKM</i>, <i class="v">BLK</i>, <i class="v">CLM</i>. Повороты на 60° вокруг <i class="v">B</i>, <i class="v">C</i>, <i class="v">A</i> переводят <i class="v">K</i> → <i class="v">L</i> → <i class="v">M</i> → <i class="v">K</i>, а их композиция — центральная симметрия с центром <i class="v">K</i>.',
+  watch:'Кнопка «Другое решение» меняет направление поворотов на −60°.',
+  view:[-3.8,3.8,-3.2,3.4], free:{A:[-2.6,-1.6],B:[2.8,-1.6],C:[-0.3,2.4]}, labels:{A:'A',B:'B',C:'C'}, state:{s:1},
+  derive(F,Pm,st){const {A,B,C}=F,s=60*st.s;const K=mid(B,rot(rot(B,C,s),A,s)),L=rot(K,B,s),M=rot(L,C,s);return {...F,K,L,M,s}},
+  draw(W){const {A,B,C,K,L,M}=W,G=cen(K,L,M);
+    return S.poly([A,K,M],'ctrf')+S.poly([B,L,K],'resf')+S.poly([C,L,M],'mvsoft')+S.poly([A,K,M],'ctrl')+S.poly([B,L,K],'resd')+S.poly([C,L,M],'thin')
+      +S.poly([A,B,C],'ln')+[['K',K],['L',L],['M',M]].map(([n,p])=>S.dot(p,'dotr')+S.lbl(p,n,'tr',away(p,cen(A,B,C)),.34)).join('')},
+  info(W){const {A,B,C,K,L,M}=W;return `AK = ${fmt(dist(A,K))}, KM = ${fmt(dist(K,M))} · BL = ${fmt(dist(B,L))}, LK = ${fmt(dist(L,K))} · CL = ${fmt(dist(C,L))}, LM = ${fmt(dist(L,M))}`},
+  actions:[{name:'Другое решение',fn:(F,W,st)=>{st.s=-st.s}}],
+  programs:[{name:'Запустить',tracked:W=>({pts:[{p:W.K,flag:true}]}),
+    steps:W=>[{type:'rot',c:W.B,a:W.s,cap:`${R('B',W.s)}: ${mp('K','L')}`},{type:'rot',c:W.C,a:W.s,cap:`${R('C',W.s)}: ${mp('L','M')}`},{type:'rot',c:W.A,a:W.s,cap:`${R('A',W.s)}: ${mp('M','K')}`}],
+    result:()=>({text:'Точка K вернулась, а флажок перевернулся на 180°: композиция — центральная симметрия с центром K.'})}]},
+
+{ id:'z11', num:'Задача 11', title:'Два треугольника наружу, один внутрь',
+  text:'На <i class="v">AB</i> и <i class="v">AC</i> наружу построены правильные треугольники с вершинами <i class="v">M</i>, <i class="v">N</i>, на <i class="v">BC</i> — внутрь, с центром <i class="v">O</i>. Тогда <i class="v">R<sub>N</sub></i>∘<i class="v">R<sub>M</sub></i> = <i class="v">R<sub>O</sub></i> на 120°, и углы <i class="v">MNO</i> равны 30°, 30°, 120°.',
+  watch:'Углы треугольника MNO внизу не меняются, как бы вы ни деформировали ABC.',
+  view:[-4.4,4,-4.8,3.0], free:{A:[-1.9,-0.7],B:[2.2,-0.7],C:[-0.4,2.1]}, labels:{A:'A',B:'B',C:'C'},
+  derive(F){const {A,B,C}=F,s=Math.sign(orient(A,B,C))||1;const M=rot(B,A,-60*s),N=rot(A,C,-60*s),X=rot(C,B,60*s);return {...F,s,M,N,X,O:cen(B,C,X)}},
+  draw(W){const {A,B,C,M,N,X,O}=W,G=cen(M,N,O);
+    return S.poly([A,M,B],'ctrf')+S.poly([C,N,A],'ctrf')+S.poly([A,M,B],'ctrl',false)+S.poly([C,N,A],'ctrl',false)+S.poly([B,X,C],'aux',false)
+      +S.poly([A,B,C],'ln')+S.poly([M,N,O],'resf')+S.poly([M,N,O],'res')+S.arc(M,N,O,.6,'res')+S.arc(N,M,O,.6,'res')+S.arc(O,M,N,.35,'res')
+      +[['M',M],['N',N],['O',O]].map(([n,p])=>S.dot(p,'dotr')+S.lbl(p,n,'tr',away(p,G),.36)).join('')},
+  info(W){const {M,N,O}=W;return `∠M = ${fmt(angleAt(M,N,O),1)}° · ∠N = ${fmt(angleAt(N,O,M),1)}° · ∠O = ${fmt(angleAt(O,M,N),1)}°`},
+  programs:[{name:'Запустить',tracked:W=>({pts:[{p:W.B,flag:true}]}),
+    steps:W=>[{type:'rot',c:W.M,a:60*W.s,cap:`${R('M',60)}: ${mp('B','A')}`},{type:'rot',c:W.N,a:60*W.s,cap:`${R('N',60)}: ${mp('A','C')}`},{type:'rot',c:W.O,a:-120*W.s,cap:`${R('O',-120)}: ${mp('C','B')}`}],
+    result:()=>({text:'B вернулась на место: композиция трёх поворотов тождественна, значит R_N∘R_M — поворот вокруг O на 120°. По упражнению углы MNO: 30°, 30°, 120°.'})}]},
+
+{ id:'z12', num:'Задача 12', title:'Клад у берёзы',
+  text:'От берёзы к колодцу и налево на то же расстояние — первый колышек; к дубу и направо — второй. Шаги «дойти и повернуть» — это повороты берёзы на 90° вокруг колодца и дуба. Клад — середина между колышками.',
+  watch:'Перетащите берёзу: колышки разъезжаются, а клад X стоит на месте.',
+  view:[-4.4,4.4,-3.4,4.2], free:{D:[-2.2,0.4],K:[2.2,0.4],Bi:[0.5,-2.6]}, labels:{D:'дуб',K:'колодец',Bi:'берёза'},
+  derive(F){const P1=rot(F.Bi,F.K,-90),P2=rot(F.Bi,F.D,90);return {...F,P1,P2,X:mid(P1,P2)}},
+  draw(W){const {D,K,X,P1,P2}=W;
+    return S.poly([D,K,X],'resf')+S.poly([D,X,K],'res',false)+S.line(P1,P2,'aux')+S.dot(P1,'dotm',.06)+S.dot(P2,'dotm',.06)
+      +S.lbl(P1,'P1','tm',away(P1,X)+30,.32)+S.lbl(P2,'P2','tm',away(P2,X)-30,.32)+S.dot(X,'dotr',.11)+S.lbl(X,'клад X','tr',90,.4)},
+  info(W){return `клад X = (${fmt(W.X.x)}; ${fmt(W.X.y)}) · |DX| = ${fmt(dist(W.D,W.X))}, |KX| = ${fmt(dist(W.K,W.X))}, ∠DXK = ${fmt(angleAt(W.X,W.D,W.K),1)}°`},
+  programs:[{name:'Запустить',tracked:W=>({pts:[{p:W.Bi,flag:true},{p:W.Bi,flag:true}]}),
+    steps:W=>[{type:'rot',c:W.K,a:-90,only:[0],cap:`у колодца налево: ${R('K',-90)}`},{type:'rot',c:W.D,a:90,only:[1],cap:`у дуба направо: ${R('D',90)}`}],
+    result:()=>({text:'Колышки P₁ и P₂ получены, клад — середина между ними. P₂ = R_D∘R_K(P₁) — центральная симметрия, её центр X не зависит от берёзы.'})}]},
+
+{ id:'z13', num:'Задача 13', title:'Квадраты на сторонах четырёхугольника',
+  text:'Центры <i class="v">O</i>₁…<i class="v">O</i>₄ квадратов, построенных наружу на сторонах <i class="v">ABCD</i>. Поворот на 90° вокруг середины <i class="v">P</i> диагонали <i class="v">BD</i> переводит отрезок <i class="v">O</i>₁<i class="v">O</i>₃ в <i class="v">O</i>₄<i class="v">O</i>₂ — значит, они равны и перпендикулярны.',
+  watch:'Первая кнопка обходит вершины четырьмя поворотами на 90°, вторая поворачивает диагональ O₁O₃ вокруг P.',
+  view:[-4.8,4.8,-4.8,4.8], free:{A:[-1.6,-1.1],B:[1.4,-1.4],C:[1.8,1.0],D:[-1.2,1.3]}, labels:{A:'A',B:'B',C:'C',D:'D'},
+  derive(F){const Q=[F.A,F.B,F.C,F.D],s=Math.sign(orient(F.A,F.B,F.C)+orient(F.A,F.C,F.D))||1;const sq=[],O=[];
+    for(let i=0;i<4;i++){const X=Q[i],Y=Q[(i+1)%4],n=rot(sub(Y,X),V(0,0),-90*s);sq.push([X,Y,add(Y,n),add(X,n)]);O.push(add(mid(X,Y),mul(n,.5)))}
+    const P=mid(F.B,F.D),e=dist(rot(O[2],P,90),O[1])<dist(rot(O[2],P,-90),O[1])?1:-1;return {...F,Q,s,sq,O,P,e}},
+  draw(W){const G=mid(W.A,W.C);
+    return W.sq.map(q=>S.poly(q,'ctrf')+S.poly(q,'ctrl')).join('')+S.poly(W.Q,'softf')+S.poly(W.Q,'ln')
+      +S.line(W.O[0],W.O[2],'res')+S.line(W.O[1],W.O[3],'resd')+S.dot(W.P,'dotc',.06)+S.lbl(W.P,'P','tc',-90,.3)
+      +W.O.map((p,i)=>S.dot(p,'dotr')+S.lbl(p,'O'+(i+1),'tr',away(p,G)+25,.36)).join('')},
+  info(W){const a=sub(W.O[2],W.O[0]),b=sub(W.O[3],W.O[1]);return `|O₁O₃| = ${fmt(len(a))} · |O₂O₄| = ${fmt(len(b))} · угол между ними ${fmt(angleAt(V(0,0),a,b),1)}°`},
+  programs:[
+   {name:'Обойти вершины',tracked:W=>({pts:[{p:W.B,flag:true}]}),
+    steps:W=>[{type:'rot',c:W.O[0],a:90*W.s,cap:`${R('O1',90)}: ${mp('B','A')}`},{type:'rot',c:W.O[3],a:90*W.s,cap:`${R('O4',90)}: ${mp('A','D')}`},
+              {type:'rot',c:W.O[2],a:90*W.s,cap:`${R('O3',90)}: ${mp('D','C')}`},{type:'rot',c:W.O[1],a:90*W.s,cap:`${R('O2',90)}: ${mp('C','B')}`}],
+    result:()=>({text:'После R_O₄∘R_O₁ точка B попала в D (центральная симметрия с центром P), после R_O₂∘R_O₃ — обратно в B (снова с центром P).'})},
+   {name:'Повернуть O₁O₃',tracked:W=>({pts:[{p:W.O[0]},{p:W.O[2]}],poly:'open'}),
+    steps:W=>[{type:'rot',c:W.P,a:90*W.e,cap:`${R('P',90*W.e)}: <i class="v">O</i>₁<i class="v">O</i>₃ ↦ <i class="v">O</i>₄<i class="v">O</i>₂`}],
+    result:()=>({text:'Отрезок O₁O₃ после поворота на 90° лёг на O₄O₂: диагонали равны и перпендикулярны.'})}]},
+];
+if(typeof module!=='undefined')module.exports={SCENES,rot,refl,dist,mid,V,sub,add,mul,orient};
+</script>
+
+<script id="sol">
+/* ---------- TeX-lite: $...$ -> HTML ---------- */
+const CMD={circ:'∘',mapsto:'↦',to:'→',ne:'≠',perp:'⊥',parallel:'∥',angle:'∠',triangle:'△',cdot:'·',varphi:'φ',alpha:'α',beta:'β',gamma:'γ',
+  pm:'±',equiv:'≡',iff:'⇔',le:'≤',ge:'≥',dots:'…',times:'×',quad:'&ensp;',infty:'∞',in:'∈',ni:'∋',Rightarrow:'⇒',implies:'⇒',colon:':',bigl:'',bigr:''};
+const BIN=new Set(['circ','cdot','times','pm']), REL=new Set(['mapsto','to','iff','ne','parallel','perp','equiv','le','ge','in','ni','Rightarrow','implies']);
+function mathHTML(s){s=s.replace(/\^\{\\circ\}/g,'°').replace(/\^\\circ/g,'°');let i=0;
+  const isL=c=>/[A-Za-zА-Яа-яЁё]/.test(c);
+  function atom(){const c=s[i];
+    if(c==='{'){i++;return seq(true)}
+    if(c==='\\'){i++;let name='';while(i<s.length&&/[A-Za-z]/.test(s[i]))name+=s[i++];
+      if(!name){const ch=s[i++];return ch==='{'||ch==='}'?ch:ch===','?'&thinsp;':ch}
+      if(name==='vec'||name==='overrightarrow'){const a=arg();return `<span class="vec">${a}</span>`}
+      if(name==='text'||name==='mathrm'){const a=rawArg();return `<span class="up">${a}</span>`}
+      if(name==='sqrt'){const a=arg();return `√<span class="rad">${a}</span>`}
+      if(name==='frac'){const a=arg(),b=arg();return `<span class="frac"><span>${a}</span><span>${b}</span></span>`}
+      while(s[i]===' ')i++;
+      if(name==='id')return '<span class="up">id</span>';
+      if(BIN.has(name))return `&thinsp;${CMD[name]}&thinsp;`;
+      if(REL.has(name))return ` ${CMD[name]} `;
+      if(name==='colon')return ':&nbsp;';
+      if(name in CMD)return CMD[name];
+      return name}
+    i++;
+    if(isL(c))return `<i>${c}</i>`;
+    if(c==='-')return lastOut&&!/[(\[{\s]$/.test(lastOut)?' − ':'−';
+    if(c==='='||c==='<'||c==='>'||c==='+')return ` ${c==='<'?'&lt;':c==='>'?'&gt;':c} `;
+    if(c==='\'')return '′';
+    return c}
+  function arg(){while(s[i]===' ')i++;if(s[i]==='{'){i++;return seq(true)}return atom()}
+  function rawArg(){if(s[i]!=='{')return atom();i++;let d=1,out='';while(i<s.length){const c=s[i++];if(c==='{')d++;if(c==='}'&&--d===0)break;out+=c}return out}
+  let lastOut='';
+  function seq(stop){let out='';
+    while(i<s.length){lastOut=out;if(s[i]==='}'){if(stop){i++;return out}i++;continue}
+      let base=atom(),sub=null,sup=null;
+      while(s[i]==='_'||s[i]==='^'){const t=s[i++];const a=arg();if(t==='_')sub=a;else sup=a}
+      if(sub!==null&&sup!==null)out+=`${base}<span class="ss"><span>${sup}</span><span>${sub}</span></span>`;
+      else if(sub!==null)out+=`${base}<sub>${sub}</sub>`;
+      else if(sup!==null)out+=`${base}<sup>${sup}</sup>`;
+      else out+=base}
+    return out}
+  return seq(false).replace(/(\s|&thinsp;)+(?= )/g,'').replace(/ {2,}/g,' ').trim()}
+const tex=str=>str.replace(/\$([^$]+)\$/g,(m,x)=>`<span class="m">${mathHTML(x)}</span>`);
+
+/* ---------- solutions ---------- */
+const SOL={
+ex:{idea:String.raw`Любой поворот — композиция двух осевых симметрий, причём одну из осей через центр можно выбрать как угодно. Возьмём общую ось $l=O_1O_2$ для обоих поворотов — тогда средние симметрии сократятся.`,
+ steps:[
+  String.raw`Если $O_1=O_2=O$, углы просто складываются: $R_O^{\varphi_2}\circ R_O^{\varphi_1}=R_O^{\varphi_1+\varphi_2}$.`,
+  String.raw`Пусть $O_1\ne O_2$. Напомним: если прямые $a$ и $b$ пересекаются в точке $O$ под углом $\alpha$ (от $a$ к $b$), то $S_b\circ S_a=R_O^{2\alpha}$.`,
+  String.raw`Поэтому $R_{O_1}^{\varphi_1}=S_l\circ S_a$, где $a\ni O_1$ и угол от $a$ до $l$ равен $\varphi_1/2$, а $R_{O_2}^{\varphi_2}=S_b\circ S_l$, где $b\ni O_2$ и угол от $l$ до $b$ равен $\varphi_2/2$.`,
+  String.raw`Тогда $R_{O_2}^{\varphi_2}\circ R_{O_1}^{\varphi_1}=S_b\circ S_l\circ S_l\circ S_a=S_b\circ S_a$, потому что $S_l\circ S_l=\id$.`,
+  String.raw`Если $a$ и $b$ пересекаются в точке $O_3$, то $S_b\circ S_a$ — поворот вокруг $O_3$ на удвоенный угол между ними, то есть на $\varphi_1+\varphi_2$. В треугольнике $O_1O_2O_3$ углы при $O_1$ и $O_2$ равны $\varphi_1/2$ и $\varphi_2/2$.`,
+  String.raw`Если $\varphi_1+\varphi_2$ кратно $360^\circ$, то $a\parallel b$, и $S_b\circ S_a$ — параллельный перенос.`],
+ fig:'Синие прямые — это a и b из шага 3, светлый треугольник — O₁O₂O₃. Меняйте ползунки: O₃ сдвигается вслед за половинами углов.',
+ ans:String.raw`две композиции поворотов — снова поворот на $\varphi_1+\varphi_2$ вокруг $O_3$ или перенос, если сумма кратна $360^\circ$. <b>Следствие</b>, которым пользуемся дальше: композиция поворотов с суммой углов $360^\circ k$ и неподвижной точкой — тождество.`,ansLabel:'Вывод'},
+
+z1:{idea:String.raw`Найти три поворота, которые по кругу переводят вершины треугольника друг в друга. Их композиция окажется тождественной, а упражнение скажет, где лежит центр композиции двух из них.`,
+ steps:[
+  String.raw`Пусть $\triangle ABC$ обходится против часовой стрелки. Центр правильного треугольника видит его сторону под углом $120^\circ$, поэтому $R_{A_1}^{120^\circ}\colon C\mapsto B$, $R_{C_1}^{120^\circ}\colon B\mapsto A$, $R_{B_1}^{120^\circ}\colon A\mapsto C$.`,
+  String.raw`Композиция $R_{B_1}^{120^\circ}\circ R_{C_1}^{120^\circ}\circ R_{A_1}^{120^\circ}$ переводит $C\to B\to A\to C$, то есть точка $C$ неподвижна.`,
+  String.raw`Сумма углов $360^\circ$, значит по упражнению это перенос. Перенос с неподвижной точкой — тождество.`,
+  String.raw`Отсюда $R_{C_1}^{120^\circ}\circ R_{A_1}^{120^\circ}=\bigl(R_{B_1}^{120^\circ}\bigr)^{-1}=R_{B_1}^{240^\circ}$.`,
+  String.raw`По упражнению центр композиции $R_{C_1}^{120^\circ}\circ R_{A_1}^{120^\circ}$ — вершина треугольника на отрезке $A_1C_1$ с углами $60^\circ$ и $60^\circ$ при основании. Этот центр — $B_1$, поэтому $\triangle A_1B_1C_1$ правильный.`],
+ fig:'Флажок после трёх поворотов встаёт точно в исходное положение — это тождество из шага 3. Длины сторон A₁B₁C₁ внизу всегда равны.',
+ ans:String.raw`треугольник $A_1B_1C_1$ правильный.`,ansLabel:'Вывод'},
+
+z2:{idea:String.raw`Поворот $f$ на $120^\circ$ вокруг $M$ и поворот $g$ на $60^\circ$ вокруг $N$ в сумме дают $180^\circ$, то есть центральную симметрию. А центральная симметрия, применённая дважды, возвращает всё на место.`,
+ steps:[
+  String.raw`Треугольники $AMB$ и $CMD$ равнобедренные с углом $120^\circ$ при $M$, поэтому $f=R_M^{120^\circ}$ переводит $A\mapsto B$ и $C\mapsto D$.`,
+  String.raw`Выберем $N$ так, чтобы $g=R_N^{60^\circ}$ переводил $B\mapsto C$. Тогда $NB=NC$ и $\angle BNC=60^\circ$: треугольник $BNC$ правильный.`,
+  String.raw`$f\circ g$ — поворот на $120^\circ+60^\circ=180^\circ$, то есть центральная симметрия. Она переводит $B\mapsto C\mapsto D$.`,
+  String.raw`Центральная симметрия — инволюция: $(f\circ g)\circ(f\circ g)=\id$. Значит, $f\circ g$ переводит $D$ обратно в $B$: $f(g(D))=B$.`,
+  String.raw`Применим $f^{-1}$: $g(D)=f^{-1}(B)=A$. Получаем $ND=NA$ и $\angle DNA=60^\circ$ — треугольник $DNA$ правильный.`],
+ fig:'Шаги 1–2 анимации — первая f∘g (B → C → D), шаги 3–4 — вторая (D → A → B). Третий шаг и есть равенство g(D) = A.',
+ ans:String.raw`подходит точка $N$, для которой $\triangle BNC$ правильный; тогда и $\triangle DNA$ правильный.`,ansLabel:'Вывод'},
+
+z3:{idea:String.raw`Равные треугольники совмещаются движением. Противоположная ориентация означает, что движение несобственное, а несобственное движение плоскости — осевая или скользящая симметрия.`,
+ steps:[
+  String.raw`Существует единственное движение $F$ с $F(A_1)=A_2$, $F(B_1)=B_2$, $F(C_1)=C_2$: движение задаётся образами трёх точек не на одной прямой.`,
+  String.raw`Ориентация меняется, значит $F$ раскладывается в нечётное число осевых симметрий — одну или три. Это скользящая симметрия $F=T_{\vec v}\circ S_l$, где $\vec v\parallel l$ (при $\vec v=\vec 0$ — просто осевая).`,
+  String.raw`Для любой точки $X$ середина отрезка $X\,S_l(X)$ лежит на $l$: ось — серединный перпендикуляр к этому отрезку.`,
+  String.raw`Перенос на $\vec v$ вдоль $l$ сдвигает эту середину на $\vec v/2$ — вдоль той же прямой. Поэтому середина $X\,F(X)$ тоже лежит на $l$.`,
+  String.raw`Применяя это к $A_1$, $B_1$, $C_1$, получаем: все три середины лежат на оси $l$.`],
+ fig:'После отражения флажок «переворачивается» — признак несобственного движения. Расстояния середин до оси в строке под чертежом всегда 0,00.',
+ ans:String.raw`середины $A_1A_2$, $B_1B_2$, $C_1C_2$ лежат на оси скользящей симметрии.`,ansLabel:'Вывод'},
+
+z4:{idea:String.raw`Композиция трёх отражений в сторонах — скользящая симметрия. Расстояние $|MT(M)|$ зависит только от удаления $M$ от её оси, поэтому достаточно найти ось. Её находим, заменяя пары симметрий на удобные.`,
+ steps:[
+  String.raw`$T=S_{BC}\circ S_{AC}\circ S_{AB}$ — несобственное движение. Прямые сторон не проходят через одну точку и не параллельны, поэтому $T$ — скользящая симметрия с осью $n$ и вектором $\vec v\ne\vec 0$.`,
+  String.raw`Если $M$ на расстоянии $d$ от оси, отражение сдвигает её на $2d$ поперёк оси, а перенос — на $|\vec v|$ вдоль. По теореме Пифагора $|MT(M)|=\sqrt{4d^2+|\vec v|^2}$, минимум при $d=0$.`,
+  String.raw`Ищем ось. $S_{AC}\circ S_{AB}$ — поворот вокруг $A$. Заменим пару прямых $(AB,AC)$ на пару $(l_1,AH_A)$ через $A$ с тем же углом, где $AH_A$ — высота: $T=S_{BC}\circ S_{AH_A}\circ S_{l_1}=Z_{H_A}\circ S_{l_1}$, так как $AH_A\perp BC$.`,
+  String.raw`Запишем $Z_{H_A}=S_m\circ S_n$, где $n\perp l_1$ и $m\parallel l_1$, обе через $H_A$. Перпендикулярные симметрии коммутируют: $T=S_m\circ S_{l_1}\circ S_n=T_{\vec w}\circ S_n$, $\vec w\parallel n$. Значит, ось проходит через $H_A$.`,
+  String.raw`Так же, начав с пары $(AC,BC)$ и высоты $CH_C$, получаем, что ось проходит через $H_C$.`],
+ fig:'Красная прямая — H_AH_C. Тащите M: строка под чертежом сравнивает |MT(M)| с минимумом |v|. Кнопка «M на ось» ставит точку на прямую — и T(M) остаётся на ней же.',
+ ans:String.raw`прямая $H_AH_C$ через основания высот на $BC$ и $AB$. Если $\angle B=90^\circ$, то $H_A=H_C=B$, и ответ — прямая через $B$, перпендикулярная медиане $BO$.`,ansLabel:'Ответ'},
+
+z5:{idea:String.raw`Проверяем четыре аксиомы группы. Для подмножеств удобно думать о движении как о «слове» из осевых симметрий: чётность числа симметрий — это ориентация, она не зависит от разложения.`,
+ steps:[
+  String.raw`<b>Замкнутость.</b> Если $F$ и $G$ сохраняют расстояния, то $|G(F(X))G(F(Y))|=|F(X)F(Y)|=|XY|$: композиция — снова движение.`,
+  String.raw`<b>Ассоциативность</b> — общее свойство композиции отображений: $(H\circ G)\circ F=H\circ(G\circ F)$.`,
+  String.raw`<b>Нейтральный элемент</b> — тождественное отображение $\id$.`,
+  String.raw`<b>Обратный.</b> Движение раскладывается в композицию не более трёх осевых симметрий, каждая из которых биективна, поэтому движение биективно. Обратное отображение тоже сохраняет расстояния: $F^{-1}=S_1\circ S_2\circ S_3$, если $F=S_3\circ S_2\circ S_1$.`,
+  String.raw`<b>Собственные движения</b> — композиции чётного числа симметрий. Чётное∘чётное — чётное, обратное к чётному — чётное, $\id$ чётно. Это подгруппа.`,
+  String.raw`<b>Несобственные движения</b> группу не образуют: композиция двух несобственных собственна (например, $S_b\circ S_a$ — поворот), и $\id$ среди них нет.`],
+ ans:String.raw`движения — группа; собственные — подгруппа; несобственные — не группа.`,ansLabel:'Ответ'},
+
+z6:{idea:String.raw`Достаточно показать, что по самому движению $F$ можно восстановить и вектор, и ось. Ключ — квадрат скользящей симметрии.`,
+ steps:[
+  String.raw`Пусть $F=T_{\vec v}\circ S_l$, $\vec v\parallel l$. Перенос вдоль оси коммутирует с отражением в этой оси: $T_{\vec v}\circ S_l=S_l\circ T_{\vec v}$.`,
+  String.raw`Тогда $F\circ F=T_{\vec v}\circ S_l\circ S_l\circ T_{\vec v}=T_{2\vec v}$.`,
+  String.raw`Значит, $\vec v$ — половина вектора переноса $F\circ F$: он определяется движением $F$.`,
+  String.raw`Отсюда и $S_l=T_{-\vec v}\circ F$ определяется по $F$, а ось $l$ — множество неподвижных точек $S_l$.`,
+  String.raw`Если две пары $(l,\vec v)$ и $(l',\vec v')$ задают одно движение, то $\vec v=\vec v'$ и $l=l'$.`],
+ ans:String.raw`разные пары задают разные скользящие симметрии.`,ansLabel:'Вывод'},
+
+z7:{idea:String.raw`Записать центральную симметрию в векторах — тогда композиция считается в одну строку.`,
+ steps:[
+  String.raw`$A$ — середина отрезка $X\,Z_A(X)$, поэтому $Z_A(X)=2A-X$.`,
+  String.raw`$Z_B(Z_A(X))=2B-(2A-X)=X+2(B-A)$.`,
+  String.raw`Каждая точка сдвигается на один и тот же вектор $2\overrightarrow{AB}$ — это параллельный перенос.`,
+  String.raw`Другой взгляд: $Z_A=R_A^{180^\circ}$, сумма углов $360^\circ$, и по упражнению получается перенос.`],
+ fig:'Флажок дважды переворачивается и в итоге смотрит в ту же сторону, что вначале: поворота нет, есть только сдвиг. Длины 2·|AB| и |XX″| под чертежом совпадают.',
+ ans:String.raw`$Z_B\circ Z_A=T_{2\overrightarrow{AB}}$.`,ansLabel:'Ответ'},
+
+z8:{idea:String.raw`Сложить первые два поворота по упражнению: получится поворот вокруг вершины $C'$ треугольника с углами $\alpha$, $\beta$, $\gamma$. Остаётся сравнить $C'$ с $C$.`,
+ steps:[
+  String.raw`Запишем $R_A^{2\alpha}=S_{AB}\circ S_a$ и $R_B^{2\beta}=S_b\circ S_{AB}$, где угол от $a$ до $AB$ равен $\alpha$, а от $AB$ до $b$ — $\beta$.`,
+  String.raw`Тогда $R_B^{2\beta}\circ R_A^{2\alpha}=S_b\circ S_a=R_{C'}^{2(\alpha+\beta)}$, где $C'=a\cap b$. Прямые пересекаются, так как $\alpha+\beta<180^\circ$.`,
+  String.raw`Точка $C'$ лежит справа от $A\to B$: $\triangle ABC'$ ориентирован отрицательно, его углы при $A$ и $B$ равны $\alpha$ и $\beta$, а при $C'$ — $\gamma$.`,
+  String.raw`Так как $2(\alpha+\beta)=360^\circ-2\gamma$, вся композиция равна $F=R_C^{2\gamma}\circ R_{C'}^{-2\gamma}$.`,
+  String.raw`Если $C=C'$, то $F=\id$. Если $C\ne C'$, то $F(C')=R_C^{2\gamma}(C')\ne C'$, потому что $0<2\gamma<360^\circ$, — тождества нет.`,
+  String.raw`Итак, $F=\id\iff C=C'$, то есть отрицательно ориентированный $\triangle ABC$ имеет углы $\alpha$, $\beta$, $\gamma$.`],
+ fig:'Повороты берутся на удвоенные настоящие углы треугольника. Пока обход A → B → C идёт по часовой стрелке, флажок возвращается. Перетащите C выше AB — ориентация сменится, и флажок уедет.',
+ ans:String.raw`композиция тождественна ровно тогда, когда углы отрицательно ориентированного $\triangle ABC$ равны $\alpha$, $\beta$, $\gamma$.`,ansLabel:'Вывод'},
+
+z9:{idea:String.raw`Центральная симметрия — поворот на $180^\circ$. Нечётное число таких поворотов даёт снова центральную симметрию, а у неё середина отрезка «точка — образ» — всегда центр.`,
+ steps:[
+  String.raw`По задаче 7 $Z_B\circ Z_A=T_{2\overrightarrow{AB}}$, а $T_{\vec v}\circ Z_A=Z_{A+\vec v/2}$ — снова центральная симметрия.`,
+  String.raw`Группируем пять симметрий: две пары дают переносы, остаётся одна симметрия. Итог $F=Z_{P_5}\circ\dots\circ Z_{P_1}=Z_Q$ для некоторой точки $Q$.`,
+  String.raw`Для $Z_Q$ середина отрезка $M\,Z_Q(M)$ — это $Q$, для любой $M$. Осталось найти $Q$.`,
+  String.raw`$P_1$ — середина $A_1A_2$, поэтому $Z_{P_1}(A_1)=A_2$; дальше $Z_{P_2}(A_2)=A_3$, …, $Z_{P_5}(A_5)=A_1$. Значит, $F(A_1)=A_1$.`,
+  String.raw`Единственная неподвижная точка центральной симметрии — её центр: $Q=A_1$. Значит, середина $MM_1$ — вершина $A_1$.`],
+ fig:'Пунктирные полуокружности — пять отражений. Красный отрезок MM₁ после анимации проходит через A₁ ровно посередине. При чётном числе сторон получился бы перенос, и утверждение было бы неверно.',
+ ans:String.raw`середина $MM_1$ совпадает с вершиной $A_1$.`,ansLabel:'Вывод'},
+
+z10:{idea:String.raw`Предположим, точки найдены, и посмотрим, какие повороты их связывают. Композиция трёх поворотов на $60^\circ$ — поворот на $180^\circ$, то есть центральная симметрия, и $K$ — её центр. А центр легко найти по любой точке и её образу.`,
+ steps:[
+  String.raw`<b>Анализ.</b> Поворот на $60^\circ$ вокруг вершины правильного треугольника переводит одну другую вершину в третью: $R_B^{60^\circ}\colon K\mapsto L$, $R_C^{60^\circ}\colon L\mapsto M$, $R_A^{60^\circ}\colon M\mapsto K$.`,
+  String.raw`Значит, $F=R_A^{60^\circ}\circ R_C^{60^\circ}\circ R_B^{60^\circ}$ оставляет $K$ на месте. Сумма углов $180^\circ$, поэтому $F$ — центральная симметрия с центром $K$.`,
+  String.raw`Центр центральной симметрии — середина отрезка между любой точкой и её образом. Возьмём точку $B$: $F(B)=R_A^{60^\circ}\bigl(R_C^{60^\circ}(B)\bigr)=B''$.`,
+  String.raw`<b>Построение.</b> $B'=R_C^{60^\circ}(B)$, $B''=R_A^{60^\circ}(B')$, $K$ — середина $BB''$, затем $L=R_B^{60^\circ}(K)$, $M=R_C^{60^\circ}(L)$.`,
+  String.raw`<b>Проверка.</b> $F(K)=K$ даёт $R_A^{60^\circ}(M)=K$, поэтому все три треугольника правильные.`],
+ fig:'K возвращается на место, а флажок разворачивается на 180° — так выглядит центральная симметрия. «Другое решение» строит то же самое с поворотами на −60°.',
+ ans:String.raw`$K$ — середина $BB''$, $L=R_B^{60^\circ}(K)$, $M=R_C^{60^\circ}(L)$; второе решение — с поворотами на $-60^\circ$.`,ansLabel:'Ответ'},
+
+z11:{idea:String.raw`Так же, как в теореме Наполеона: три поворота по кругу переводят вершины друг в друга, их композиция — тождество, а форму треугольника центров даёт упражнение.`,
+ steps:[
+  String.raw`Пусть $\triangle ABC$ ориентирован положительно. $M$ и $N$ — вершины правильных треугольников, поэтому $R_M^{60^\circ}\colon B\mapsto A$ и $R_N^{60^\circ}\colon A\mapsto C$.`,
+  String.raw`$O$ — центр правильного треугольника на $BC$, построенного внутрь. Он видит $BC$ под углом $120^\circ$, но с другой стороны, поэтому $R_O^{-120^\circ}\colon C\mapsto B$.`,
+  String.raw`Композиция $R_O^{-120^\circ}\circ R_N^{60^\circ}\circ R_M^{60^\circ}$ переводит $B\to A\to C\to B$. Сумма углов $60^\circ+60^\circ-120^\circ=0$ — это перенос с неподвижной точкой, то есть тождество.`,
+  String.raw`Отсюда $R_N^{60^\circ}\circ R_M^{60^\circ}=R_O^{120^\circ}$.`,
+  String.raw`По упражнению центр композиции $R_N^{60^\circ}\circ R_M^{60^\circ}$ — вершина треугольника на $MN$ с углами $60^\circ/2=30^\circ$ при $M$ и $N$. Этот центр — $O$.`],
+ fig:'Строка под чертежом показывает углы MNO. Деформируйте треугольник ABC — они остаются 30°, 30° и 120°.',
+ ans:String.raw`$\angle M=\angle N=30^\circ$, $\angle O=120^\circ$.`,ansLabel:'Ответ'},
+
+z12:{idea:String.raw`«Дойти до ориентира и повернуть под прямым углом на то же расстояние» — это поворот берёзы на $90^\circ$ вокруг ориентира. Исключив берёзу, получим композицию двух поворотов на $90^\circ$ — центральную симметрию.`,
+ steps:[
+  String.raw`У колодца поворачиваем налево: первый колышек $P_1$ таков, что $Б=R_K^{90^\circ}(P_1)$. У дуба направо: $P_2=R_D^{90^\circ}(Б)$.`,
+  String.raw`Исключаем берёзу: $P_2=R_D^{90^\circ}\bigl(R_K^{90^\circ}(P_1)\bigr)$.`,
+  String.raw`$R_D^{90^\circ}\circ R_K^{90^\circ}$ — поворот на $180^\circ$, то есть центральная симметрия $Z_X$. По упражнению $X$ — вершина треугольника $KDX$ с углами $45^\circ$ при $K$ и $D$: прямоугольного и равнобедренного.`,
+  String.raw`Значит, $P_2=Z_X(P_1)$, и середина $P_1P_2$ — точка $X$. Она определяется только колодцем и дубом.`,
+  String.raw`<b>Проверка в комплексных числах.</b> $P_1=K-i(Б-K)$, $P_2=D+i(Б-D)$, откуда $\frac{P_1+P_2}{2}=\frac{K+D}{2}+i\,\frac{K-D}{2}$ — берёза сократилась.`],
+ fig:'Анимация показывает обе прогулки как повороты: «рука» от колодца и от дуба до берёзы поворачивается на 90°. Перетащите берёзу — колышки разъезжаются, а клад X не двигается.',
+ ans:String.raw`да. Клад — вершина прямого угла равнобедренного прямоугольного треугольника с гипотенузой «колодец — дуб», слева, если смотреть от дуба на колодец.`,ansLabel:'Ответ'},
+
+z13:{idea:String.raw`Центры квадратов — центры поворотов на $90^\circ$, переводящих вершины друг в друга. Пары таких поворотов дают центральные симметрии с одним и тем же центром — серединой $BD$. Упражнение превращает это в поворот на $90^\circ$, который переводит одну диагональ в другую.`,
+ steps:[
+  String.raw`Пусть $ABCD$ обходится против часовой стрелки. Центр квадрата видит сторону под углом $90^\circ$: $R_{O_1}^{90^\circ}\colon B\mapsto A$, $R_{O_2}^{90^\circ}\colon C\mapsto B$, $R_{O_3}^{90^\circ}\colon D\mapsto C$, $R_{O_4}^{90^\circ}\colon A\mapsto D$.`,
+  String.raw`$R_{O_2}^{90^\circ}\circ R_{O_3}^{90^\circ}$ — поворот на $180^\circ$, переводящий $D\mapsto C\mapsto B$: центральная симметрия с центром в середине $P$ отрезка $BD$.`,
+  String.raw`$R_{O_4}^{90^\circ}\circ R_{O_1}^{90^\circ}$ переводит $B\mapsto A\mapsto D$ — центральная симметрия с тем же центром $P$.`,
+  String.raw`По упражнению $P$ — вершина прямого равнобедренного треугольника и на $O_3O_2$, и на $O_1O_4$, причём оба раза с одной стороны. Поэтому один поворот на $90^\circ$ вокруг $P$ переводит $O_3\mapsto O_2$ и $O_1\mapsto O_4$.`,
+  String.raw`Этот поворот переводит отрезок $O_1O_3$ в $O_4O_2$: длины равны, а угол между отрезками $90^\circ$.`],
+ fig:'«Обойти вершины» показывает шаги 1–3: B → A → D → C → B. «Повернуть O₁O₃» выполняет шаг 4 — отрезок ложится точно на O₄O₂.',
+ ans:String.raw`диагонали $O_1O_3$ и $O_2O_4$ равны и перпендикулярны.`,ansLabel:'Вывод'},
+};
+const STATIC={
+ z5:{id:'z5',num:'Задача 5',title:'Группа движений',text:String.raw`Докажите, что движения образуют группу относительно композиции. Образуют ли группу собственные движения? А несобственные?`},
+ z6:{id:'z6',num:'Задача 6',title:'Скользящая симметрия определяет свою пару',text:String.raw`Скользящая симметрия задаётся парой (ось, вектор переноса). Докажите, что разные пары задают разные скользящие симметрии.`},
+};
+const ORDER=['ex','z1','z2','z3','z4','z5','z6','z7','z8','z9','z10','z11','z12','z13'];
+function solHTML(id){const s=SOL[id];if(!s)return '';
+  return `<details class="sol" open><summary>Решение</summary><div class="solbody">
+    <p class="idea"><span class="tag">Идея</span>${tex(s.idea)}</p>
+    <ol>${s.steps.map(x=>`<li><div>${tex(x)}</div></li>`).join('')}</ol>
+    ${s.fig?`<p class="onfig"><span class="tag">На чертеже</span>${tex(s.fig)}</p>`:''}
+    <p class="ans"><span class="tag">${s.ansLabel||'Ответ'}</span>${tex(s.ans)}</p></div></details>`}
+</script>
+
+<script>
+/* ---------- engine ---------- */
+const reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+const FLAG=[V(0,0.62),V(0.42,0.5),V(0,0.36)];
+
+class Demo{
+  constructor(def){
+    this.def=def;this.F={};for(const k in def.free)this.F[k]=V(...def.free[k]);
+    this.P={};(def.params||[]).forEach(p=>this.P[p.id]=p.value);
+    this.st=Object.assign({},def.state||{});this.anim=null;this.drag=null;
+    this.build();this.compute();this.reset();
+  }
+  build(){
+    const d=this.def,sec=document.createElement('section');sec.className='sheet';sec.id=d.id;
+    sec.innerHTML=`<div class="num">${d.num}</div><h2>${d.title}</h2><p>${d.text}</p><p class="watch">${d.watch}</p>
+      <div class="fig"><svg role="img" aria-label="${d.title}: интерактивный чертёж"></svg></div>
+      <div class="controls"></div><div class="steps" aria-label="Шаги"></div><div class="info"></div><div class="msg" aria-live="polite"></div>${solHTML(d.id)}`;
+    document.getElementById('main').appendChild(sec);
+    this.svg=sec.querySelector('svg');this.ctl=sec.querySelector('.controls');this.stepsEl=sec.querySelector('.steps');
+    this.infoEl=sec.querySelector('.info');this.msgEl=sec.querySelector('.msg');
+    const [x0,x1,y0,y1]=d.view;this.svg.setAttribute('viewBox',`${x0} ${-y1} ${x1-x0} ${y1-y0}`);
+    d.programs.forEach((pg,i)=>{const b=document.createElement('button');b.textContent='▶ '+pg.name;b.id=`${d.id}-run${i}`;b.onclick=()=>this.run(i);this.ctl.appendChild(b)});
+    (d.actions||[]).forEach((a,i)=>{const b=document.createElement('button');b.className='ghost';b.textContent=a.name;b.id=`${d.id}-act${i}`;
+      b.onclick=()=>{a.fn(this.F,this.W,this.st);this.compute();this.reset();this.run(0)};this.ctl.appendChild(b)});
+    const r=document.createElement('button');r.className='ghost';r.textContent='Сбросить';r.id=`${d.id}-reset`;r.onclick=()=>{this.stop();this.reset()};this.ctl.appendChild(r);
+    (d.params||[]).forEach(p=>{const l=document.createElement('label');l.className='param';
+      l.innerHTML=`${p.label}<input type="range" id="${d.id}-${p.id}" min="${p.min}" max="${p.max}" step="${p.step}" value="${p.value}"><output>${this.pfmt(p,p.value)}</output>`;
+      const inp=l.querySelector('input'),out=l.querySelector('output');
+      inp.oninput=()=>{this.P[p.id]=+inp.value;out.textContent=this.pfmt(p,+inp.value);this.stop();this.compute();this.reset()};this.ctl.appendChild(l)});
+    this.svg.addEventListener('pointerdown',e=>this.down(e));
+    this.svg.addEventListener('pointermove',e=>this.move(e));
+    ['pointerup','pointercancel'].forEach(t=>this.svg.addEventListener(t,()=>{this.drag=null;this.render()}));
+  }
+  pfmt(p,v){return p.step<1?fmt(+v,1):v+'°'}
+  compute(){this.W=this.def.derive(this.F,this.P,this.st)}
+  world(e){const pt=this.svg.createSVGPoint();pt.x=e.clientX;pt.y=e.clientY;const q=pt.matrixTransform(this.svg.getScreenCTM().inverse());return V(q.x,-q.y)}
+  down(e){const id=e.target.dataset&&e.target.dataset.id;if(!id)return;e.preventDefault();this.drag=id;this.svg.setPointerCapture(e.pointerId);this.stop();}
+  move(e){if(!this.drag)return;const p=this.world(e),[x0,x1,y0,y1]=this.def.view;
+    this.F[this.drag]=V(Math.min(x1-.2,Math.max(x0+.2,p.x)),Math.min(y1-.2,Math.max(y0+.2,p.y)));this.compute();this.reset()}
+  /* tracked state */
+  setup(i){const pg=this.def.programs[i],tr=pg.tracked(this.W,this.P);const pts=[],own=[],lab=[];
+    tr.pts.forEach((t,k)=>{pts.push(t.p);own.push(k);lab.push(true);if(t.flag)FLAG.forEach(f=>{pts.push(add(t.p,f));own.push(k);lab.push(false)})});
+    return {pg,tr,base:pts,own,lab,steps:pg.steps(this.W,this.P)}}
+  reset(){this.cur=null;this.trails=[];this.k=-1;this.res=null;this.prog=this.setup(this.anim?this.anim.i:0);this.cur=this.prog.base.slice();
+    this.msgEl.textContent='';this.renderSteps();this.render()}
+  stop(){if(this.anim){cancelAnimationFrame(this.anim.raf);this.anim=null}}
+  apply(s,q,t){if(s.type==='rot')return rot(q,s.c,s.a*t);if(s.type==='refl')return add(mul(q,1-t),mul(refl(q,s.a,s.b),t));return add(q,mul(s.v,t))}
+  run(i){this.stop();this.anim={i};this.trails=[];this.res=null;this.msgEl.textContent='';this.prog=this.setup(i);this.cur=this.prog.base.slice();
+    this.k=0;this.t=0;this.from=this.cur.slice();let last=performance.now(),pause=0;this.renderSteps();
+    const tick=now=>{const dt=now-last;last=now;const s=this.prog.steps[this.k];
+      if(pause>0){pause-=dt}else{
+        const dur=reduce?1:(s.type==='rot'?500+Math.abs(s.a)*5:900);this.t=Math.min(1,this.t+dt/dur);
+        const e=this.t<.5?2*this.t*this.t:1-Math.pow(-2*this.t+2,2)/2;
+        this.cur=this.from.map((q,j)=>this.on(s,j)?this.apply(s,q,e):q);
+        if(this.t>=1){this.trails.push(this.trailOf(s,this.from,1));this.from=this.cur.slice();this.k++;this.t=0;pause=reduce?500:280;this.renderSteps();
+          if(this.k>=this.prog.steps.length){this.anim=null;this.finish();return}}}
+      this.render();this.anim.raf=requestAnimationFrame(tick)};
+    this.anim.raf=requestAnimationFrame(tick)}
+  on(s,j){return !s.only||s.only.includes(this.prog.own[j])}
+  trailOf(s,from,t){let out='';from.forEach((q,j)=>{if(!this.prog.lab[j]||!this.on(s,j))return;
+      if(s.type==='rot'){const pts=[];const n=Math.max(4,Math.ceil(Math.abs(s.a)*t/6));for(let i=0;i<=n;i++)pts.push(rot(q,s.c,s.a*t*i/n));out+=S.poly(pts,'trail',false)}
+      else out+=S.line(q,this.apply(s,q,t),'trail')});return out}
+  finish(){const r=this.prog.pg.result(this.W,this.P,this.prog.base,this.cur,{shape:(pts,c)=>this.shape(pts,c)})||{};this.res=r;this.msgEl.textContent=r.text||'';this.render()}
+  shape(pts,mode){const pr=this.prog;let s='';const L=pts.filter((_,j)=>pr.lab[j]);
+    if(pr.tr.poly&&L.length>1)s+=S.poly(L,mode==='ghost'?'ghost':'mv',pr.tr.poly==='closed');
+    for(let j=0;j<pts.length;j++){if(pr.lab[j]&&pts[j+1]&&!pr.lab[j+1]){const b=pts[j],f=pts.slice(j+1,j+4);
+        s+=S.line(b,f[0],mode==='ghost'?'ghost':'mv')+(mode==='ghost'?S.poly(f,'ghostf'):S.poly(f,'mvf'))}
+      if(pr.lab[j]&&mode!=='ghost')s+=S.dot(pts[j],'dotm',.075)}
+    return s}
+  renderSteps(){this.stepsEl.innerHTML=this.prog.steps.map((s,i)=>`<span class="step ${i<this.k?'done':i===this.k?'on':''}">${s.cap}</span>`).join('')}
+  render(){const d=this.def,[x0,x1,y0,y1]=d.view;let g='';
+    for(let x=Math.ceil(x0);x<=x1;x++)g+=`<line class="g" x1="${x}" y1="${-y1}" x2="${x}" y2="${-y0}"/>`;
+    for(let y=Math.ceil(y0);y<=y1;y++)g+=`<line class="g" x1="${x0}" y1="${-y}" x2="${x1}" y2="${-y}"/>`;
+    let s=g+d.draw(this.W,this.P);
+    const moved=this.k>0||this.anim;if(moved)s+=this.shape(this.prog.base,'ghost');
+    s+=this.trails.join('');
+    if(this.anim&&this.k<this.prog.steps.length){const st=this.prog.steps[this.k];s+=this.trailOf(st,this.from,this.t);
+      if(st.type==='rot'){s+=S.dot(st.c,'pulse',.2);this.cur.forEach((q,j)=>{if(this.prog.lab[j]&&this.on(st,j))s+=S.line(st.c,q,'arm')})}
+      else if(st.type==='refl')s+=S.full(st.a,st.b,'ctrl')}
+    s+=this.shape(this.cur,'live');
+    if(this.res&&this.res.svg)s+=this.res.svg;
+    const ref=cen(...Object.values(this.F).slice(0,3));
+    for(const k in this.F){const p=this.F[k],lb=(d.labels||{})[k];
+      s+=`<circle class="hit" data-id="${k}" cx="${p.x}" cy="${-p.y}" r="0.34"/>`+`<circle class="handle${this.drag===k?' drag':''}" cx="${p.x}" cy="${-p.y}" r="0.11" pointer-events="none"/>`;
+      if(lb)s+=S.lbl(p,lb,k==='Bi'||k==='K'||k==='D'?'up':'',away(p,ref),.36).replace('<text','<text pointer-events="none"')}
+    this.svg.innerHTML=s;this.infoEl.textContent=d.info?d.info(this.W,this.P):''}
+}
+const nav=document.getElementById('nav');
+function staticSheet(d){const sec=document.createElement('section');sec.className='sheet';sec.id=d.id;
+  sec.innerHTML=`<div class="num">${d.num}</div><h2>${d.title}</h2><p>${tex(d.text)}</p>${solHTML(d.id)}`;document.getElementById('main').appendChild(sec)}
+ORDER.forEach(id=>{const def=SCENES.find(x=>x.id===id)||STATIC[id];if(STATIC[id])staticSheet(def);else new Demo(def);
+  const a=document.createElement('a');a.href='#'+def.id;a.textContent=def.num.replace('Задача ','№ ');nav.appendChild(a)});
+document.getElementById('notation').innerHTML=[String.raw`$R_O^\varphi$ — поворот вокруг $O$ на $\varphi$ против часовой стрелки`,String.raw`$S_l$ — симметрия относительно прямой $l$`,
+  String.raw`$Z_O$ — центральная симметрия`,String.raw`$T_{\vec v}$ — перенос`,String.raw`$g\circ f$ — сначала $f$, потом $g$`].map(x=>`<li>${tex(x)}</li>`).join('');
+</script>
+
+</body></html>
