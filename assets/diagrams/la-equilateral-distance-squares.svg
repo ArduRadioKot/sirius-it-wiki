@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="490" viewBox="0 0 1000 490" role="img" aria-labelledby="title desc">
+  <title id="title">Расстояния от вершин правильного треугольника до прямой через центр</title>
+  <desc id="desc">Правильный треугольник ABC с центром O. Через O проведена прямая l. От каждой вершины опущен перпендикуляр на l, отмечены расстояния d_A, d_B, d_C.</desc>
+  <defs>
+    <style>.h{font:700 23px Arial,sans-serif;fill:#173c43}.s{font:17px Arial,sans-serif;fill:#546e74}.v{font:700 19px Arial,sans-serif;fill:#173c43}</style>
+  </defs>
+  <rect width="1000" height="490" rx="22" fill="#f0f9fb"/>
+  <text x="35" y="43" class="h">Задача 1 · сумма квадратов расстояний постоянна</text>
+  <rect x="28" y="64" width="944" height="390" rx="17" fill="#fff" stroke="#d8e9ed"/>
+  <path d="M500 90 320 402 680 402Z" fill="#e3f5f8" fill-opacity=".65" stroke="#0b7d86" stroke-width="3"/>
+  <path d="M200 188 800 408" stroke="#173c43" stroke-width="2.5"/>
+  <path d="M500 90 433 274M320 402 374 252M680 402 692 368" stroke="#d9773d" stroke-width="2.5" stroke-dasharray="8 6"/>
+  <g fill="#d9773d"><circle cx="433" cy="274" r="5"/><circle cx="374" cy="252" r="5"/><circle cx="692" cy="368" r="5"/></g>
+  <g fill="#0b7d86"><circle cx="500" cy="90" r="6"/><circle cx="320" cy="402" r="6"/><circle cx="680" cy="402" r="6"/><circle cx="500" cy="298" r="6"/></g>
+  <g class="v"><text x="507" y="84">A</text><text x="296" y="423">B</text><text x="687" y="422">C</text><text x="508" y="298">O</text><text x="808" y="415">l</text></g>
+  <g class="s"><text x="445" y="181">d_A</text><text x="327" y="322">d_B</text><text x="702" y="391">d_C</text></g>
+  <text x="58" y="111" class="s">Прямая l может вращаться вокруг O.</text>
+  <text x="58" y="142" class="s">Но d(A,l)² + d(B,l)² + d(C,l)² = a²/2.</text>
+</svg>

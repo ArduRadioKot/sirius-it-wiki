@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1110" height="350" viewBox="0 0 1110 350" role="img" aria-labelledby="title desc">
+  <title id="title">Три координатных движения плоскости</title>
+  <desc id="desc">Перенос прибавляет вектор к координатам, поворот вокруг C сохраняет расстояние до C, отражение относительно оси меняет знак перпендикулярного расстояния.</desc>
+  <defs>
+    <style>
+      .h{font:700 21px Arial,sans-serif;fill:#173c43}
+      .s{font:16px Arial,sans-serif;fill:#546e74}
+      .p{font:700 18px Arial,sans-serif;fill:#173c43}
+    </style>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0 0 10 5 0 10Z" fill="#d9773d"/>
+    </marker>
+  </defs>
+  <rect width="1110" height="350" rx="20" fill="#f0f9fb"/>
+  <g fill="#fff" stroke="#d8e9ed">
+    <rect x="20" y="20" width="340" height="310" rx="15"/>
+    <rect x="385" y="20" width="340" height="310" rx="15"/>
+    <rect x="750" y="20" width="340" height="310" rx="15"/>
+  </g>
+  <text x="44" y="58" class="h">Перенос</text>
+  <text x="409" y="58" class="h">Поворот</text>
+  <text x="774" y="58" class="h">Отражение</text>
+  <path d="M106 248 263 151" stroke="#d9773d" stroke-width="4" marker-end="url(#arrow)"/>
+  <circle cx="106" cy="248" r="6" fill="#0b7d86"/><circle cx="263" cy="151" r="6" fill="#0b7d86"/>
+  <text x="82" y="275" class="p">M</text><text x="272" y="145" class="p">M′</text>
+  <text x="182" y="187" class="p" fill="#b66921">v</text>
+  <text x="44" y="303" class="s">M′ = M + v</text>
+  <path d="M548 239 639 239M548 239 548 148" fill="none" stroke="#9eb5bb" stroke-width="2" stroke-dasharray="7 6"/>
+  <path d="M607 239 A59 59 0 0 0 548 180" fill="none" stroke="#d9773d" stroke-width="3" marker-end="url(#arrow)"/>
+  <circle cx="548" cy="239" r="6" fill="#0b7d86"/><circle cx="639" cy="239" r="6" fill="#0b7d86"/><circle cx="548" cy="148" r="6" fill="#0b7d86"/>
+  <text x="524" y="264" class="p">C</text><text x="647" y="245" class="p">M</text><text x="555" y="140" class="p">M′</text>
+  <text x="582" y="198" class="p" fill="#b66921">φ</text>
+  <text x="409" y="303" class="s">CM = CM′</text>
+  <path d="M920 93 920 264" stroke="#0b7d86" stroke-width="3"/>
+  <path d="M829 184 1011 184" stroke="#9eb5bb" stroke-width="2" stroke-dasharray="7 6"/>
+  <path d="M829 184 920 184M920 184 1011 184" stroke="#d9773d" stroke-width="3"/>
+  <circle cx="829" cy="184" r="6" fill="#0b7d86"/><circle cx="1011" cy="184" r="6" fill="#0b7d86"/>
+  <text x="803" y="176" class="p">M</text><text x="1019" y="176" class="p">M′</text><text x="931" y="108" class="p">l</text>
+  <text x="774" y="303" class="s">ось l делит MM′ пополам</text>
+</svg>
