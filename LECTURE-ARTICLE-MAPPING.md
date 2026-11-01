@@ -14,7 +14,7 @@
 Эти статьи видимы на платформе в разделе **«Без подтверждённой даты»**, чтобы не приписывать занятию вымышленную дату:
 
 - `undated/informatics-intro-programming.md` — Информатика;
-- `undated/geometry-gergonne-tangent.md` — Линейная алгебра и геометрия;
+- `undated/geometry-gergonne-tangent.md` — Линейная алгебра;
 - `undated/social-studies-society-system.md` — Обществознание;
 - `undated/physics-limits-derivatives-motion.md` — Физика;
 - `undated/history-practice-world-war-i.md` — История;
