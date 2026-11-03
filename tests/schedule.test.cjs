@@ -29,9 +29,11 @@ test('horizontal swipes change days, while vertical and cancelled gestures do no
   const start=()=>area.touchstart({touches:[touch(150,100)],target:{closest:()=>null}});
   const end=(x,y)=>area.touchend({touches:[],changedTouches:[touch(x,y)]});
   start();end(50,105);assert.match(h.nodes.get('app').innerHTML,/value="2026-09-16"/);
+  assert.match(h.nodes.get('app').innerHTML,/schedule-transition-next/);
   start();end(150,220);assert.match(h.nodes.get('app').innerHTML,/value="2026-09-16"/);
   start();area.touchcancel();end(250,100);assert.match(h.nodes.get('app').innerHTML,/value="2026-09-16"/);
   start();end(250,100);assert.match(h.nodes.get('app').innerHTML,/value="2026-09-15"/);
+  assert.match(h.nodes.get('app').innerHTML,/schedule-transition-previous/);
 });
 test('stale schedule and denied permission never trigger reminders',async()=>{assert.equal((await setup({stale:true})).sent.length,0);assert.equal((await setup({denied:true})).sent.length,0);});
 test('calendar contains UTC dates, alarms and byte-folded Russian text',async()=>{const h=await setup();h.nodes.get('exportCalendar').onclick();const text=await h.blob().text();assert.match(text,/DTSTART:20260915T054500Z/);assert.match(text,/TRIGGER:-PT10M/);assert.match(text,/METHOD:PUBLISH/);assert.match(text,/Математика\\, логика\\;/);for(const line of text.split('\r\n'))assert.ok(Buffer.byteLength(line)<=75);});

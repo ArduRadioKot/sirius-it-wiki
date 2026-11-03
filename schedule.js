@@ -318,7 +318,7 @@
     return '';
   }
 
-  function render() {
+  function render(direction = '') {
     const rows = lessons().filter((e) => e.date === date);
     const slots = slotsFor(rows);
     const covered = Array.isArray(snapshot?.groups[group]) && date >= snapshot.fromDate && date <= snapshot.toDate;
@@ -351,7 +351,7 @@
           ${weekNav()}
           <p class="schedule-meta schedule-meta-rail" role="status">${escape(statusLine())} · <a href="https://schedule.siriusuniversity.ru" target="_blank" rel="noopener">Источник</a></p>
         </aside>
-        <div class="schedule-main" id="scheduleSwipeArea">
+        <div class="schedule-main${direction === 'next' ? ' schedule-transition-next' : direction === 'previous' ? ' schedule-transition-previous' : ''}" id="scheduleSwipeArea">
           <div class="schedule-day-bar">
             <h2>${escape(dayTitle)}</h2>
             <span class="schedule-count">${slots.length || '0'}</span>
@@ -397,7 +397,7 @@
     ])
       document.getElementById(id).onclick = () => {
         date = shiftDate(date, step);
-        render();
+      render(step > 0 ? 'next' : 'previous');
       };
     // Keep vertical scrolling and multi-touch gestures native; only deliberate
     // horizontal swipes over the day's content change the selected date.
@@ -417,9 +417,10 @@
       if (touch) {
         const dx = touch.clientX - swipeStart.x, dy = touch.clientY - swipeStart.y;
         if (Math.abs(dx) >= 50 && Math.abs(dx) > Math.abs(dy) * 1.5) {
-          date = shiftDate(date, dx < 0 ? 1 : -1);
+          const direction = dx < 0 ? 'next' : 'previous';
+          date = shiftDate(date, direction === 'next' ? 1 : -1);
           swipeStart = null;
-          render();
+          render(direction);
           return;
         }
       }
@@ -447,8 +448,9 @@
     if (pickFile) pickFile.onclick = pickDeviceFile;
     document.querySelectorAll('.schedule-week-day').forEach((btn) => {
       btn.onclick = () => {
+        const direction = btn.dataset.date > date ? 'next' : btn.dataset.date < date ? 'previous' : '';
         date = btn.dataset.date;
-        render();
+        render(direction);
       };
     });
     paintTime();
