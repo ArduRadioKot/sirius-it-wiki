@@ -351,7 +351,7 @@
           ${weekNav()}
           <p class="schedule-meta schedule-meta-rail" role="status">${escape(statusLine())} · <a href="https://schedule.siriusuniversity.ru" target="_blank" rel="noopener">Источник</a></p>
         </aside>
-        <div class="schedule-main">
+        <div class="schedule-main" id="scheduleSwipeArea">
           <div class="schedule-day-bar">
             <h2>${escape(dayTitle)}</h2>
             <span class="schedule-count">${slots.length || '0'}</span>
@@ -399,6 +399,33 @@
         date = shiftDate(date, step);
         render();
       };
+    // Keep vertical scrolling and multi-touch gestures native; only deliberate
+    // horizontal swipes over the day's content change the selected date.
+    const swipeArea = document.getElementById('scheduleSwipeArea');
+    let swipeStart = null;
+    swipeArea.addEventListener('touchstart', (event) => {
+      if (event.touches.length !== 1 || event.target.closest('a, button, input, select, textarea')) {
+        swipeStart = null;
+        return;
+      }
+      const touch = event.touches[0];
+      swipeStart = { x: touch.clientX, y: touch.clientY, id: touch.identifier };
+    }, { passive: true });
+    swipeArea.addEventListener('touchend', (event) => {
+      if (!swipeStart || event.touches.length) { swipeStart = null; return; }
+      const touch = Array.from(event.changedTouches).find((item) => item.identifier === swipeStart.id);
+      if (touch) {
+        const dx = touch.clientX - swipeStart.x, dy = touch.clientY - swipeStart.y;
+        if (Math.abs(dx) >= 50 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+          date = shiftDate(date, dx < 0 ? 1 : -1);
+          swipeStart = null;
+          render();
+          return;
+        }
+      }
+      swipeStart = null;
+    }, { passive: true });
+    swipeArea.addEventListener('touchcancel', () => { swipeStart = null; }, { passive: true });
     document.getElementById('todayButton').onclick = () => {
       date = today();
       render();
