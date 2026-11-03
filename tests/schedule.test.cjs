@@ -14,7 +14,7 @@ async function setup({offline=false,stale=false,denied=false,legacy=false,host='
   const sessionStore=session||new Map();
   const nodes=new Map();const sent=[];let blob; let requests=0;const events={};const timers=[];
   class Clock extends realDate {constructor(...args){super(...(args.length?args:[now]));}static now(){return now;}}
-  const document={currentScript:{src:'https://wiki.test/repo/schedule.js'},hidden:false,addEventListener(name,fn){events['doc:'+name]=fn;},querySelectorAll(){return[];},getElementById(id){if(!nodes.has(id)) nodes.set(id,{innerHTML:'',textContent:''});return nodes.get(id);},createElement(){return {click(){}};}};
+  const document={currentScript:{src:'https://wiki.test/repo/schedule.js'},hidden:false,addEventListener(name,fn){events['doc:'+name]=fn;},querySelectorAll(){return[];},getElementById(id){if(!nodes.has(id)) nodes.set(id,{innerHTML:'',textContent:'',addEventListener(name,fn){this[name]=fn;}});return nodes.get(id);},createElement(){return {click(){}};}};
   class TestURL extends URL {static createObjectURL(b){blob=b;return 'blob:test';}static revokeObjectURL(){}}
   const opened=[];let copied='';
   const context={URL:TestURL,Blob,TextEncoder,Intl,Date:Clock,AbortSignal,console,document,location:{hash:'#/schedule',hostname:host,protocol:host==='127.0.0.1'||host==='localhost'?'http:':'https:'},localStorage:{getItem:k=>store.get(k)??null,setItem:(k,v)=>store.set(k,v)},sessionStorage:{getItem:k=>sessionStore.get(k)??null,setItem:(k,v)=>sessionStore.set(k,v),removeItem:k=>sessionStore.delete(k)},navigator:{onLine:!offline,clipboard:{writeText:async(text)=>{copied=text;}},serviceWorker:{getRegistration:async()=>({active:true,showNotification:async(...v)=>sent.push(v)})}},Notification:{permission:denied?'denied':'granted',requestPermission:async()=>denied?'denied':'granted'},fetch:async()=>{requests++;if(offline)throw Error('offline');return{ok:true,json:async()=>JSON.parse(JSON.stringify(data))};},setTimeout(){},setInterval(fn,ms){timers.push({fn,ms});},addEventListener(name,fn){events[name]=fn;},open(url){opened.push(url);}};
@@ -22,6 +22,17 @@ async function setup({offline=false,stale=false,denied=false,legacy=false,host='
   return {context,nodes,sent,store,events,timers,data,advance:ms=>now+=ms,requests:()=>requests,blob:()=>blob,opened,copied:()=>copied};
 }
 test('saved offline schedule and Moscow countdown work under a repository subpath',async()=>{const h=await setup({offline:true});assert.match(h.nodes.get('app').innerHTML,/08:45/);assert.match(h.nodes.get('nextHeadline').textContent,/9 мин/);assert.match(h.nodes.get('app').innerHTML,/Без интернета/);assert.equal(h.sent.length,1);assert.match(h.sent[0][1].data.url,/\/repo\/#\/schedule$/);await h.context.SiriusSchedule.refresh();assert.equal(h.sent.length,1);});
+test('horizontal swipes change days, while vertical and cancelled gestures do not',async()=>{
+  const h=await setup({offline:true});
+  const area=h.nodes.get('scheduleSwipeArea');
+  const touch=(x,y)=>({identifier:1,clientX:x,clientY:y});
+  const start=()=>area.touchstart({touches:[touch(150,100)],target:{closest:()=>null}});
+  const end=(x,y)=>area.touchend({touches:[],changedTouches:[touch(x,y)]});
+  start();end(50,105);assert.match(h.nodes.get('app').innerHTML,/value="2026-09-16"/);
+  start();end(150,220);assert.match(h.nodes.get('app').innerHTML,/value="2026-09-16"/);
+  start();area.touchcancel();end(250,100);assert.match(h.nodes.get('app').innerHTML,/value="2026-09-16"/);
+  start();end(250,100);assert.match(h.nodes.get('app').innerHTML,/value="2026-09-15"/);
+});
 test('stale schedule and denied permission never trigger reminders',async()=>{assert.equal((await setup({stale:true})).sent.length,0);assert.equal((await setup({denied:true})).sent.length,0);});
 test('calendar contains UTC dates, alarms and byte-folded Russian text',async()=>{const h=await setup();h.nodes.get('exportCalendar').onclick();const text=await h.blob().text();assert.match(text,/DTSTART:20260915T054500Z/);assert.match(text,/TRIGGER:-PT10M/);assert.match(text,/METHOD:PUBLISH/);assert.match(text,/Математика\\, логика\\;/);for(const line of text.split('\r\n'))assert.ok(Buffer.byteLength(line)<=75);});
 test('Google Calendar subscribes in one click via webcal cid',async()=>{
