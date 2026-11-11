@@ -318,6 +318,16 @@
     return '';
   }
 
+  function moveDate(step, animate = true) {
+    setDate(shiftDate(date, step), animate);
+  }
+
+  function setDate(nextDate, animate = true) {
+    const direction = nextDate > date ? 'next' : nextDate < date ? 'previous' : '';
+    date = nextDate;
+    render(animate ? direction : '');
+  }
+
   function render(direction = '') {
     const rows = lessons().filter((e) => e.date === date);
     const slots = slotsFor(rows);
@@ -386,51 +396,11 @@
       if (!snapshot?.groups[group]) refresh();
     };
     document.getElementById('scheduleDate').onchange = (e) => {
-      if (/^\d{4}-\d{2}-\d{2}$/.test(e.target.value)) {
-        date = e.target.value;
-        render();
-      }
+      if (/^\d{4}-\d{2}-\d{2}$/.test(e.target.value)) setDate(e.target.value);
     };
-    for (const [id, step] of [
-      ['previousDay', -1],
-      ['nextDay', 1],
-    ])
-      document.getElementById(id).onclick = () => {
-        date = shiftDate(date, step);
-      render(step > 0 ? 'next' : 'previous');
-      };
-    // Keep vertical scrolling and multi-touch gestures native; only deliberate
-    // horizontal swipes over the day's content change the selected date.
-    const swipeArea = document.getElementById('scheduleSwipeArea');
-    let swipeStart = null;
-    swipeArea.addEventListener('touchstart', (event) => {
-      if (event.touches.length !== 1 || event.target.closest('a, button, input, select, textarea')) {
-        swipeStart = null;
-        return;
-      }
-      const touch = event.touches[0];
-      swipeStart = { x: touch.clientX, y: touch.clientY, id: touch.identifier };
-    }, { passive: true });
-    swipeArea.addEventListener('touchend', (event) => {
-      if (!swipeStart || event.touches.length) { swipeStart = null; return; }
-      const touch = Array.from(event.changedTouches).find((item) => item.identifier === swipeStart.id);
-      if (touch) {
-        const dx = touch.clientX - swipeStart.x, dy = touch.clientY - swipeStart.y;
-        if (Math.abs(dx) >= 50 && Math.abs(dx) > Math.abs(dy) * 1.5) {
-          const direction = dx < 0 ? 'next' : 'previous';
-          date = shiftDate(date, direction === 'next' ? 1 : -1);
-          swipeStart = null;
-          render(direction);
-          return;
-        }
-      }
-      swipeStart = null;
-    }, { passive: true });
-    swipeArea.addEventListener('touchcancel', () => { swipeStart = null; }, { passive: true });
-    document.getElementById('todayButton').onclick = () => {
-      date = today();
-      render();
-    };
+    document.getElementById('previousDay').onclick = () => moveDate(-1);
+    document.getElementById('nextDay').onclick = () => moveDate(1);
+    document.getElementById('todayButton').onclick = () => setDate(today());
     document.getElementById('reminderLead').onchange = (e) => {
       lead = Number(e.target.value);
       put('sirius-lead', String(lead));
@@ -447,11 +417,7 @@
     const pickFile = document.getElementById('devicePickFile');
     if (pickFile) pickFile.onclick = pickDeviceFile;
     document.querySelectorAll('.schedule-week-day').forEach((btn) => {
-      btn.onclick = () => {
-        const direction = btn.dataset.date > date ? 'next' : btn.dataset.date < date ? 'previous' : '';
-        date = btn.dataset.date;
-        render(direction);
-      };
+      btn.onclick = () => setDate(btn.dataset.date);
     });
     paintTime();
   }
@@ -642,7 +608,7 @@
     setTimeout(() => URL.revokeObjectURL(url), 10000);
     showCalendarMessage('Файл скачан. Это разовый снимок — для автообновления используйте подписку.');
   }
-  window.SiriusSchedule={render,refresh};
+  window.SiriusSchedule={render,refresh,moveDate};
   let lastEnter = 0;
   const refreshOnEnter = () => {
     const now = Date.now();

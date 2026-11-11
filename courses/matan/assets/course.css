@@ -1,0 +1,205 @@
+/* Общие стили курса: уроки и справочники подключают этот файл. */
+:root {
+  color-scheme: light dark;
+  --bg: #fffff8;
+  --panel: #f6f4e8;
+  --ink: #1f1f1c;
+  --muted: #60605a;
+  --line: #d8d5c5;
+  --accent: #7a2e1f;
+  --ok: #1d6b3a;
+  --ok-bg: #e3f2e4;
+  --bad: #a3271d;
+  --bad-bg: #f9e4e0;
+  --focus: #1f5fbf;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #1b1b19;
+    --panel: #272724;
+    --ink: #e9e7dc;
+    --muted: #a5a398;
+    --line: #45443e;
+    --accent: #e39a83;
+    --ok: #7fd49a;
+    --ok-bg: #1f3a29;
+    --bad: #f0978b;
+    --bad-bg: #472521;
+    --focus: #8ab6ff;
+  }
+}
+
+* { box-sizing: border-box; }
+html { font-size: 19px; -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  /* Не Georgia: её старостильный 0 в формулах неотличим от буквы «о». */
+  font-family: Cambria, "PT Serif", "Times New Roman", serif;
+  line-height: 1.55;
+}
+main { max-width: 37rem; margin: 0 auto; padding: 2.5rem 1rem 4rem; }
+main.wide { max-width: 50rem; }
+
+h1 { font-weight: 400; font-size: 2rem; line-height: 1.2; margin: 0 0 .4rem; }
+h2 { font-weight: 400; font-style: italic; font-size: 1.4rem; margin: 2.6rem 0 .6rem; }
+h3 { font-weight: 700; font-size: 1rem; margin: 1.6rem 0 .3rem; }
+p { margin: 0 0 .9rem; }
+ul, ol { margin: 0 0 .9rem; padding-left: 1.4rem; }
+li { margin-bottom: .3rem; }
+a { color: var(--accent); }
+a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.meta { color: var(--muted); font-size: .85rem; margin-bottom: 1.6rem; }
+.cite { font-size: .78rem; white-space: nowrap; }
+.note { color: var(--muted); font-size: .88rem; }
+
+/* Формулы */
+.f {
+  font-family: "Cambria Math", "STIX Two Math", Cambria, "Times New Roman", serif;
+  white-space: nowrap;
+}
+.formula {
+  font-family: "Cambria Math", "STIX Two Math", Cambria, "Times New Roman", serif;
+  font-size: 1.12rem;
+  text-align: center;
+  margin: .9rem 0;
+  overflow-wrap: anywhere;
+}
+
+.rule { border-left: 3px solid var(--accent); padding: .3rem 0 .3rem 1rem; margin: 1.1rem 0; }
+.rule p:last-child { margin-bottom: 0; }
+
+.steps { counter-reset: s; list-style: none; padding: 0; }
+.steps > li { counter-increment: s; padding-left: 1.8rem; position: relative; }
+.steps > li::before { content: counter(s) "."; position: absolute; left: 0; color: var(--accent); }
+
+/* Таблицы */
+.tablewrap { overflow-x: auto; margin: 1rem 0; }
+table { border-collapse: collapse; width: 100%; font-size: .88rem; }
+th, td { border-bottom: 1px solid var(--line); padding: .35rem .5rem; text-align: left; vertical-align: top; }
+th { font-weight: 700; border-bottom: 2px solid var(--ink); }
+td.c, th.c { text-align: center; }
+
+/* Тест */
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 1rem; margin: 1rem 0; }
+.card .q { margin-bottom: .7rem; }
+.qnum { color: var(--muted); font-size: .8rem; display: block; margin-bottom: .15rem; }
+.opts { display: grid; gap: .4rem; }
+.opt, .btn, .slot, .grade {
+  font: inherit;
+  color: var(--ink);
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  cursor: pointer;
+}
+.opt { display: block; width: 100%; text-align: left; padding: .5rem .7rem; min-height: 2.75rem; overflow-wrap: anywhere; font-family: "Cambria Math", "STIX Two Math", Cambria, "Times New Roman", serif; }
+.opt:hover:not(:disabled), .btn:hover:not(:disabled), .slot:hover:not(:disabled), .grade:hover { border-color: var(--accent); }
+.opt:disabled { cursor: default; color: var(--muted); }
+.opt.right { background: var(--ok-bg); border-color: var(--ok); color: var(--ink); }
+.opt.wrong { background: var(--bad-bg); border-color: var(--bad); color: var(--ink); }
+.fb { margin-top: .7rem; font-size: .92rem; }
+.fb:empty { display: none; }
+.fb .ok { color: var(--ok); font-weight: 700; }
+.fb .no { color: var(--bad); font-weight: 700; }
+
+/* Конструктор */
+.given { margin-bottom: .6rem; }
+.line { display: flex; flex-wrap: wrap; align-items: center; gap: .3rem; font-family: "Cambria Math", "STIX Two Math", Cambria, serif; font-size: 1.05rem; margin-bottom: .7rem; }
+.slot { min-width: 2.75rem; min-height: 2.75rem; padding: .2rem .5rem; font-family: inherit; }
+.slot.empty { color: var(--muted); border-style: dashed; }
+.slot.right { background: var(--ok-bg); border-color: var(--ok); }
+.slot.wrong { background: var(--bad-bg); border-color: var(--bad); }
+.slot:disabled { cursor: default; color: var(--ink); }
+.btn { padding: .45rem .9rem; min-height: 2.75rem; }
+.btn:disabled { cursor: default; color: var(--muted); }
+
+/* Самооценка и отчёт */
+.grades { display: flex; flex-wrap: wrap; gap: .4rem; margin-top: .5rem; }
+.grade { min-width: 2.75rem; min-height: 2.75rem; padding: .2rem .7rem; }
+.grade[aria-pressed="true"] { background: var(--ok-bg); border-color: var(--ok); }
+details { margin: 1rem 0; }
+summary { cursor: pointer; color: var(--accent); min-height: 2rem; }
+.report { font-size: .92rem; white-space: pre-wrap; background: var(--bg); border: 1px solid var(--line); border-radius: 5px; padding: .7rem; margin: 0 0 .7rem; font-family: inherit; }
+
+.next { border-top: 1px solid var(--line); margin-top: 2.6rem; padding-top: 1rem; font-size: .92rem; }
+
+@media (max-width: 480px) {
+  html { font-size: 17px; }
+  main { padding-top: 1.5rem; }
+  h1 { font-size: 1.7rem; }
+}
+
+@media print {
+  :root { --bg: #fff; --panel: #fff; --ink: #000; --muted: #444; --line: #999; --accent: #000; }
+  html { font-size: 11pt; }
+  main, main.wide { max-width: none; padding: 0; }
+  .noprint { display: none; }
+  h2 { margin-top: 1.2rem; break-after: avoid; }
+  tr, .rule { break-inside: avoid; }
+  a { text-decoration: none; }
+}
+
+/* Таблица истинности */
+table.truth { width: auto; min-width: 60%; font-size: 1rem; }
+table.truth th, table.truth td { padding: .25rem .4rem; }
+table.truth .slot { min-width: 2.75rem; font-family: inherit; }
+td.same { background: var(--ok-bg); }
+@media (max-width: 480px) {
+  .card { padding: .7rem .5rem; }
+  table.truth th, table.truth td { padding: .2rem .1rem; }
+  table.truth th.f { white-space: normal; font-size: .85rem; }
+  table.truth .slot { min-width: 2.5rem; padding: .2rem .15rem; }
+}
+@media (max-width: 480px) {
+  table .f { white-space: normal; }
+}
+
+/* Конспект: те же блоки, что в тетради ученика (Опр. в зелёной рамке, «Важно» красным, Т. в рамке). */
+:root { --green: #2e7d4f; --red: #b3261e; }
+@media (prefers-color-scheme: dark) { :root { --green: #7fd49a; --red: #f0978b; } }
+.konspekt h2 { font-style: normal; font-weight: 700; text-decoration: underline; text-decoration-color: var(--red); text-underline-offset: .25em; }
+.ticket { display: inline-block; font-size: .78rem; font-weight: 400; color: var(--muted); border: 1px solid var(--line); border-radius: 4px; padding: 0 .35rem; margin-left: .4rem; vertical-align: middle; text-decoration: none; }
+.opr, .teor { border: 2px solid var(--green); border-radius: 10px; padding: .6rem .8rem; margin: .9rem 0; }
+.teor { border-color: var(--ink); border-style: double; border-width: 3px; }
+.opr > p:last-child, .teor > p:last-child { margin-bottom: 0; }
+.lbl { font-weight: 700; }
+.prosto { color: var(--muted); font-style: italic; }
+.vazhno::before { content: "Важно: "; color: var(--red); font-weight: 700; }
+.oboz { border-left: 3px solid #8a6fd1; padding-left: .6rem; }
+@media print {
+  .opr { border-color: #000; }
+  .opr, .teor, .tablewrap { break-inside: avoid; }
+}
+.konspekt h3 { text-decoration: underline; text-decoration-color: var(--red); text-underline-offset: .25em; }
+
+/* Поле для своего примера */
+.ex textarea { width: 100%; min-height: 3.5rem; font: inherit; color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 5px; padding: .45rem .6rem; resize: vertical; }
+@media (max-width: 480px) { .f { white-space: normal; } }
+
+/* Кнопка «Пояснение»: формулировка учебника видна сразу, простое объяснение — по нажатию. */
+details.poyasn { margin: .2rem 0 .9rem; }
+details.poyasn > summary { display: inline-block; list-style: none; cursor: pointer; font-size: .85rem; color: var(--accent); border: 1px solid var(--line); border-radius: 999px; padding: .2rem .8rem; min-height: 2rem; line-height: 1.6rem; }
+details.poyasn > summary::-webkit-details-marker { display: none; }
+details.poyasn > summary::before { content: "? "; font-weight: 700; }
+details.poyasn[open] > summary { background: var(--panel); }
+details.poyasn > :not(summary) { margin: .45rem 0 0; border-left: 3px solid var(--accent); padding-left: .7rem; }
+
+/* Общий язык оформления Сириус Wiki. */
+@font-face{font-family:Montserrat;src:url('../../../assets/fonts/montserrat-cyrillic.woff2') format('woff2');font-weight:400 700;font-display:swap;unicode-range:U+0400-045F,U+0490-0491,U+2116}
+@font-face{font-family:Montserrat;src:url('../../../assets/fonts/montserrat-latin.woff2') format('woff2');font-weight:400 700;font-display:swap}
+:root{color-scheme:light;--bg:#fff;--panel:#f3f6f7;--ink:#1f2a2e;--muted:#5f6e73;--line:#e1e8ea;--accent:#0b7d86;--focus:#0b7d86;--ok:#156640;--ok-bg:#e3f2e4;--bad:#a3271d;--bad-bg:#f9e4e0}
+[data-theme=dark]{color-scheme:dark;--bg:#10191c;--panel:#19272c;--ink:#e5eef0;--muted:#a6bac0;--line:#34474d;--accent:#66ddd5;--focus:#66ddd5;--ok:#7fd49a;--ok-bg:#1f3a29;--bad:#f0978b;--bad-bg:#472521}
+html{font-size:17px;scroll-behavior:smooth;scroll-padding-top:100px}body{font-family:Montserrat,'Segoe UI',sans-serif;line-height:1.7}
+main{max-width:900px;padding:42px 24px 80px}main.wide{max-width:1200px}h1{font-size:clamp(1.8rem,4vw,3rem);font-weight:650;letter-spacing:-.04em}h2{font-style:normal;font-weight:600;letter-spacing:-.025em}h3{font-weight:600}.f,.formula,.opt{font-family:'Cambria Math',Cambria,serif}.opt{font-size:1.1rem}
+.course-header{position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:24px;justify-content:space-between;padding:16px 32px;background:var(--bg);border-bottom:1px solid var(--line)}.course-brand img{width:155px;display:block}[data-theme=dark] .course-brand img{filter:brightness(0) invert(1)}.course-header nav{display:flex;flex-wrap:wrap;gap:24px;font-size:.86rem}.course-header a{text-decoration:none}.course-header .btn{min-height:36px;font-size:.8rem}
+.btn,.grade,.slot,.opt{border-radius:12px}.btn{text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:8px}.primary{background:#05dbd0;color:#06343a;border-color:#05dbd0}.card{border-radius:20px;padding:24px}.rule,.opr,.teor{background:var(--panel);border-left:3px solid var(--accent);padding:18px 22px;border-radius:0 16px 16px 0}details{margin:20px 0}summary{cursor:pointer;color:var(--accent);padding:8px 0}input,textarea,select{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:12px;max-width:100%}textarea{display:block;width:100%;margin-top:10px}input[type=search]{width:100%}.eyebrow{text-transform:uppercase;letter-spacing:.12em;font-size:.72rem;color:var(--accent);font-weight:600}
+.course-dashboard{display:grid;grid-template-columns:1fr 1.5fr;gap:30px;padding:30px;background:var(--panel);border-radius:24px;margin:24px 0 40px}.course-dashboard h2{margin:10px 0}.course-actions{display:grid;gap:10px}progress{width:100%;accent-color:var(--accent)}.reader-tools{padding:16px 0;margin:16px 0}.reader-tools .btn{margin:4px}.book-layout{display:grid;grid-template-columns:235px minmax(0,1fr);gap:40px}#chapters{align-self:start;position:sticky;top:100px;display:grid;gap:8px}#chapters a{padding:14px;border-radius:12px;text-decoration:none;font-size:.85rem}#chapters a[aria-current=true]{background:var(--panel);font-weight:600}#chapters small{display:block;color:var(--muted)}.lesson-nav{display:flex;justify-content:space-between;gap:12px;margin-top:35px;flex-wrap:wrap}#pdf-view iframe{width:100%;height:650px;border:1px solid var(--line);margin-top:20px}.lab-output{font-family:Cambria,serif;font-size:1.4rem;padding:16px 0}.lab-grid{display:flex;gap:20px;align-items:center;flex-wrap:wrap}.lab-grid label{display:grid;gap:4px}.venn-live{width:100%;max-width:340px}.venn-live text{font:18px Montserrat;fill:var(--ink)}.venn-live .outline{fill:none;stroke:var(--ink);stroke-width:2}.search-result{display:block;padding:10px;border-bottom:1px solid var(--line)}mark{background:#d8f5ed;color:#163731}.search-message{margin-top:10px;font-size:.85rem}#chapter:focus{outline:none}
+@media(max-width:760px){.course-header{padding:12px 16px;gap:12px;flex-wrap:wrap}.course-brand img{width:120px}.course-header nav{order:3;width:100%;gap:18px}.book-layout,.course-dashboard{grid-template-columns:1fr}#chapters{position:static;display:flex;overflow:auto}#chapters a{min-width:170px}main,main.wide{padding:28px 18px 60px}.course-dashboard{padding:22px}.card{padding:18px}.f{white-space:normal}.lesson-nav .btn{width:100%}}
+@media print{.course-header,.reader-tools,#chapters,#lab,#chapter-quiz,#original,.lesson-nav,#chapter-note,label[for=chapter-note]{display:none!important}.book-layout{display:block}details>*{display:block}main{max-width:none}body{background:#fff;color:#111}}
+.book-layout>*{min-width:0}#chapter{overflow-wrap:anywhere}.lab-output{overflow-wrap:anywhere}.course-actions>*{min-width:0}

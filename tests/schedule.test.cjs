@@ -22,18 +22,20 @@ async function setup({offline=false,stale=false,denied=false,legacy=false,host='
   return {context,nodes,sent,store,events,timers,data,advance:ms=>now+=ms,requests:()=>requests,blob:()=>blob,opened,copied:()=>copied};
 }
 test('saved offline schedule and Moscow countdown work under a repository subpath',async()=>{const h=await setup({offline:true});assert.match(h.nodes.get('app').innerHTML,/08:45/);assert.match(h.nodes.get('nextHeadline').textContent,/9 мин/);assert.match(h.nodes.get('app').innerHTML,/Без интернета/);assert.equal(h.sent.length,1);assert.match(h.sent[0][1].data.url,/\/repo\/#\/schedule$/);await h.context.SiriusSchedule.refresh();assert.equal(h.sent.length,1);});
-test('horizontal swipes change days, while vertical and cancelled gestures do not',async()=>{
-  const h=await setup({offline:true});
-  const area=h.nodes.get('scheduleSwipeArea');
-  const touch=(x,y)=>({identifier:1,clientX:x,clientY:y});
-  const start=()=>area.touchstart({touches:[touch(150,100)],target:{closest:()=>null}});
-  const end=(x,y)=>area.touchend({touches:[],changedTouches:[touch(x,y)]});
-  start();end(50,105);assert.match(h.nodes.get('app').innerHTML,/value="2026-09-16"/);
-  assert.match(h.nodes.get('app').innerHTML,/schedule-transition-next/);
-  start();end(150,220);assert.match(h.nodes.get('app').innerHTML,/value="2026-09-16"/);
-  start();area.touchcancel();end(250,100);assert.match(h.nodes.get('app').innerHTML,/value="2026-09-16"/);
-  start();end(250,100);assert.match(h.nodes.get('app').innerHTML,/value="2026-09-15"/);
-  assert.match(h.nodes.get('app').innerHTML,/schedule-transition-previous/);
+test('date navigation shifts by a day or a week and supports an external animation', async () => {
+  const h = await setup({offline: true});
+  const view = () => h.nodes.get('app').innerHTML;
+  h.context.SiriusSchedule.moveDate(1);
+  assert.match(view(), /value="2026-09-16"/);
+  assert.match(view(), /schedule-transition-next/);
+  h.context.SiriusSchedule.moveDate(7, false);
+  assert.match(view(), /value="2026-09-23"/);
+  assert.doesNotMatch(view(), /schedule-transition-/);
+  h.context.SiriusSchedule.moveDate(-7);
+  assert.match(view(), /value="2026-09-16"/);
+  assert.match(view(), /schedule-transition-previous/);
+  h.nodes.get('previousDay').onclick();
+  assert.match(view(), /value="2026-09-15"/);
 });
 test('stale schedule and denied permission never trigger reminders',async()=>{assert.equal((await setup({stale:true})).sent.length,0);assert.equal((await setup({denied:true})).sent.length,0);});
 test('calendar contains UTC dates, alarms and byte-folded Russian text',async()=>{const h=await setup();h.nodes.get('exportCalendar').onclick();const text=await h.blob().text();assert.match(text,/DTSTART:20260915T054500Z/);assert.match(text,/TRIGGER:-PT10M/);assert.match(text,/METHOD:PUBLISH/);assert.match(text,/Математика\\, логика\\;/);for(const line of text.split('\r\n'))assert.ok(Buffer.byteLength(line)<=75);});

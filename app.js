@@ -58,7 +58,7 @@ function inlineMarkdown(text) {
     .replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1">')
     .replace(
       /\[([^\]]+)\]\(([^)]+)\)/g,
-      '<a href="$2" target="_blank" rel="noopener">$1</a>',
+      (_, label, url) => url.startsWith('#/') ? `<a href="${url}">${label}</a>` : `<a href="${url}" target="_blank" rel="noopener">${label}</a>`,
     )
     .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
     .replace(/__([^_]+)__/g, "<strong>$1</strong>")
@@ -596,8 +596,14 @@ function studyPage({ day = null, subject = null, view = "day" } = {}) {
 
   app.innerHTML = `<section class="page"><div class="page-top"><div><span class="eyebrow">Раздел 01</span><h1>Учёба</h1></div><p class="page-description">Конспекты и учебные материалы по дням и предметам. Выберите нужную дату или дисциплину в списке.</p></div>
   <a class="study-review" href="#/study/review"><img class="study-review-art" src="assets/cards/pattern-23.svg" alt="" loading="lazy"><div class="study-review-text"><span class="study-review-title">Самопроверка</span><p>Короткие тесты по конспектам с разбором каждого ответа</p><span class="study-review-meta">${questionsLabel(questionCount)} · ${subjectCount} ${plural(subjectCount, "предмет", "предмета", "предметов")}</span></div>${ROUND_ARROW}</a>
+  <a class="study-review" href="#/study/matan"><img class="study-review-art" src="assets/cards/pattern-24.svg" alt="" loading="lazy"><div class="study-review-text"><span class="study-review-title">Курс математического анализа</span><p>Уроки, интерактивный учебник, тренажёры и карточки к коллоквиуму</p><span class="study-review-meta">9 уроков · 6 глав · 26 вопросов</span></div>${ROUND_ARROW}</a>
   <div class="study-switch" role="group" aria-label="Способ сортировки"><button type="button" class="study-switch-button ${studyView === "day" ? "active" : ""}" aria-pressed="${studyView === "day"}" data-view="day">По дням</button><button type="button" class="study-switch-button ${studyView === "subject" ? "active" : ""}" aria-pressed="${studyView === "subject"}" data-view="subject">По предметам</button></div>
   <div class="content-layout"><aside class="sidebar"><p class="sidebar-title">${studyView === "subject" ? "По предметам" : "По дням"}</p>${sidebarItems}</aside><div class="entries">${items.map((x) => entryRow(x, studyView)).join("") || '<div class="empty-state">Пока нет учебных материалов.</div>'}</div></div></section>`;
+
+  const filters = studyView === "subject" ? subjects : days;
+  const position = filters.indexOf(studyView === "subject" ? currentSubject : currentDay);
+  const filterLink = (value) => value && `#/study?view=${studyView}&${studyView}=${encodeURIComponent(value)}`;
+  SiriusSwipe.setRoutes(app.querySelector(".entries"), filterLink(filters[position - 1]), filterLink(filters[position + 1]), true);
 
   document.querySelectorAll(".study-switch-button").forEach((b) =>
     b.addEventListener("click", () => {
@@ -736,6 +742,15 @@ async function router() {
   const [path, qs] = raw.split("?");
   const parts = path.split("/").filter(Boolean).map(safeDecode);
 
+  const currentSection = `#/${parts[0] || ""}`;
+  document.querySelectorAll(".mobile-nav a").forEach((link) => {
+    if (link.getAttribute("href") === currentSection) {
+      link.setAttribute("aria-current", parts.length > 1 ? "location" : "page");
+    } else {
+      link.removeAttribute("aria-current");
+    }
+  });
+
   // The schedule lives in its own module, so it opens without waiting for the article index.
   if (parts[0] !== "schedule") await indexReady;
   if (!parts.length) home();
@@ -743,6 +758,9 @@ async function router() {
   else if (parts[0] === "life" && parts.length === 1) lifePage();
   else if (parts[0] === "life" && parts[1])
     await articlePage(index.life.find((x) => x.slug === parts[1]));
+  else if (parts[0] === "study" && parts[1] === "matan") {
+    await window.SiriusMatan.render(new URLSearchParams(qs || ""));
+  }
   else if (parts[0] === "study" && parts[1] === "review") {
     const p = new URLSearchParams(qs || "");
     reviewPage({ path: p.get("article") || "", subject: p.get("subject") || "" });
@@ -765,7 +783,7 @@ async function router() {
   } else notFound();
 
   app.focus({ preventScroll: true });
-  window.scrollTo(0, 0);
+  if (!swipeNavigation.finishRoute(location.hash)) window.scrollTo(0, 0);
 }
 
 const searchDialog = document.getElementById("searchDialog");
@@ -877,7 +895,12 @@ function openSearch() {
 function renderSearch(q) {
   const tokens = searchTokens(q);
   const articles = [...(index?.life || []), ...(index?.articles || [])];
-  const catalog = [...SITE_PAGES, ...articles];
+  const coursePages = Object.entries(window.MatanPages || {}).map(([page, value]) => {
+    const plain = document.createElement('div'); plain.innerHTML = value.html;
+    return {type:'page', title:value.title, subject:'Математический анализ', description:'Курс матанализа · уроки, учебник и справочники', content:plain.textContent, href:window.SiriusMatan.href(page)};
+  });
+  const originalPages = Object.entries(window.MatanOriginals || {}).flatMap(([kind,pages]) => pages.map((p,i)=>({type:'page',title:`${kind==='textbook'?'Учебник':'Лекции'} по матанализу · страница ${i+1}`,subject:'Математический анализ',content:p.text,href:window.SiriusMatan.href('original-'+kind,{n:String(i+1)})})));
+  const catalog = [...SITE_PAGES, ...coursePages, ...originalPages, ...articles];
   const ranked = tokens.length
     ? catalog
         .map((item) => ({ item, score: matchScore(item, tokens) }))
@@ -905,10 +928,7 @@ function renderSearch(q) {
 }
 
 document.getElementById("searchOpen").onclick = openSearch;
-document.getElementById("mobileSearchOpen").onclick = () => {
-  closeMenu();
-  openSearch();
-};
+document.getElementById("mobileSearchOpen").onclick = openSearch;
 searchInput.oninput = (e) => renderSearch(e.target.value);
 document.addEventListener("keydown", (e) => {
   if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
@@ -917,35 +937,25 @@ document.addEventListener("keydown", (e) => {
   }
 });
 
-const menu = document.getElementById("mobileMenu");
-const menuButton = document.getElementById("menuButton");
-function isMenuOpen() {
-  return menu.classList.contains("is-open");
-}
-function openMenu() {
-  menu.classList.add("is-open");
-  menu.setAttribute("aria-hidden", "false");
-  menuButton.setAttribute("aria-expanded", "true");
-  menuButton.setAttribute("aria-label", "Закрыть меню");
-  document.body.classList.add("menu-open");
-}
-function closeMenu() {
-  if (!isMenuOpen()) return;
-  menu.classList.remove("is-open");
-  menu.setAttribute("aria-hidden", "true");
-  menuButton.setAttribute("aria-expanded", "false");
-  menuButton.setAttribute("aria-label", "Открыть меню");
-  document.body.classList.remove("menu-open");
-}
-menuButton.onclick = () => {
-  if (isMenuOpen()) closeMenu();
-  else openMenu();
-};
-menu.querySelectorAll("a").forEach((a) => (a.onclick = closeMenu));
-document.addEventListener("keydown", (e) => {
-  if (e.key === "Escape") closeMenu();
+const sectionRoutes = ["#/", "#/study", "#/life", "#/schedule"];
+const swipeNavigation = SiriusSwipe.bind(app, (target) => {
+  const week = target.closest(".schedule-week");
+  const day = target.closest("#scheduleSwipeArea");
+  if (week || day) {
+    const selector = week ? ".schedule-shell" : "#scheduleSwipeArea";
+    return {
+      panel: app.querySelector(selector),
+      destination: (step) => ({
+        selector,
+        commit: () => SiriusSchedule.moveDate(step * (week ? 7 : 1), false),
+      }),
+    };
+  }
+  const section = location.hash.split(/[/?]/)[1];
+  const position = sectionRoutes.indexOf(section ? `#/${section}` : "#/");
+  if (position < 0) return null;
+  return { panel: app, destination: (step) => ({ hash: sectionRoutes[position + step] }) };
 });
-window.addEventListener("hashchange", () => closeMenu());
 
 const indexLoad = loadIndex();
 // Later navigations render with whatever index is available; a failed first load keeps its error page.

@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Логика и кванторы</title>
+<link rel="stylesheet" href="../assets/course.css?v=20261111">
+<script src="../../../theme.js"></script>
+<script src="../assets/portal.js" defer></script>
+</head>
+<body>
+<main>
+<h1>Логика и кванторы</h1>
+<p class="meta">Шпаргалка к темам 1–2. Источник: Пратусевич, §1 и §3. Формулировки сверяйте с конспектом.</p>
+
+<h2>Таблица истинности</h2>
+<div class="tablewrap"><table>
+<thead><tr><th class="c">a</th><th class="c">b</th><th class="c">¬a</th><th class="c">a ∧ b</th><th class="c">a ∨ b</th><th class="c">a → b</th><th class="c">a ↔ b</th></tr></thead>
+<tbody>
+<tr><td class="c">Л</td><td class="c">Л</td><td class="c">И</td><td class="c">Л</td><td class="c">Л</td><td class="c">И</td><td class="c">И</td></tr>
+<tr><td class="c">Л</td><td class="c">И</td><td class="c">И</td><td class="c">Л</td><td class="c">И</td><td class="c">И</td><td class="c">Л</td></tr>
+<tr><td class="c">И</td><td class="c">Л</td><td class="c">Л</td><td class="c">Л</td><td class="c">И</td><td class="c">Л</td><td class="c">Л</td></tr>
+<tr><td class="c">И</td><td class="c">И</td><td class="c">Л</td><td class="c">И</td><td class="c">И</td><td class="c">И</td><td class="c">И</td></tr>
+</tbody>
+</table></div>
+<p class="note">В учебнике вместо И и Л стоят T и F. Запомните: <span class="f">a → b</span> ложна только при истинном a и ложном b.</p>
+
+<h2>Названия</h2>
+<div class="tablewrap"><table>
+<thead><tr><th>Значок</th><th>Читаем</th><th>Название</th></tr></thead>
+<tbody>
+<tr><td class="f">¬a</td><td>не a</td><td>отрицание</td></tr>
+<tr><td class="f">a ∧ b</td><td>a и b</td><td>конъюнкция («соединение»: нужны обе части)</td></tr>
+<tr><td class="f">a ∨ b</td><td>a или b</td><td>дизъюнкция («разделение»: хватит одной части)</td></tr>
+<tr><td class="f">a → b</td><td>если a, то b</td><td>импликация</td></tr>
+<tr><td class="f">a ↔ b</td><td>a равносильно b</td><td>эквивалентность</td></tr>
+<tr><td class="f">∀x</td><td>для всех x</td><td>квантор всеобщности</td></tr>
+<tr><td class="f">∃x</td><td>существует x</td><td>квантор существования</td></tr>
+<tr><td class="f">∃!x</td><td>существует единственный x</td><td>ровно один такой x</td></tr>
+</tbody>
+</table></div>
+
+<h2>Главные равенства</h2>
+<div class="tablewrap"><table>
+<tbody>
+<tr><th>Де Морган</th><td class="f">¬(a ∧ b) = ¬a ∨ ¬b</td><td class="f">¬(a ∨ b) = ¬a ∧ ¬b</td></tr>
+<tr><th>Импликация</th><td class="f">a → b = ¬a ∨ b</td><td class="f">¬(a → b) = a ∧ ¬b</td></tr>
+<tr><th>Кванторы</th><td class="f">¬(∀x P(x)) = ∃x: ¬P(x)</td><td class="f">¬(∃x: P(x)) = ∀x ¬P(x)</td></tr>
+</tbody>
+</table></div>
+
+<h2>Как построить отрицание</h2>
+<ol class="steps">
+<li>Заменить каждый <span class="f">∀</span> на <span class="f">∃</span>, а каждый <span class="f">∃</span> на <span class="f">∀</span>.</li>
+<li>Порядок переменных и их области оставить как есть.</li>
+<li>Отрицать только условие после кванторов.</li>
+</ol>
+
+<h2>Отрицания условий</h2>
+<div class="tablewrap"><table>
+<thead><tr><th>Условие</th><th>Отрицание</th></tr></thead>
+<tbody>
+<tr><td class="f">x = y</td><td class="f">x ≠ y</td></tr>
+<tr><td class="f">x &gt; y</td><td class="f">x ≤ y</td></tr>
+<tr><td class="f">x ≥ y</td><td class="f">x &lt; y</td></tr>
+<tr><td class="f">x ∈ A</td><td class="f">x ∉ A</td></tr>
+</tbody>
+</table></div>
+
+<h2>Самопроверка</h2>
+<p>Из утверждения и его отрицания истинно ровно одно. Если оба варианта истинны или оба ложны, в отрицании ошибка. Чтобы опровергнуть <span class="f">∀x P(x)</span>, достаточно одного контрпримера.</p>
+
+<p class="next noprint">Буквы ℕ, ℤ, ℚ, ℝ и значки множеств: <a href="bukvy-i-znachki.html">шпаргалка</a>. План: <a href="karta-kollokviuma.html">карта коллоквиума</a>.</p>
+</main>
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Буквы и значки</title>
+<link rel="stylesheet" href="../assets/course.css?v=20261111">
+<script src="../assets/course.js?v=20261110"></script>
+<style>
+  .nest { border: 2px solid var(--line); border-radius: 8px; padding: .5rem .6rem .6rem; margin-top: .4rem; }
+  .nest > .lbl { font-size: .9rem; }
+  .nest > .lbl b { font-family: "Cambria Math", "STIX Two Math", Cambria, serif; font-size: 1.15rem; color: var(--accent); }
+</style>
+<script src="../../../theme.js"></script>
+<script src="../assets/portal.js" defer></script>
+</head>
+<body>
+<main>
+<h1>Буквы и значки</h1>
+<p class="meta">Шпаргалка: что значат ℕ, ℤ, ℚ, ℝ и значки множеств. Источник: Пратусевич, с. 49</p>
+
+<h2>Четыре буквы для чисел</h2>
+<p>Это не переменные, а <strong>имена множеств</strong> чисел. Их пишут двойными линиями: ℕ, ℤ, ℚ, ℝ. В учебнике — жирными буквами: <strong>N, Z, Q, R</strong>. Это одно и то же.</p>
+
+<div class="tablewrap"><table>
+<thead><tr><th class="c">Буква</th><th>Какие числа</th><th>Примеры</th></tr></thead>
+<tbody>
+<tr><td class="c f">ℕ</td><td><strong>натуральные</strong> — числа для счёта предметов</td><td class="f">1, 2, 3, 4, …</td></tr>
+<tr><td class="c f">ℤ</td><td><strong>целые</strong> — натуральные, ноль и минус натуральные</td><td class="f">…, −2, −1, 0, 1, 2, …</td></tr>
+<tr><td class="c f">ℚ</td><td><strong>рациональные</strong> — все дроби <span class="f">p/q</span>, где p — целое, q — натуральное</td><td class="f">1/2, −3/4, 0,5, 5</td></tr>
+<tr><td class="c f">ℝ</td><td><strong>вещественные</strong> (действительные) — все точки числовой прямой</td><td class="f">√2, π, −1,5, 7</td></tr>
+</tbody>
+</table></div>
+<p class="note">ℕ здесь начинается с 1, как в школе. В некоторых книгах в ℕ добавляют 0. Если в конспекте лектора так — следуйте конспекту.</p>
+
+<h3>Как запомнить буквы</h3>
+<ul>
+<li><span class="f">ℕ</span> — <em>Natural</em> (англ. «натуральный»).</li>
+<li><span class="f">ℤ</span> — <em>Zahlen</em> (нем. «числа»).</li>
+<li><span class="f">ℚ</span> — <em>Quotient</em> (англ. «частное», результат деления): рациональное число — это дробь.</li>
+<li><span class="f">ℝ</span> — <em>Real</em> (англ. «вещественный»).</li>
+</ul>
+<div class="rule"><p><strong>Частая ошибка:</strong> ℝ — это <em>не</em> «рациональные». Рациональные — это ℚ. А ℝ — вещественные. <span class="cite">с. 49</span></p></div>
+
+<h3>Каждое множество лежит внутри следующего</h3>
+<div class="nest"><div class="lbl"><b>ℝ</b> вещественные: ещё √2, π, …</div>
+  <div class="nest"><div class="lbl"><b>ℚ</b> рациональные: ещё 1/2, −3/4, …</div>
+    <div class="nest"><div class="lbl"><b>ℤ</b> целые: ещё 0, −1, −2, …</div>
+      <div class="nest"><div class="lbl"><b>ℕ</b> натуральные: 1, 2, 3, …</div></div>
+    </div>
+  </div>
+</div>
+<p>Число 5 есть во всех четырёх. А √2 есть только в ℝ: его нельзя записать дробью. <span class="cite">с. 49</span></p>
+
+<h3 class="noprint">Проверьте себя</h3>
+<p class="noprint">В каком <em>самом маленьком</em> из этих множеств лежит число?</p>
+<div id="numbers" class="noprint"></div>
+
+<h2>Значки для множеств</h2>
+<div class="tablewrap"><table>
+<thead><tr><th>Запись</th><th>Читаем</th><th>Пример</th></tr></thead>
+<tbody>
+<tr><td class="f">x ∈ A</td><td>x принадлежит A (x из A)</td><td class="f">3 ∈ ℕ</td></tr>
+<tr><td class="f">x ∉ A</td><td>x не принадлежит A</td><td class="f">−3 ∉ ℕ</td></tr>
+<tr><td class="f">{1, 2, 3}</td><td>множество из чисел 1, 2, 3</td><td>задание перечислением</td></tr>
+<tr><td class="f">{x ∈ ℝ: x² = 1}</td><td>все x из ℝ, для которых x² = 1</td><td>это <span class="f">{−1, 1}</span></td></tr>
+<tr><td class="f">∅</td><td>пустое множество, в нём нет ни одного элемента</td><td class="f">{x ∈ ℝ: x² = −1} = ∅</td></tr>
+<tr><td class="f">A ⊆ B</td><td>A — подмножество B: каждый элемент A лежит в B</td><td class="f">ℕ ⊆ ℤ</td></tr>
+<tr><td class="f">A ∪ B</td><td>объединение: всё, что есть в A <em>или</em> в B</td><td class="f">{1, 2} ∪ {2, 3} = {1, 2, 3}</td></tr>
+<tr><td class="f">A ∩ B</td><td>пересечение: то, что есть и в A, <em>и</em> в B</td><td class="f">{1, 2} ∩ {2, 3} = {2}</td></tr>
+<tr><td class="f">A \ B</td><td>разность: то, что есть в A, но нет в B</td><td class="f">{1, 2} \ {2, 3} = {1}</td></tr>
+</tbody>
+</table></div>
+<p class="note">Про <span class="f">⊂</span>: в учебнике <span class="f">A ⊂ B</span> значит то же, что <span class="f">A ⊆ B</span>. В других книгах <span class="f">⊂</span> значит <em>собственное</em> подмножество: A лежит в B, но не равно B. Как пишет ваш лектор, смотрите в конспекте.</p>
+<p class="note">Подсказка: ∪ похоже на чашку — в неё ссыпали всё вместе. Объединение связано с «или» (∨), пересечение — с «и» (∧).</p>
+
+<p class="next noprint">Логика и кванторы: <a href="kvantory-shpargalka.html">шпаргалка</a>. План: <a href="karta-kollokviuma.html">карта коллоквиума</a>.</p>
+</main>
+
+<script>
+Course.quiz('#numbers', 'Числа', [
+  { tag: '7', q: '<span class="f">7</span>', options: ['ℕ', 'ℤ', 'ℚ', 'ℝ'], correct: 0, why: '7 — число для счёта. Оно натуральное.' },
+  { tag: '−3', q: '<span class="f">−3</span>', options: ['ℕ', 'ℤ', 'ℚ', 'ℝ'], correct: 1, why: 'Отрицательные числа не натуральные. −3 — целое.' },
+  { tag: '3/4', q: '<span class="f">3/4</span>', options: ['ℕ', 'ℤ', 'ℚ', 'ℝ'], correct: 2, why: 'Это дробь, но не целое число. Значит, ℚ.' },
+  { tag: '√2', q: '<span class="f">√2</span>', options: ['ℕ', 'ℤ', 'ℚ', 'ℝ'], correct: 3, why: '√2 нельзя записать дробью. Оно есть только в ℝ.' },
+  { tag: '−10/5', q: '<span class="f">−10/5</span>', options: ['ℕ', 'ℤ', 'ℚ', 'ℝ'], correct: 1, why: 'Хитрость: −10/5 = −2. Это целое число.' },
+  { tag: '0,5', q: '<span class="f">0,5</span>', options: ['ℕ', 'ℤ', 'ℚ', 'ℝ'], correct: 2, why: '0,5 = 1/2. Это дробь, значит, ℚ.' }
+]);
+</script>
+</body>
+</html>
