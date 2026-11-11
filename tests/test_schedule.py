@@ -62,14 +62,14 @@ class ScheduleTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, 'wrong week'):m.collect()
 
 
-    def test_both_2025_groups_are_supported(self):
-        for group in ['ИОП-ИТ-25/1', 'ИОП-ИТ-25/2']:
+    def test_both_2024_groups_are_supported(self):
+        for group in ['ИОП-ИТ-24/1', 'ИОП-ИТ-24/2']:
             self.assertIn(group, m.GROUPS)
             event=self.event();event['group']=group
             self.assertEqual(len(m.normalize({'a':[event]},group)),1)
     def test_legacy_snapshot_is_only_valid_as_backup(self):
         saved=self.snapshot()
-        del saved['groups']['ИОП-ИТ-25/1'];del saved['groups']['ИОП-ИТ-25/2']
+        del saved['groups']['ИОП-ИТ-24/1'];del saved['groups']['ИОП-ИТ-24/2']
         self.assertFalse(m.valid_snapshot(saved))
         self.assertTrue(m.valid_snapshot(saved, require_all=False))
 
@@ -158,7 +158,7 @@ class ScheduleTests(unittest.TestCase):
             self.assertTrue(m.update(target, Mock(return_value=snapshot), Mock()))
             ics=(Path(directory)/'calendars'/'iop-it-26-1.ics').read_text(encoding='utf-8')
             self.assertIn('SUMMARY:Физика', ics)
-            self.assertTrue((Path(directory)/'calendars'/'iop-it-25-2.ics').exists())
+            self.assertTrue((Path(directory)/'calendars'/'iop-it-24-2.ics').exists())
 
     def test_remote_collector_sends_token_and_requires_https(self):
         response=Mock();response.read.return_value=json.dumps(self.snapshot()).encode()

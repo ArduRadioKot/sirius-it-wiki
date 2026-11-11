@@ -23,7 +23,7 @@
     const pageOrigin = () => {
       try { return location.origin; } catch { return ''; }
     };
-    const GROUPS = ['ИОП-ИТ-26/1', 'ИОП-ИТ-26/2', 'ИОП-ИТ-25/1', 'ИОП-ИТ-25/2'];
+    const GROUPS = ['ИОП-ИТ-26/1', 'ИОП-ИТ-26/2', 'ИОП-ИТ-25/1', 'ИОП-ИТ-25/2', 'ИОП-ИТ-24/1', 'ИОП-ИТ-24/2'];
     const dayPattern = /^\d{4}-\d{2}-\d{2}$/;
     const shift = (date, days) => {
       const value = new Date(`${date}T12:00:00Z`);
@@ -135,7 +135,7 @@
     if (document.getElementById('sirius-wiki-export')) return;
     const box = document.createElement('div'); box.id = 'sirius-wiki-export';
     box.style.cssText = 'position:fixed;inset:16px 16px auto;z-index:2147483647;padding:20px;background:white;color:black;border:1px solid #aaa;border-radius:12px;font:16px/1.5 system-ui;box-shadow:0 8px 40px #0004';
-    const status = document.createElement('p');status.textContent = 'Загрузка расписания четырёх групп…';box.append(status);
+    const status = document.createElement('p');status.textContent = 'Загрузка расписания групп…';box.append(status);
     document.body.append(box);
     try {
       const data = await factory().collect({progress:text => status.textContent=text});

@@ -7,8 +7,8 @@ const group='ИОП-ИТ-26/1';
 const realDate=Date;
 async function setup({offline=false,stale=false,denied=false,legacy=false,host='wiki.test',checked=false,session}={}) {
   let now=Date.parse('2026-09-15T05:36:00Z');
-  const data={version:1,updatedAt:new Date(now-(stale?2*86400000:0)).toISOString(),fromDate:'2026-09-14',toDate:'2026-10-04',groups:{[group]:[{id:'1',date:'2026-09-15',start:'08:45',end:'10:05',title:'Математика, логика; проверка'.repeat(6),room:'Альфа 5.8',teachers:'Преподаватель',kind:'Лекция',comment:''}], 'ИОП-ИТ-26/2':[], 'ИОП-ИТ-25/1':[], 'ИОП-ИТ-25/2':[]}};
-  if(legacy){delete data.groups['ИОП-ИТ-25/1'];delete data.groups['ИОП-ИТ-25/2'];}
+  const data={version:1,updatedAt:new Date(now-(stale?2*86400000:0)).toISOString(),fromDate:'2026-09-14',toDate:'2026-10-04',groups:{[group]:[{id:'1',date:'2026-09-15',start:'08:45',end:'10:05',title:'Математика, логика; проверка'.repeat(6),room:'Альфа 5.8',teachers:'Преподаватель',kind:'Лекция',comment:''}], 'ИОП-ИТ-26/2':[], 'ИОП-ИТ-25/1':[], 'ИОП-ИТ-25/2':[], 'ИОП-ИТ-24/1':[], 'ИОП-ИТ-24/2':[]}};
+  if(legacy){for(const name of ['ИОП-ИТ-24/1','ИОП-ИТ-24/2']) delete data.groups[name];}
   const store=new Map([['sirius-schedule',JSON.stringify(data)],['sirius-reminders','true']]);
   if(checked) store.set('sirius-schedule-checked',String(now));
   const sessionStore=session||new Map();
@@ -134,13 +134,13 @@ test('network failure never marks a check successful or destroys the backup',asy
   assert.equal(h.store.has('sirius-schedule-checked'),false);
 });
 
-test('both 2025 groups display their own lessons and persist selection',async()=>{
+test('both 2024 groups display their own lessons and persist selection',async()=>{
   const h=await setup();
-  for(const name of ['ИОП-ИТ-25/1','ИОП-ИТ-25/2']) {
+  for(const name of ['ИОП-ИТ-24/1','ИОП-ИТ-24/2']) {
     h.data.groups[name]=[{...h.data.groups[group][0],id:name,title:'Занятие '+name}];
   }
   await h.context.SiriusSchedule.refresh();
-  for(const name of ['ИОП-ИТ-25/1','ИОП-ИТ-25/2']) {
+  for(const name of ['ИОП-ИТ-24/1','ИОП-ИТ-24/2']) {
     h.nodes.get('scheduleGroup').onchange({target:{value:name}});
     assert.equal(h.store.get('sirius-group'),name);
     assert.match(h.nodes.get('app').innerHTML,new RegExp('Занятие '+name));
@@ -148,10 +148,10 @@ test('both 2025 groups display their own lessons and persist selection',async()=
     assert.ok((await h.blob().text()).includes('SUMMARY:Занятие '+name));
   }
 });
-test('legacy offline snapshot keeps 2026 lessons and does not claim 2025 has no classes',async()=>{
+test('legacy offline snapshot keeps 2026 lessons and does not claim 2024 has no classes',async()=>{
   const h=await setup({legacy:true,offline:true});
   assert.match(h.nodes.get('app').innerHTML,/Математика/);
-  h.nodes.get('scheduleGroup').onchange({target:{value:'ИОП-ИТ-25/1'}});
+  h.nodes.get('scheduleGroup').onchange({target:{value:'ИОП-ИТ-24/1'}});
   assert.match(h.nodes.get('app').innerHTML,/нет сохранённых данных/);
   assert.doesNotMatch(h.nodes.get('app').innerHTML,/В этот день занятий нет/);
 });
@@ -161,6 +161,8 @@ test('device button loads the timetable without opening extra menus',async()=>{
   incoming.updatedAt='2026-09-21T00:00:00.000Z';
   incoming.groups['ИОП-ИТ-25/1']=[];
   incoming.groups['ИОП-ИТ-25/2']=[];
+  incoming.groups['ИОП-ИТ-24/1']=[];
+  incoming.groups['ИОП-ИТ-24/2']=[];
   let collected=0;
   h.context.SiriusSource={valid:()=>true,collect:async()=>{collected++;return incoming;}};
   h.context.SiriusSchedule.render();

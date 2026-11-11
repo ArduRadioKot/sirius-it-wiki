@@ -1,5 +1,5 @@
 (() => {
-  const GROUPS = ['ИОП-ИТ-26/1', 'ИОП-ИТ-26/2', 'ИОП-ИТ-25/1', 'ИОП-ИТ-25/2'];
+  const GROUPS = ['ИОП-ИТ-26/1', 'ИОП-ИТ-26/2', 'ИОП-ИТ-25/1', 'ИОП-ИТ-25/2', 'ИОП-ИТ-24/1', 'ИОП-ИТ-24/2'];
   const base = new URL('./', document.currentScript.src);
   const get = (key, fallback) => { try { return localStorage.getItem(key) ?? fallback; } catch { return fallback; } };
   const put = (key, value) => { try { localStorage.setItem(key, value); } catch {} };
@@ -61,8 +61,11 @@
     deviceMessage = text;
     document.querySelectorAll('[data-device-status]').forEach((el) => { el.textContent = text; });
   }
-  function acceptDevice(data) {
-    if (!window.SiriusSource?.valid(data, true)) throw new Error('Файл не содержит корректного расписания четырёх групп.');
+  function acceptDevice(data, { requireComplete = true } = {}) {
+    if (!window.SiriusSource?.valid(data, requireComplete)) throw new Error('Файл не содержит корректного расписания.');
+    if (completeSnapshot() && !GROUPS.every(group => Array.isArray(data.groups[group]))) {
+      throw new Error('В приложении уже есть расписание всех групп. Выберите полный файл.');
+    }
     if (snapshot && Date.parse(data.updatedAt) < Date.parse(snapshot.updatedAt)) throw new Error('В приложении уже есть более новое расписание.');
     try { localStorage.setItem('sirius-schedule', JSON.stringify(data)); }
     catch { throw new Error('Не удалось сохранить расписание. Освободите место в хранилище браузера.'); }
@@ -76,7 +79,7 @@
     try {
       if (file.size > 2 * 1024 * 1024) throw new Error('Файл слишком большой. Максимум — 2 МБ.');
       let data; try { data = JSON.parse(await file.text()); } catch { throw new Error('Нужен JSON-файл расписания.'); }
-      acceptDevice(data);
+      acceptDevice(data, { requireComplete: false });
     } catch (error) {
       deviceFailed = true;
       showDeviceMessage(error.message);

@@ -127,7 +127,7 @@ explanation: Apply $f$ first, then $g$.
 
 ## Schedule
 
-The **Schedule** page covers `ИОП-ИТ-26/1`, `ИОП-ИТ-26/2`, `ИОП-ИТ-25/1` and `ИОП-ИТ-25/2`: group and day pickers, a week strip with class counts, countdown to the next class, rooms and teachers. All times are Moscow time.
+The **Schedule** page covers `ИОП-ИТ-26/1`, `ИОП-ИТ-26/2`, `ИОП-ИТ-25/1`, `ИОП-ИТ-25/2`, `ИОП-ИТ-24/1` and `ИОП-ИТ-24/2`: group and day pickers, a week strip with class counts, countdown to the next class, rooms and teachers. All times are Moscow time.
 
 ### How the timetable is updated
 

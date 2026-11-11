@@ -44,7 +44,7 @@ test('collector reads three weeks for each group and keeps cookie credentials',a
     return{ok:true,json:async()=>({serverMemo:{data:{group:activeGroup,events:{slot:[lesson({group:activeGroup,date})]}},checksum:'week'+week}})};
   };
   const data=await sandbox.window.SiriusSource.collect({request,now:new Date('2026-09-21T12:00:00Z')});
-  assert.equal(requests,16);assert.equal(data.fromDate,'2026-09-21');assert.equal(data.toDate,'2026-10-11');
+  assert.equal(requests,4 * api.GROUPS.length);assert.equal(data.fromDate,'2026-09-21');assert.equal(data.toDate,'2026-10-11');
   for(const g of api.GROUPS)assert.equal(data.groups[g].length,3);
 });
 test('export bookmark returns the snapshot to the wiki',()=>{

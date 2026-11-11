@@ -1,0 +1,1039 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Sirius Wiki//Schedule//RU
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:Сириус ИОП-ИТ-24/1
+X-WR-TIMEZONE:Europe/Moscow
+REFRESH-INTERVAL;VALUE=DURATION:PT4H
+X-PUBLISHED-TTL:PT4H
+BEGIN:VEVENT
+UID:33666ca05be4e41b02fc@sirius-wiki
+DTSTAMP:20261111T111026Z
+DTSTART:20261109T054500Z
+DTEND:20261109T070500Z
+SUMMARY:ППА 1 Математический анализ (Математ
+ ика)
+LOCATION:1-14-19.Альфа 4.1
+DESCRIPTION:ИОП-ИТ-24/1 · Федоров Глеб Владимиро
+ вич\nВнеучебное мероприятие\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:ППА 1 Математический анализ (Матем
+ атика)
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:9b2a646ba5132e2b4b08@sirius-wiki
+DTSTAMP:20261111T111026Z
+DTSTART:20261109T072000Z
+DTEND:20261109T084000Z
+SUMMARY:Дифференциальные уравнения
+LOCATION:1\,34К_1
+DESCRIPTION:ИОП-ИТ-24/1 · Криворотько Ольга Игор
+ евна\nЛекции\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Дифференциальные уравнения
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:01e57483c9b1d76d2340@sirius-wiki
+DTSTAMP:20261111T111026Z
+DTSTART:20261109T085500Z
+DTEND:20261109T101500Z
+SUMMARY:Методы оптимизации
+LOCATION:Альфа 5.7
+DESCRIPTION:ИОП-ИТ-24/1 · Федоров Глеб Владимиро
+ вич\nЛекции\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Методы оптимизации
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:68cdab72050ac59f48fc@sirius-wiki
+DTSTAMP:20261111T111026Z
+DTSTART:20261109T120500Z
+DTEND:20261109T132500Z
+SUMMARY:Высшая алгебра
+LOCATION:1\,34К_1
+DESCRIPTION:ИОП-ИТ-24/1 · Шнурников Игорь Никола
+ евич\nЛекции\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Высшая алгебра
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:96b9bc8ad6a6a62e2ba5@sirius-wiki
+DTSTAMP:20261111T111026Z
+DTSTART:20261109T134000Z
+DTEND:20261109T150000Z
+SUMMARY:Внеучебную деятельность
+LOCATION:1.33К_2
+DESCRIPTION:ИОП-ИТ-24/1 · Максим Пугачёв\nВнеуче
+ бное мероприятие\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Внеучебную деятельность
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:a4a9f75b741f0c941e95@sirius-wiki
+DTSTAMP:20261111T111026Z
+DTSTART:20261110T054500Z
+DTEND:20261110T070500Z
+SUMMARY:Современные социальные науки (Общес
+ твознание)
+LOCATION:1\,34К_1
+DESCRIPTION:ИОП-ИТ-24/1 · Галявиев Нияз Рамилеви
+ ч\nЛекции\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Современные социальные науки (Общ
+ ествознание)
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:920c18c163bca3343382@sirius-wiki
+DTSTAMP:20261111T111026Z
+DTSTART:20261110T072000Z
+DTEND:20261110T084000Z
+SUMMARY:Технологии тестирования и верифика
+ ции программных кодов
+LOCATION:1.32К_3
+DESCRIPTION:ИОП-ИТ-24/1 · Куранаков Дмитрий Серг
+ еевич\nЛекции\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Технологии тестирования и верифи
+ кации программных кодов
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:ea6e1ab92fd628e096de@sirius-wiki
+DTSTAMP:20261111T111026Z
+DTSTART:20261110T085500Z
+DTEND:20261110T101500Z
+SUMMARY:Теория вероятностей
+LOCATION:19-3К_19
+DESCRIPTION:ИОП-ИТ-24/1 · Шнурников Игорь Никола
+ евич\nЛекции\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Теория вероятностей
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:70b6e468477ee11d4548@sirius-wiki
+DTSTAMP:20261111T111026Z
+DTSTART:20261110T103000Z
+DTEND:20261110T115000Z
+SUMMARY:Современные социальные науки (Общес
+ твознание)
+LOCATION:1\,34К_1
+DESCRIPTION:ИОП-ИТ-24/1 · Галявиев Нияз Рамилеви
+ ч\nЛекции\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Современные социальные науки (Общ
+ ествознание)
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:262f0285e001d48510b7@sirius-wiki
+DTSTAMP:20261111T111026Z
+DTSTART:20261110T120500Z
+DTEND:20261110T132500Z
+SUMMARY:Теории систем
+LOCATION:Альфа 5.1
+DESCRIPTION:ИОП-ИТ-24/1 · Брунс Леонид Сергеевич
+ \nПрактические занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Теории систем
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:6ea882fc365dee8520e6@sirius-wiki
+DTSTAMP:20261111T111026Z
+DTSTART:20261111T054500Z
+DTEND:20261111T070500Z
+SUMMARY:Технологии тестирования и верифика
+ ции программных кодов
+LOCATION:1-14-15.Альфа 4.4
+DESCRIPTION:ИОП-ИТ-24/1 · Куранаков Дмитрий Серг
+ еевич\nПрактические занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Технологии тестирования и верифи
+ кации программных кодов
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:70e95509ff8b12410e50@sirius-wiki
+DTSTAMP:20261111T111026Z
+DTSTART:20261111T072000Z
+DTEND:20261111T084000Z
+SUMMARY:Математический анализ (Математика)
+LOCATION:1\,34К_1
+DESCRIPTION:ИОП-ИТ-24/1 · Гонгапшев Астемир Султ
+ анович\nПрактические занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Математический анализ (Математик
+ а)
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:f0ca507a631e6f0de1d0@sirius-wiki
+DTSTAMP:20261111T111026Z
+DTSTART:20261111T103000Z
+DTEND:20261111T115000Z
+SUMMARY:Операционные системы и системное пр
+ ограммирование
+LOCATION:1\,34К_1
+DESCRIPTION:ИОП-ИТ-24/1 · Ковригин Алексей Викто
+ рович\nЛекции\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Операционные системы и системное 
+ программирование
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:20bb759f3da2b43fc511@sirius-wiki
+DTSTAMP:20261111T111026Z
+DTSTART:20261111T120500Z
+DTEND:20261111T132500Z
+SUMMARY:Теории систем
+LOCATION:Альфа 5.1
+DESCRIPTION:ИОП-ИТ-24/1 · Брунс Леонид Сергеевич
+ \nПрактические занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Теории систем
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:142cb99712fa45d0a1d9@sirius-wiki
+DTSTAMP:20261111T111026Z
+DTSTART:20261111T134000Z
+DTEND:20261111T150000Z
+SUMMARY:Высшая алгебра
+LOCATION:1-14-15.Альфа 4.4
+DESCRIPTION:ИОП-ИТ-24/1 · Шнурников Игорь Никола
+ евич\nПрактические занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Высшая алгебра
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:6deb6cc0581dbbcf6c56@sirius-wiki
+DTSTAMP:20261111T111026Z
+DTSTART:20261112T054500Z
+DTEND:20261112T070500Z
+SUMMARY:Профессиональный иностранный язык
+LOCATION:1-14-19.Альфа 4.1
+DESCRIPTION:ИОП-ИТ-24/1 · Делоне Жан-Люк\nПрактич
+ еские занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Профессиональный иностранный язы
+ к
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:f1489b41cdf285fbe398@sirius-wiki
+DTSTAMP:20261111T111026Z
+DTSTART:20261112T072000Z
+DTEND:20261112T084000Z
+SUMMARY:Элективные дисциплины по физическо
+ й культуре и спорту (Физическая культур
+ а)
+LOCATION:ЛД "Айсберг"
+DESCRIPTION:ИОП-ИТ-24/1 · Басков Егор Петрович\nП
+ рактические занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Элективные дисциплины по физичес
+ кой культуре и спорту (Физическая культ
+ ура)
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:bca4b4f6db85caf8e8ac@sirius-wiki
+DTSTAMP:20261111T111026Z
+DTSTART:20261112T085500Z
+DTEND:20261112T101500Z
+SUMMARY:Современные социальные науки (Общес
+ твознание)
+LOCATION:Альфа 5.1
+DESCRIPTION:ИОП-ИТ-24/1 · Галявиев Нияз Рамилеви
+ ч\nПрактические занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Современные социальные науки (Общ
+ ествознание)
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:0fe10ae3430891c1e531@sirius-wiki
+DTSTAMP:20261111T111026Z
+DTSTART:20261113T054500Z
+DTEND:20261113T070500Z
+SUMMARY:Методы оптимизации
+LOCATION:1-14-19.Альфа 4.1
+DESCRIPTION:ИОП-ИТ-24/1 · Федоров Глеб Владимиро
+ вич\nПрактические занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Методы оптимизации
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:5eefbce7b7ee6328e5cc@sirius-wiki
+DTSTAMP:20261111T111026Z
+DTSTART:20261113T072000Z
+DTEND:20261113T084000Z
+SUMMARY:Профессиональный иностранный язык
+LOCATION:1.32К_3
+DESCRIPTION:ИОП-ИТ-24/1 · Делоне Жан-Люк\nПрактич
+ еские занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Профессиональный иностранный язы
+ к
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:f2c287fdc0c5b27a8420@sirius-wiki
+DTSTAMP:20261111T111026Z
+DTSTART:20261113T085500Z
+DTEND:20261113T101500Z
+SUMMARY:Дифференциальные уравнения
+LOCATION:1-14-15.Альфа 4.4
+DESCRIPTION:ИОП-ИТ-24/1 · Сметанина Влада Дмитри
+ евна\nПрактические занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Дифференциальные уравнения
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:4e0e143d0a7855f71913@sirius-wiki
+DTSTAMP:20261111T111026Z
+DTSTART:20261113T120500Z
+DTEND:20261113T132500Z
+SUMMARY:Операционные системы и системное пр
+ ограммирование
+LOCATION:1.17.1.17. К_АстраЛинукс (комп)
+DESCRIPTION:ИОП-ИТ-24/1 · Ковригин Алексей Викто
+ рович\nПрактические занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Операционные системы и системное 
+ программирование
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:a50a37dbd17f15a02f46@sirius-wiki
+DTSTAMP:20261111T111026Z
+DTSTART:20261113T134000Z
+DTEND:20261113T150000Z
+SUMMARY:Теория вероятностей
+LOCATION:1-14-15.Альфа 4.4
+DESCRIPTION:ИОП-ИТ-24/1 · Шнурников Игорь Никола
+ евич\nПрактические занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Теория вероятностей
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:02c0610c1bb2af731988@sirius-wiki
+DTSTAMP:20261111T111026Z
+DTSTART:20261114T072000Z
+DTEND:20261114T084000Z
+SUMMARY:Дифференциальные уравнения
+LOCATION:Альфа 5.1
+DESCRIPTION:ИОП-ИТ-24/1 · Сметанина Влада Дмитри
+ евна\nПрактические занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Дифференциальные уравнения
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:12b31db611b4b5bf764a@sirius-wiki
+DTSTAMP:20261111T111026Z
+DTSTART:20261114T085500Z
+DTEND:20261114T101500Z
+SUMMARY:Высшая алгебра
+LOCATION:1-14-14.Альфа 4.6
+DESCRIPTION:ИОП-ИТ-24/1 · Шнурников Игорь Никола
+ евич\nПрактические занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Высшая алгебра
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:59f6b5b0fd2b886899e0@sirius-wiki
+DTSTAMP:20261111T111026Z
+DTSTART:20261116T103000Z
+DTEND:20261116T115000Z
+SUMMARY:Методы оптимизации
+LOCATION:Альфа 5.7
+DESCRIPTION:ИОП-ИТ-24/1 · Федоров Глеб Владимиро
+ вич\nЛекции\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Методы оптимизации
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:063c5fcf6630a37e0dc2@sirius-wiki
+DTSTAMP:20261111T111026Z
+DTSTART:20261116T120500Z
+DTEND:20261116T132500Z
+SUMMARY:Математический анализ (Математика)
+LOCATION:1\,34К_1
+DESCRIPTION:ИОП-ИТ-24/1 · Федоров Глеб Владимиро
+ вич\nЛекции\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Математический анализ (Математик
+ а)
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:971e593c199d5c9dc1f1@sirius-wiki
+DTSTAMP:20261111T111026Z
+DTSTART:20261116T134000Z
+DTEND:20261116T150000Z
+SUMMARY:Дифференциальные уравнения
+LOCATION:1\,34К_1
+DESCRIPTION:ИОП-ИТ-24/1 · Криворотько Ольга Игор
+ евна\nЛекции\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Дифференциальные уравнения
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:227f41b367993c52492e@sirius-wiki
+DTSTAMP:20261111T111026Z
+DTSTART:20261117T054500Z
+DTEND:20261117T070500Z
+SUMMARY:Теории систем
+LOCATION:Альфа 5.4
+DESCRIPTION:ИОП-ИТ-24/1 · Брунс Леонид Сергеевич
+ \nПрактические занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Теории систем
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:e856f1c3fce08a5d3dc4@sirius-wiki
+DTSTAMP:20261111T111026Z
+DTSTART:20261117T072000Z
+DTEND:20261117T084000Z
+SUMMARY:Высшая алгебра
+LOCATION:1\,34К_1
+DESCRIPTION:ИОП-ИТ-24/1 · Шнурников Игорь Никола
+ евич\nЛекции\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Высшая алгебра
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:3cbb0e8accd942613e0d@sirius-wiki
+DTSTAMP:20261111T111026Z
+DTSTART:20261117T085500Z
+DTEND:20261117T101500Z
+SUMMARY:Теория вероятностей
+LOCATION:Альфа 5.7
+DESCRIPTION:ИОП-ИТ-24/1 · Шнурников Игорь Никола
+ евич\nЛекции\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Теория вероятностей
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:8a2c0ece8d7c3587ee41@sirius-wiki
+DTSTAMP:20261111T111026Z
+DTSTART:20261117T120500Z
+DTEND:20261117T132500Z
+SUMMARY:Проектно-исследовательская работа
+LOCATION:Альфа 5.8
+DESCRIPTION:ИОП-ИТ-24/1 · Чубатов Андрей Алексее
+ вич\, Семенов Михаил Евгеньевич\nПрактич
+ еские занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Проектно-исследовательская работ
+ а
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:e2be2d0d9ea02c54f80a@sirius-wiki
+DTSTAMP:20261111T111026Z
+DTSTART:20261118T054500Z
+DTEND:20261118T070500Z
+SUMMARY:Технологии тестирования и верифика
+ ции программных кодов
+LOCATION:1-14-15.Альфа 4.4
+DESCRIPTION:ИОП-ИТ-24/1 · Куранаков Дмитрий Серг
+ еевич\nПрактические занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Технологии тестирования и верифи
+ кации программных кодов
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:585f668576cf6a75dcaf@sirius-wiki
+DTSTAMP:20261111T111026Z
+DTSTART:20261118T085500Z
+DTEND:20261118T101500Z
+SUMMARY:Теории систем
+LOCATION:1-14-17.Альфа 4.3
+DESCRIPTION:ИОП-ИТ-24/1 · Брунс Леонид Сергеевич
+ \nПрактические занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Теории систем
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:4caf1fcf6da6b4480a5e@sirius-wiki
+DTSTAMP:20261111T111026Z
+DTSTART:20261118T120500Z
+DTEND:20261118T132500Z
+SUMMARY:Высшая алгебра
+LOCATION:1-14-15.Альфа 4.4
+DESCRIPTION:ИОП-ИТ-24/1 · Шнурников Игорь Никола
+ евич\nПрактические занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Высшая алгебра
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:714ebb1a9f445ed33da8@sirius-wiki
+DTSTAMP:20261111T111026Z
+DTSTART:20261118T134000Z
+DTEND:20261118T150000Z
+SUMMARY:Высшая алгебра
+LOCATION:Альфа 5.11
+DESCRIPTION:ИОП-ИТ-24/1 · Шнурников Игорь Никола
+ евич\nПрактические занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Высшая алгебра
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:f76fa6f594bf439bc482@sirius-wiki
+DTSTAMP:20261111T111026Z
+DTSTART:20261119T072000Z
+DTEND:20261119T084000Z
+SUMMARY:Элективные дисциплины по физическо
+ й культуре и спорту (Физическая культур
+ а)
+LOCATION:ЛД "Айсберг"
+DESCRIPTION:ИОП-ИТ-24/1 · Басков Егор Петрович\nП
+ рактические занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Элективные дисциплины по физичес
+ кой культуре и спорту (Физическая культ
+ ура)
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:dcfc19f4508217058a5b@sirius-wiki
+DTSTAMP:20261111T111026Z
+DTSTART:20261119T103000Z
+DTEND:20261119T115000Z
+SUMMARY:Профессиональный иностранный язык
+LOCATION:1-14-19.Альфа 4.1
+DESCRIPTION:ИОП-ИТ-24/1 · Делоне Жан-Люк\nПрактич
+ еские занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Профессиональный иностранный язы
+ к
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:294255114399a355bc94@sirius-wiki
+DTSTAMP:20261111T111026Z
+DTSTART:20261119T120500Z
+DTEND:20261119T132500Z
+SUMMARY:Операционные системы и системное пр
+ ограммирование
+LOCATION:1.17.1.17. К_АстраЛинукс (комп)
+DESCRIPTION:ИОП-ИТ-24/1 · Ковригин Алексей Викто
+ рович\nПрактические занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Операционные системы и системное 
+ программирование
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:d025a457a5076a140a99@sirius-wiki
+DTSTAMP:20261111T111026Z
+DTSTART:20261120T054500Z
+DTEND:20261120T070500Z
+SUMMARY:Методы оптимизации
+LOCATION:1-14-19.Альфа 4.1
+DESCRIPTION:ИОП-ИТ-24/1 · Федоров Глеб Владимиро
+ вич\nПрактические занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Методы оптимизации
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:03e25b47e530134ac59e@sirius-wiki
+DTSTAMP:20261111T111026Z
+DTSTART:20261120T072000Z
+DTEND:20261120T084000Z
+SUMMARY:Профессиональный иностранный язык
+LOCATION:1.32К_3
+DESCRIPTION:ИОП-ИТ-24/1 · Делоне Жан-Люк\nПрактич
+ еские занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Профессиональный иностранный язы
+ к
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:8363dea112562608f45a@sirius-wiki
+DTSTAMP:20261111T111026Z
+DTSTART:20261120T085500Z
+DTEND:20261120T101500Z
+SUMMARY:Дифференциальные уравнения
+LOCATION:1-14-15.Альфа 4.4
+DESCRIPTION:ИОП-ИТ-24/1 · Сметанина Влада Дмитри
+ евна\nПрактические занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Дифференциальные уравнения
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:5048bdf54f0f1c93c8fe@sirius-wiki
+DTSTAMP:20261111T111026Z
+DTSTART:20261120T120500Z
+DTEND:20261120T132500Z
+SUMMARY:Операционные системы и системное пр
+ ограммирование
+LOCATION:1.17.1.17. К_АстраЛинукс (комп)
+DESCRIPTION:ИОП-ИТ-24/1 · Ковригин Алексей Викто
+ рович\nПрактические занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Операционные системы и системное 
+ программирование
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:48837436b569c1cd1286@sirius-wiki
+DTSTAMP:20261111T111026Z
+DTSTART:20261120T134000Z
+DTEND:20261120T150000Z
+SUMMARY:Теория вероятностей
+LOCATION:Альфа 5.11
+DESCRIPTION:ИОП-ИТ-24/1 · Шнурников Игорь Никола
+ евич\nПрактические занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Теория вероятностей
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:9341acdf4d5e3844577d@sirius-wiki
+DTSTAMP:20261111T111026Z
+DTSTART:20261121T072000Z
+DTEND:20261121T084000Z
+SUMMARY:Дифференциальные уравнения
+LOCATION:Альфа 5.1
+DESCRIPTION:ИОП-ИТ-24/1 · Сметанина Влада Дмитри
+ евна\nПрактические занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Дифференциальные уравнения
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:0c65cbf7324f6582a012@sirius-wiki
+DTSTAMP:20261111T111026Z
+DTSTART:20261123T054500Z
+DTEND:20261123T070500Z
+SUMMARY:Современные социальные науки (Общес
+ твознание)
+LOCATION:1\,34К_1
+DESCRIPTION:ИОП-ИТ-24/1 · Галявиев Нияз Рамилеви
+ ч\nЛекции\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Современные социальные науки (Общ
+ ествознание)
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:55d8ccc8bbcfc6abe333@sirius-wiki
+DTSTAMP:20261111T111026Z
+DTSTART:20261123T072000Z
+DTEND:20261123T084000Z
+SUMMARY:Дифференциальные уравнения
+LOCATION:1\,34К_1
+DESCRIPTION:ИОП-ИТ-24/1 · Криворотько Ольга Игор
+ евна\nЛекции\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Дифференциальные уравнения
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:3e9e3f8f000c9c5ad45e@sirius-wiki
+DTSTAMP:20261111T111026Z
+DTSTART:20261123T085500Z
+DTEND:20261123T101500Z
+SUMMARY:Методы оптимизации
+LOCATION:Альфа 5.7
+DESCRIPTION:ИОП-ИТ-24/1 · Федоров Глеб Владимиро
+ вич\nЛекции\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Методы оптимизации
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:a9fe5a66a5f485b676ad@sirius-wiki
+DTSTAMP:20261111T111026Z
+DTSTART:20261123T120500Z
+DTEND:20261123T132500Z
+SUMMARY:Высшая алгебра
+LOCATION:1\,34К_1
+DESCRIPTION:ИОП-ИТ-24/1 · Шнурников Игорь Никола
+ евич\nЛекции\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Высшая алгебра
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:db3dfa4a2e13cc6d0ee2@sirius-wiki
+DTSTAMP:20261111T111026Z
+DTSTART:20261124T054500Z
+DTEND:20261124T070500Z
+SUMMARY:Операционные системы и системное пр
+ ограммирование
+LOCATION:1\,34К_1
+DESCRIPTION:ИОП-ИТ-24/1 · Ковригин Алексей Викто
+ рович\nЛекции\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Операционные системы и системное 
+ программирование
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:232fd8af2d9fe9be021c@sirius-wiki
+DTSTAMP:20261111T111026Z
+DTSTART:20261124T072000Z
+DTEND:20261124T084000Z
+SUMMARY:Технологии тестирования и верифика
+ ции программных кодов
+LOCATION:1\,34К_1
+DESCRIPTION:ИОП-ИТ-24/1 · Куранаков Дмитрий Серг
+ еевич\nЛекции\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Технологии тестирования и верифи
+ кации программных кодов
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:69417f9269aeb7b0ad8a@sirius-wiki
+DTSTAMP:20261111T111026Z
+DTSTART:20261124T085500Z
+DTEND:20261124T101500Z
+SUMMARY:Теория вероятностей
+LOCATION:Альфа 5.7
+DESCRIPTION:ИОП-ИТ-24/1 · Шнурников Игорь Никола
+ евич\nЛекции\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Теория вероятностей
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:f3292ea6173472f64bf4@sirius-wiki
+DTSTAMP:20261111T111026Z
+DTSTART:20261124T120500Z
+DTEND:20261124T132500Z
+SUMMARY:Теории систем
+LOCATION:Альфа 5.4
+DESCRIPTION:ИОП-ИТ-24/1 · Брунс Леонид Сергеевич
+ \nПрактические занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Теории систем
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:1c7c9c94158e4f7cd4de@sirius-wiki
+DTSTAMP:20261111T111026Z
+DTSTART:20261125T054500Z
+DTEND:20261125T070500Z
+SUMMARY:Технологии тестирования и верифика
+ ции программных кодов
+LOCATION:1-14-15.Альфа 4.4
+DESCRIPTION:ИОП-ИТ-24/1 · Куранаков Дмитрий Серг
+ еевич\nПрактические занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Технологии тестирования и верифи
+ кации программных кодов
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:f71dc8c0ad5589627681@sirius-wiki
+DTSTAMP:20261111T111026Z
+DTSTART:20261125T072000Z
+DTEND:20261125T084000Z
+SUMMARY:Математический анализ (Математика)
+LOCATION:1\,34К_1
+DESCRIPTION:ИОП-ИТ-24/1 · Гонгапшев Астемир Султ
+ анович\nПрактические занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Математический анализ (Математик
+ а)
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:fdf095931929ed68dd2f@sirius-wiki
+DTSTAMP:20261111T111026Z
+DTSTART:20261125T085500Z
+DTEND:20261125T101500Z
+SUMMARY:Теории систем
+LOCATION:1-14-15.Альфа 4.4
+DESCRIPTION:ИОП-ИТ-24/1 · Брунс Леонид Сергеевич
+ \nПрактические занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Теории систем
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:271f5649d7e167eee822@sirius-wiki
+DTSTAMP:20261111T111026Z
+DTSTART:20261126T072000Z
+DTEND:20261126T084000Z
+SUMMARY:Элективные дисциплины по физическо
+ й культуре и спорту (Физическая культур
+ а)
+LOCATION:ЛД "Айсберг"
+DESCRIPTION:ИОП-ИТ-24/1 · Басков Егор Петрович\nП
+ рактические занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Элективные дисциплины по физичес
+ кой культуре и спорту (Физическая культ
+ ура)
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:d6f48b66c4742c156293@sirius-wiki
+DTSTAMP:20261111T111026Z
+DTSTART:20261126T103000Z
+DTEND:20261126T115000Z
+SUMMARY:Профессиональный иностранный язык
+LOCATION:1-14-19.Альфа 4.1
+DESCRIPTION:ИОП-ИТ-24/1 · Делоне Жан-Люк\nПрактич
+ еские занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Профессиональный иностранный язы
+ к
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:573c4f4b5655c3a92c23@sirius-wiki
+DTSTAMP:20261111T111026Z
+DTSTART:20261126T120500Z
+DTEND:20261126T132500Z
+SUMMARY:Высшая алгебра
+LOCATION:1-14-15.Альфа 4.4
+DESCRIPTION:ИОП-ИТ-24/1 · Шнурников Игорь Никола
+ евич\nПрактические занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Высшая алгебра
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:c759abeb60a6551bb0c0@sirius-wiki
+DTSTAMP:20261111T111026Z
+DTSTART:20261127T054500Z
+DTEND:20261127T070500Z
+SUMMARY:Методы оптимизации
+LOCATION:1-14-15.Альфа 4.4
+DESCRIPTION:ИОП-ИТ-24/1 · Федоров Глеб Владимиро
+ вич\nПрактические занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Методы оптимизации
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:a1a47b362f18063d54d4@sirius-wiki
+DTSTAMP:20261111T111026Z
+DTSTART:20261127T072000Z
+DTEND:20261127T084000Z
+SUMMARY:Дифференциальные уравнения
+LOCATION:1-14-19.Альфа 4.1
+DESCRIPTION:ИОП-ИТ-24/1 · Сметанина Влада Дмитри
+ евна\nПрактические занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Дифференциальные уравнения
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:0a4f50919024ef6de547@sirius-wiki
+DTSTAMP:20261111T111026Z
+DTSTART:20261127T085500Z
+DTEND:20261127T101500Z
+SUMMARY:Теория вероятностей
+LOCATION:Альфа 5.4
+DESCRIPTION:ИОП-ИТ-24/1 · Шнурников Игорь Никола
+ евич\nПрактические занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Теория вероятностей
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:1ba2bae9017e3cdc5743@sirius-wiki
+DTSTAMP:20261111T111026Z
+DTSTART:20261127T120500Z
+DTEND:20261127T132500Z
+SUMMARY:Операционные системы и системное пр
+ ограммирование
+LOCATION:1.191.19 К_РЖД ОЦРВ (комп)
+DESCRIPTION:ИОП-ИТ-24/1 · Ковригин Алексей Викто
+ рович\nПрактические занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Операционные системы и системное 
+ программирование
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:9a4b2df28f92bf9fdd38@sirius-wiki
+DTSTAMP:20261111T111026Z
+DTSTART:20261128T072000Z
+DTEND:20261128T084000Z
+SUMMARY:Дифференциальные уравнения
+LOCATION:Альфа 5.1
+DESCRIPTION:ИОП-ИТ-24/1 · Сметанина Влада Дмитри
+ евна\nПрактические занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Дифференциальные уравнения
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:14484461e970924a22da@sirius-wiki
+DTSTAMP:20261111T111026Z
+DTSTART:20261128T085500Z
+DTEND:20261128T101500Z
+SUMMARY:Высшая алгебра
+LOCATION:1-14-15.Альфа 4.4
+DESCRIPTION:ИОП-ИТ-24/1 · Шнурников Игорь Никола
+ евич\nПрактические занятия\n
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Высшая алгебра
+END:VALARM
+END:VEVENT
+END:VCALENDAR

@@ -899,7 +899,7 @@ function renderSearch(q) {
     const plain = document.createElement('div'); plain.innerHTML = value.html;
     return {type:'page', title:value.title, subject:'Математический анализ', description:'Курс матанализа · уроки, учебник и справочники', content:plain.textContent, href:window.SiriusMatan.href(page)};
   });
-  const originalPages = Object.entries(window.MatanOriginals || {}).flatMap(([kind,pages]) => pages.map((p,i)=>({type:'page',title:`${kind==='textbook'?'Учебник':'Лекции'} по матанализу · страница ${i+1}`,subject:'Математический анализ',content:p.text,href:window.SiriusMatan.href('original-'+kind,{n:String(i+1)})})));
+  const originalPages = Object.entries(window.MatanOriginals || {}).flatMap(([kind,pages]) => pages.map((p,i)=>({type:'page',title:`${window.SiriusMatan.originals[kind].title} · страница ${i+1}`,subject:'Математический анализ',content:p.text,href:window.SiriusMatan.href('original-'+kind,{n:String(i+1)})})));
   const catalog = [...SITE_PAGES, ...coursePages, ...originalPages, ...articles];
   const ranked = tokens.length
     ? catalog

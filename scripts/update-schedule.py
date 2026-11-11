@@ -18,7 +18,7 @@ import urllib.request
 import urllib.parse
 
 SOURCE = 'https://schedule.siriusuniversity.ru'
-GROUPS = ['ИОП-ИТ-26/1', 'ИОП-ИТ-26/2', 'ИОП-ИТ-25/1', 'ИОП-ИТ-25/2']
+GROUPS = ['ИОП-ИТ-26/1', 'ИОП-ИТ-26/2', 'ИОП-ИТ-25/1', 'ИОП-ИТ-25/2', 'ИОП-ИТ-24/1', 'ИОП-ИТ-24/2']
 ROOT = Path(__file__).resolve().parents[1]
 
 
