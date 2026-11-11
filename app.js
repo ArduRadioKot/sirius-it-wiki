@@ -306,105 +306,6 @@ function formatDate(iso) {
   }
 }
 
-function parseFrontMatter(md, fallbackTitle) {
-  const match = md.match(/^---\s*\n([\s\S]*?)\n---\s*(?:\n|$)/);
-  const meta = {};
-  if (match) {
-    for (const line of match[1].split(/\r?\n/)) {
-      const i = line.indexOf(":");
-      if (i === -1) continue;
-      const key = line.slice(0, i).trim();
-      let value = line.slice(i + 1).trim();
-      value = value.replace(/^['"]|['"]$/g, "");
-      meta[key] = value;
-    }
-  }
-  return {
-    title: meta.title || fallbackTitle,
-    description: meta.description || "",
-    subject: meta.subject || "Другое",
-    order: Number(meta.order || 9999),
-  };
-}
-
-async function fetchDirectory(path) {
-  const res = await fetch(siteUrl(path), { cache: "no-store" });
-  if (!res.ok) throw new Error(`Не удалось открыть ${path}`);
-  const html = await res.text();
-  const doc = new DOMParser().parseFromString(html, "text/html");
-  return [...doc.querySelectorAll("a[href]")]
-    .map((a) => a.getAttribute("href"))
-    .filter(Boolean)
-    .map((href) => decodeURIComponent(href.split("?")[0].split("#")[0]));
-}
-
-async function buildItem(type, path, slug, day = null) {
-  try {
-    const res = await fetch(siteUrl(path), { cache: "no-store" });
-    if (!res.ok) throw new Error(path);
-    const md = await res.text();
-    const fallbackTitle = slug
-      .replace(/[-_]+/g, " ")
-      .replace(/^./, (c) => c.toUpperCase());
-    const meta = parseFrontMatter(md, fallbackTitle);
-    return { type, path, slug, day, content: md, ...meta };
-  } catch (err) {
-    console.warn("Не удалось прочитать Markdown:", path, err);
-    return null;
-  }
-}
-
-async function discoverContentLocally() {
-  const lifeLinks = await fetchDirectory("life/");
-  const lifeFiles = lifeLinks.filter(
-    (h) => /\.md$/i.test(h) && !h.includes("/"),
-  );
-  const life = (
-    await Promise.all(
-      lifeFiles.map((file) => {
-        const slug = file.replace(/\.md$/i, "");
-        return buildItem("life", `life/${file}`, slug);
-      }),
-    )
-  )
-    .filter(Boolean)
-    .sort((a, b) => a.order - b.order || a.title.localeCompare(b.title, "ru"));
-
-  const articleRoot = await fetchDirectory("articles/");
-  const dayFolders = articleRoot
-    .filter((h) => /^\d{4}-\d{2}-\d{2}\/$/.test(h) || h === "undated/")
-    .map((h) => h.replace(/\/$/, ""));
-
-  const articleGroups = await Promise.all(
-    dayFolders.map(async (day) => {
-      const links = await fetchDirectory(`articles/${day}/`);
-      const files = links.filter((h) => /\.md$/i.test(h) && !h.includes("/"));
-      return Promise.all(
-        files.map((file) => {
-          const slug = file.replace(/\.md$/i, "");
-          return buildItem("article", `articles/${day}/${file}`, slug, day);
-        }),
-      );
-    }),
-  );
-
-  const articles = articleGroups
-    .flat()
-    .filter(Boolean)
-    .sort(
-      (a, b) =>
-        (a.day === "undated"
-          ? 1
-          : b.day === "undated"
-            ? -1
-            : b.day.localeCompare(a.day)) ||
-        a.order - b.order ||
-        a.title.localeCompare(b.title, "ru"),
-    );
-
-  return { life, articles };
-}
-
 async function loadGeneratedIndex() {
   const res = await fetch(siteUrl("content-index.json"), { cache: "no-store" });
   if (!res.ok) throw new Error("content-index.json не найден");
@@ -414,41 +315,8 @@ async function loadGeneratedIndex() {
   return data;
 }
 
-function isLocalPreview() {
-  const hostname = location.hostname;
-  return (
-    hostname === "localhost" ||
-    hostname === "127.0.0.1" ||
-    hostname === "0.0.0.0" ||
-    hostname === "::1" ||
-    hostname === "[::1]" ||
-    hostname.endsWith(".local") ||
-    /^10\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(hostname) ||
-    /^192\.168\.\d{1,3}\.\d{1,3}$/.test(hostname) ||
-    /^172\.(1[6-9]|2\d|3[0-1])\.\d{1,3}\.\d{1,3}$/.test(hostname)
-  );
-}
-
 async function loadIndex() {
   try {
-    // На локальном python -m http.server сохраняем удобство: новые файлы видны сразу.
-    if (
-      isLocalPreview() &&
-      navigator.onLine &&
-      !navigator.serviceWorker?.controller
-    ) {
-      try {
-        index = await discoverContentLocally();
-        return;
-      } catch (localError) {
-        console.info(
-          "Directory listing недоступен, используем content-index.json",
-          localError,
-        );
-      }
-    }
-
-    // На GitHub Pages список каталогов недоступен. Индекс обновляет workflow content-index.yml.
     index = await loadGeneratedIndex();
   } catch (err) {
     console.error(err);
@@ -521,12 +389,22 @@ function entryRow(x, mode = "day") {
   return `<a class="entry-row" href="${routeFor(x)}"><span class="date">${label}</span><div><h3>${esc(x.title)}</h3><p>${esc(x.description || "")}</p></div><span class="entry-arrow" aria-hidden="true"><span class="icon icon-arrow-right"></span></span></a>`;
 }
 
-function quizSections(item) {
-  return String(item.content || "").match(/^:::quiz\s*$[\s\S]*?^:::\s*$/gm) || [];
+function quizSections(markdown) {
+  return String(markdown || "").match(/^:::quiz\s*$[\s\S]*?^:::\s*$/gm) || [];
+}
+
+async function fetchArticle(item) {
+  if (typeof item.content === "string") return item.content;
+  const response = await fetch(siteUrl(item.path));
+  if (!response.ok) throw new Error(`HTTP ${response.status}: ${item.path}`);
+  return response.text();
 }
 
 function reviewArticles() {
-  return index.articles.map((item) => ({ item, questions: quizSections(item) })).filter((row) => row.questions.length);
+  return index.articles.map(item => ({
+    item,
+    count: item.quizCount ?? quizSections(item.content).length,
+  })).filter(row => row.count);
 }
 
 function plural(n, one, few, many) {
@@ -540,7 +418,7 @@ const questionsLabel = (n) => `${n} ${plural(n, "вопрос", "вопроса"
 
 function studyPage({ day = null, subject = null, view = "day" } = {}) {
   const reviews = reviewArticles();
-  const questionCount = reviews.reduce((total, row) => total + row.questions.length, 0);
+  const questionCount = reviews.reduce((total, row) => total + row.count, 0);
   const subjectCount = new Set(reviews.map((row) => row.item.subject || "Другое")).size;
   const days = [
     ...new Set(index.articles.map((x) => x.day).filter(Boolean)),
@@ -630,7 +508,7 @@ function studyPage({ day = null, subject = null, view = "day" } = {}) {
   );
 }
 
-function reviewPage({ path = "", subject = "" } = {}) {
+async function reviewPage({ path = "", subject = "" } = {}) {
   const reviews = reviewArticles();
   const groups = new Map();
   for (const row of reviews) {
@@ -642,35 +520,50 @@ function reviewPage({ path = "", subject = "" } = {}) {
   let session = null;
   if (subject && groups.has(subject)) {
     const rows = groups.get(subject);
-    session = { key: `s:${subject}`, kicker: `${rows.length} ${plural(rows.length, "тема", "темы", "тем")}`, title: `${subject}: все вопросы`, questions: rows.flatMap((r) => r.questions), theory: null };
+    session = { key: `s:${subject}`, kicker: `${rows.length} ${plural(rows.length, "тема", "темы", "тем")}`, title: `${subject}: все вопросы`, items: rows.map(row => row.item), theory: null };
   } else {
     const row = reviews.find((r) => r.item.path === path) || reviews[0];
-    if (row) session = { key: `a:${row.item.path}`, kicker: `${row.item.subject || "Другое"} · ${formatDate(row.item.day)}`, title: row.item.title, questions: row.questions, theory: routeFor(row.item), subject: row.item.subject || "Другое" };
+    if (row) session = { key: `a:${row.item.path}`, kicker: `${row.item.subject || "Другое"} · ${formatDate(row.item.day)}`, title: row.item.title, items: [row.item], theory: routeFor(row.item), subject: row.item.subject || "Другое" };
+  }
+  if (session) {
+    const hash = location.hash;
+    session.questions = [];
+    app.innerHTML = '<section class="page"><h1>Самопроверка</h1><p role="status">Загружаем вопросы…</p></section>';
+    try {
+      for (const item of session.items) {
+        if (hash !== location.hash) return;
+        session.questions.push(...quizSections(await fetchArticle(item)));
+      }
+    } catch (error) {
+      if (hash === location.hash) showMaterialError(error);
+      return;
+    }
+    if (hash !== location.hash) return;
   }
   const activeSubject = subject || session?.subject || "";
   const href = (q) => `#/study/review?${q}`;
   const nav = subjects
     .map((name) => {
       const rows = groups.get(name);
-      const total = rows.reduce((n, r) => n + r.questions.length, 0);
+      const total = rows.reduce((n, r) => n + r.count, 0);
       const allKey = `s:${name}`;
       const topics = rows
-        .map(({ item, questions }) => {
+        .map(({ item, count }) => {
           const key = `a:${item.path}`;
-          return `<a class="review-topic ${session?.key === key ? "active" : ""}" href="${href(`article=${encodeURIComponent(item.path)}`)}" ${session?.key === key ? 'aria-current="page"' : ""}><span>${esc(item.title)}</span><small>${questionsLabel(questions.length)}</small></a>`;
+          return `<a class="review-topic ${session?.key === key ? "active" : ""}" href="${href(`article=${encodeURIComponent(item.path)}`)}" ${session?.key === key ? 'aria-current="page"' : ""}><span>${esc(item.title)}</span><small>${questionsLabel(count)}</small></a>`;
         })
         .join("");
       return `<details class="review-group" ${name === activeSubject ? "open" : ""}><summary><span>${esc(name)}</span><small>${questionsLabel(total)}</small></summary><div class="review-group-body"><a class="review-topic review-topic-all ${session?.key === allKey ? "active" : ""}" href="${href(`subject=${encodeURIComponent(name)}`)}" ${session?.key === allKey ? 'aria-current="page"' : ""}><span>Все вопросы предмета</span><small>${questionsLabel(total)}</small></a>${topics}</div></details>`;
     })
     .join("");
-  const total = reviews.reduce((n, r) => n + r.questions.length, 0);
+  const total = reviews.reduce((n, r) => n + r.count, 0);
   // Phones get one compact picker instead of the long list of subjects.
   const picker = subjects
     .map((name) => {
       const rows = groups.get(name);
-      const all = rows.reduce((n, r) => n + r.questions.length, 0);
+      const all = rows.reduce((n, r) => n + r.count, 0);
       const opts = [`<option value="${href(`subject=${encodeURIComponent(name)}`)}" ${session?.key === `s:${name}` ? "selected" : ""}>Все вопросы предмета · ${all}</option>`]
-        .concat(rows.map(({ item, questions }) => `<option value="${href(`article=${encodeURIComponent(item.path)}`)}" ${session?.key === `a:${item.path}` ? "selected" : ""}>${esc(item.title)} · ${questions.length}</option>`))
+        .concat(rows.map(({ item, count }) => `<option value="${href(`article=${encodeURIComponent(item.path)}`)}" ${session?.key === `a:${item.path}` ? "selected" : ""}>${esc(item.title)} · ${count}</option>`))
         .join("");
       return `<optgroup label="${esc(name)}">${opts}</optgroup>`;
     })
@@ -691,8 +584,8 @@ function reviewPage({ path = "", subject = "" } = {}) {
   app.querySelector(".review-picker select")?.addEventListener("change", (event) => {
     location.hash = event.target.value;
   });
-  app.querySelector(".review-restart")?.addEventListener("click", () => {
-    reviewPage({ path, subject });
+  app.querySelector(".review-restart")?.addEventListener("click", async () => {
+    await reviewPage({ path, subject });
     app.querySelector(".review-session")?.scrollIntoView({ block: "start" });
   });
   renderMath();
@@ -703,17 +596,10 @@ async function articlePage(item) {
     notFound();
     return;
   }
+  const hash = location.hash;
   try {
-    // На GitHub Pages Markdown уже встроен в content-index.json во время сборки.
-    // Поэтому открытие статьи не зависит от URL файла и не ломается в /<repo>/.
-    let md = item.content;
-
-    // Совместимость со старыми индексами и локальным режимом.
-    if (typeof md !== "string") {
-      const res = await fetch(siteUrl(item.path), { cache: "no-store" });
-      if (!res.ok) throw new Error(`HTTP ${res.status}: ${item.path}`);
-      md = await res.text();
-    }
+    const md = await fetchArticle(item);
+    if (hash !== location.hash) return;
 
     const back =
       item.type === "life"
@@ -726,10 +612,17 @@ async function articlePage(item) {
     app.innerHTML = `<article class="article-page"><header class="article-head"><a class="back-link" href="${back}"><span class="icon icon-arrow-left" aria-hidden="true"></span>Назад</a><div class="article-kicker">${kicker}</div><h1>${esc(item.title)}</h1>${item.description ? `<p class="summary">${esc(item.description)}</p>` : ""}</header><div class="markdown">${parseMarkdown(md)}</div></article>`;
     renderMath();
   } catch (error) {
-    console.error("Не удалось открыть статью:", item, error);
-    app.innerHTML =
-      '<section class="article-page"><h1>Не удалось открыть статью</h1><p>Статья есть в списке, но её содержимое не удалось загрузить. Сделай новый push, чтобы GitHub Actions заново собрал <code>content-index.json</code>.</p><p><a class="back-link" href="#/"><span class="icon icon-arrow-left" aria-hidden="true"></span>На главную</a></p></section>';
+    if (hash === location.hash) showMaterialError(error);
   }
+}
+
+function showMaterialError(error) {
+  const message = error.message.startsWith("HTTP 429")
+    ? "Слишком много запросов. Подожди немного и попробуй снова."
+    : "Проверь подключение и попробуй открыть материал снова.";
+  app.innerHTML = `<section class="article-page"><h1>Не удалось открыть материал</h1><p>${message}</p><button type="button">Повторить</button></section>`;
+  // A failed module import can be memoized for the lifetime of the page.
+  app.querySelector("button").onclick = error instanceof TypeError ? () => location.reload() : router;
 }
 
 function notFound() {
@@ -738,6 +631,7 @@ function notFound() {
 }
 
 async function router() {
+  const initialHash = location.hash;
   const raw = location.hash.slice(1) || "/";
   const [path, qs] = raw.split("?");
   const parts = path.split("/").filter(Boolean).map(safeDecode);
@@ -759,11 +653,15 @@ async function router() {
   else if (parts[0] === "life" && parts[1])
     await articlePage(index.life.find((x) => x.slug === parts[1]));
   else if (parts[0] === "study" && parts[1] === "matan") {
-    await window.SiriusMatan.render(new URLSearchParams(qs || ""));
+    try {
+      await window.SiriusMatan.render(new URLSearchParams(qs || ""));
+    } catch (error) {
+      if (location.hash === initialHash) showMaterialError(error);
+    }
   }
   else if (parts[0] === "study" && parts[1] === "review") {
     const p = new URLSearchParams(qs || "");
-    reviewPage({ path: p.get("article") || "", subject: p.get("subject") || "" });
+    await reviewPage({ path: p.get("article") || "", subject: p.get("subject") || "" });
   }
   else if (parts[0] === "study" && parts.length === 1) {
     const p = new URLSearchParams(qs || "");
@@ -782,6 +680,7 @@ async function router() {
     );
   } else notFound();
 
+  if (location.hash !== initialHash) return;
   app.focus({ preventScroll: true });
   if (!swipeNavigation.finishRoute(location.hash)) window.scrollTo(0, 0);
 }
@@ -828,18 +727,6 @@ const SITE_PAGES = [
   },
 ];
 
-function stripSearchText(md = "") {
-  return String(md)
-    .replace(/^---[\s\S]*?---\s*/, "")
-    .replace(/```[\s\S]*?```/g, " ")
-    .replace(/:::[\s\S]*?:::/g, " ")
-    .replace(/!\[[^\]]*]\([^)]*\)/g, " ")
-    .replace(/\[([^\]]+)]\([^)]*\)/g, "$1")
-    .replace(/[#>*_`~|=]/g, " ")
-    .replace(/\s+/g, " ")
-    .trim();
-}
-
 function searchTokens(q) {
   return q.trim().toLowerCase().split(/\s+/).filter(Boolean);
 }
@@ -849,30 +736,15 @@ function matchScore(item, tokens) {
   const description = String(item.description || "").toLowerCase();
   const subject = String(item.subject || "").toLowerCase();
   const keywords = String(item.keywords || "").toLowerCase();
-  const body = stripSearchText(item.content).toLowerCase();
   let score = 0;
   for (const token of tokens) {
     if (title.includes(token)) score += 100;
     else if (subject.includes(token) || keywords.includes(token)) score += 70;
     else if (description.includes(token)) score += 50;
-    else if (body.includes(token)) score += 20;
     else return 0;
   }
   if (item.type === "page") score += 5;
   return score;
-}
-
-function matchSnippet(item, tokens) {
-  const plain = stripSearchText(item.content);
-  if (!plain || !tokens.length) return item.description || "";
-  const lower = plain.toLowerCase();
-  const token = tokens.find((t) => lower.includes(t));
-  if (!token) return item.description || "";
-  const at = lower.indexOf(token);
-  const start = Math.max(0, at - 42);
-  const end = Math.min(plain.length, at + token.length + 68);
-  const slice = plain.slice(start, end).trim();
-  return `${start > 0 ? "…" : ""}${slice}${end < plain.length ? "…" : ""}`;
 }
 
 function searchLabel(item) {
@@ -895,12 +767,8 @@ function openSearch() {
 function renderSearch(q) {
   const tokens = searchTokens(q);
   const articles = [...(index?.life || []), ...(index?.articles || [])];
-  const coursePages = Object.entries(window.MatanPages || {}).map(([page, value]) => {
-    const plain = document.createElement('div'); plain.innerHTML = value.html;
-    return {type:'page', title:value.title, subject:'Математический анализ', description:'Курс матанализа · уроки, учебник и справочники', content:plain.textContent, href:window.SiriusMatan.href(page)};
-  });
-  const originalPages = Object.entries(window.MatanOriginals || {}).flatMap(([kind,pages]) => pages.map((p,i)=>({type:'page',title:`${window.SiriusMatan.originals[kind].title} · страница ${i+1}`,subject:'Математический анализ',content:p.text,href:window.SiriusMatan.href('original-'+kind,{n:String(i+1)})})));
-  const catalog = [...SITE_PAGES, ...coursePages, ...originalPages, ...articles];
+  const coursePages = window.SiriusMatan.searchPages();
+  const catalog = [...SITE_PAGES, ...coursePages, ...articles];
   const ranked = tokens.length
     ? catalog
         .map((item) => ({ item, score: matchScore(item, tokens) }))
@@ -916,9 +784,7 @@ function renderSearch(q) {
   searchResults.innerHTML =
     rows
       .map((x) => {
-        const snippet = tokens.length
-          ? matchSnippet(x, tokens)
-          : x.description || "";
+        const snippet = x.description || "";
         return `<a class="search-result" href="${searchHref(x)}"><strong>${esc(x.title)}</strong><span>${esc(searchLabel(x))}${snippet ? " · " + esc(snippet) : ""}</span></a>`;
       })
       .join("") || '<div class="empty-state">Ничего не найдено</div>';

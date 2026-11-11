@@ -57,8 +57,8 @@
  }
 if(i>=0){const nav=document.createElement('nav');nav.className='lesson-nav';nav.setAttribute('aria-label','Переход между уроками');for(const j of [i-1,i+1])if(lessons[j]){const a=document.createElement('a');a.className='matan-button';a.href=href('lessons/'+lessons[j][0]);a.textContent=(j<i?'← ':'')+lessons[j][1]+(j>i?' →':'');nav.append(a);}root.append(nav);}
  }
- function original(root,kind,params){
-  const pages=window.MatanOriginals[kind];const n=Math.min(pages.length,Math.max(1,Math.trunc(Number(params.get('n'))||1)));const material = originals[kind];
+ function original(root,kind,params,pages){
+  const n=Math.min(pages.length,Math.max(1,Math.trunc(Number(params.get('n'))||1)));const material = originals[kind];
   const topics = kind === 'answers' ? window.MatanAnswerTopics : [];
   root.innerHTML=`<span class="eyebrow">${kind === 'answers' ? 'Версия с исправлениями' : 'Полный оригинал'} · ${pages.length} страниц</span><h1>${material.title}</h1><p class="meta">${material.description}</p><div class="matan-reader-controls"><label>Страница <input id="original-page" type="number" min="1" max="${pages.length}" value="${n}"></label><button class="matan-button" id="original-go">Перейти</button><button class="matan-button" id="original-prev" ${n===1?'disabled':''}>←</button><button class="matan-button" id="original-next" ${n===pages.length?'disabled':''}>→</button><button class="matan-button" id="original-zoom">Увеличить</button><a class="matan-button" href="${materialUrl(material.pdf)}" download>Скачать PDF</a>${material.docx ? `<a class="matan-button" href="${materialUrl(material.docx)}" download>Исходный Word</a>` : ''}</div>
   ${topics.length ? `<p><label>Вопрос <select id="answer-topic"><option value="">Выбрать из 26 вопросов</option>${topics.map(topic => `<option value="${topic.page}">${esc(topic.title)}</option>`).join('')}</select></label></p>` : ''}
@@ -76,17 +76,52 @@ if(i>=0){const nav=document.createElement('nav');nav.className='lesson-nav';nav.
   const dialog=root.querySelector('dialog');root.querySelector('#original-zoom').onclick=()=>dialog.showModal();dialog.querySelector('button').onclick=()=>dialog.close();
   root.querySelector('#original-search').oninput=e=>{const q=e.target.value.trim().toLocaleLowerCase('ru');const results=root.querySelector('#original-results');results.replaceChildren();if(q.length<2)return;let found=0;pages.forEach((p,i)=>{const offset=p.text.toLocaleLowerCase('ru').indexOf(q);if(offset<0)return;found++;const a=document.createElement('a');a.className='matan-search-result';a.href=href('original-'+kind,{n:String(i+1)});a.textContent=`Страница ${i+1} · …${p.text.slice(Math.max(0,offset-35),offset+100)}…`;results.append(a);});if(!found)results.textContent='Не найдено. Рукописные страницы можно просмотреть на изображениях.';};
  }
- async function render(params){const ticket=++revision;active=null;let page=params.get('page')||'index';let chapter=params.get('chapter');if(!chapter)chapter=bookState().last;if(!window.MatanChapters.some(c=>c.id===chapter))chapter='t1';const root=document.getElementById('app');
+ async function loadMaterial(file) {
+  const response = await fetch(new URL(file, base()));
+  if (!response.ok) throw new Error(`HTTP ${response.status}: ${file}`);
+  return response.json();
+ }
+
+ function searchPages() {
+  const catalog = Object.entries(window.MatanPages).map(([page, entry]) => ({
+   title: entry.title,
+   keywords: entry.keywords,
+   href: href(page),
+  }));
+  for (const chapter of window.MatanChapters) {
+   catalog.push({ title: chapter.title, keywords: chapter.keywords, href: href('textbook', { chapter: chapter.id }) });
+  }
+  for (const [kind, material] of Object.entries(originals)) {
+   catalog.push({ title: material.title, description: material.description, href: href('original-' + kind) });
+  }
+  for (const topic of window.MatanAnswerTopics) {
+   catalog.push({ title: topic.title, description: originals.answers.title, href: href('original-answers', { n: topic.page }) });
+  }
+  return catalog.map(item => ({ ...item, type: 'page', subject: 'Математический анализ' }));
+ }
+ async function render(params){const ticket=++revision;const hash=location.hash;active=null;let page=params.get('page')||'index';let chapter=params.get('chapter');if(!chapter)chapter=bookState().last;if(!window.MatanChapters.some(c=>c.id===chapter))chapter='t1';const root=document.getElementById('app');
  if(!window.MatanPages[page]&&!(page.startsWith('original-') && Object.hasOwn(originals, page.slice(9))))page='index';
  root.innerHTML=`<section class="page matan-page"><a class="back-link" href="#/study"><span class="icon icon-arrow-left" aria-hidden="true"></span>Учёба</a><div class="matan-layout"><aside class="sidebar matan-sidebar" aria-label="Навигация по курсу"><details class="matan-course-toc" ${innerWidth>900?'open':''}><summary>Содержание курса</summary><nav>${sidebar(page,chapter)}</nav></details></aside><article class="markdown matan-content"></article></div></section>`;
  const content=root.querySelector('.matan-content');
- if(page.startsWith('original-')){original(content,page.slice(9),params);return;}
- content.innerHTML=window.MatanPages[page].html;
+ content.innerHTML = '<p role="status">Загружаем материал…</p>';
+ const current = () => ticket === revision && hash === location.hash && content.isConnected;
+ if (page.startsWith('original-')) {
+  const kind = page.slice(9);
+  const pages = await loadMaterial(window.MatanOriginals[kind].file);
+  if (current()) original(content, kind, params, pages);
+  return;
+ }
+ const entry = window.MatanPages[page];
+ const pageModule = await import(new URL(entry.modulePath, base()).href);
+ if (!current()) return;
+ const material = page === 'textbook' ? await loadMaterial(window.MatanChapters.find(item => item.id === chapter).file) : null;
+ if (!current()) return;
+ content.innerHTML = pageModule.default.html;
  content.querySelectorAll('table').forEach(table=>{if(!table.parentElement.classList.contains('tablewrap')){const wrap=document.createElement('div');wrap.className='tablewrap';table.before(wrap);wrap.append(table);}});
  // Inline lesson diagrams retain their original rules, scoped to this course.
- for(const css of window.MatanPages[page].styles){const style=document.createElement('style');style.textContent=css.replace(/(^|})\s*([^@{}][^{]+)\{/g,(_,close,selectors)=>close+' '+selectors.split(',').map(s=>'.matan-content '+s.trim()).join(',')+'{');content.prepend(style);}
+ for(const css of pageModule.default.styles){const style=document.createElement('style');style.textContent=css.replace(/(^|})\s*([^@{}][^{]+)\{/g,(_,close,selectors)=>close+' '+selectors.split(',').map(s=>'.matan-content '+s.trim()).join(',')+'{');content.prepend(style);}
  window.createMatanCourse();
- window.MatanInitializers[page]?.(window.Course);
+ pageModule.initialize?.(window.Course);
  if(page==='index')dashboard(content);
  if(page.startsWith('lessons/'))lessonTools(content,page);
  if(page==='textbook'){
@@ -96,7 +131,7 @@ if(i>=0){const nav=document.createElement('nav');nav.className='lesson-nav';nav.
    return adjacent && href('textbook', {chapter: adjacent.id});
   };
   SiriusSwipe.setRoutes(content, chapterRoute(-1), chapterRoute(1));
-  window.MatanBookRoute={chapter,href:id=>href('textbook',{chapter:id}),page:id=>href(id),asset:path=>new URL(path,base()).href,updateNav:()=>{root.querySelector('.matan-sidebar nav').innerHTML=sidebar(page,chapter);}};window.initMatanBook();
+  window.MatanBookRoute={chapter,href:id=>href('textbook',{chapter:id}),page:id=>href(id),asset:path=>new URL(path,base()).href,updateNav:()=>{root.querySelector('.matan-sidebar nav').innerHTML=sidebar(page,chapter);}};window.initMatanBook(material);
   const answer = window.MatanAnswerTopics.find(topic => topic.title.startsWith(`${chapterIndex + 1}.1.`));
   const answerLink = document.createElement('a');
   answerLink.className = 'matan-button';
@@ -108,5 +143,5 @@ if(i>=0){const nav=document.createElement('nav');nav.className='lesson-nav';nav.
  fixLinks(content,page);
  const anchor=params.get('anchor');if(anchor)requestAnimationFrame(()=>{if(ticket===revision)document.getElementById(anchor)?.scrollIntoView({block:'start'});});
  }
- window.SiriusMatan={render,href,originals};
+ window.SiriusMatan={render,href,searchPages};
 })();

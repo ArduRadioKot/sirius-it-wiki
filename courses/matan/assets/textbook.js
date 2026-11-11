@@ -1,4 +1,4 @@
-window.initMatanBook = function () {
+window.initMatanBook = function (material) {
   const chapters=window.MatanChapters;
   const route=window.MatanBookRoute;
   const chapterHref=id=>route?route.href(id):'#'+id;
@@ -21,8 +21,8 @@ window.initMatanBook = function () {
   function save(){try{localStorage.setItem(key,JSON.stringify(state));document.querySelector('#book-status').textContent='Сохранено в этом браузере.';}catch{document.querySelector('#book-status').textContent='Хранилище недоступно. Эта сессия работает без сохранения.';}}
   const $=s=>document.querySelector(s);
   const escape=s=>s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  function addVisuals(article, chapterId) {
-    const { figures, example } = window.MatanBookVisuals[chapterId];
+  function addVisuals(article) {
+    const { figures, example } = material.visuals;
     const headings = [...article.querySelectorAll('h3')];
     function addAfterSection(title, element) {
       const index = headings.findIndex(heading => heading.textContent.trim() === title);
@@ -90,12 +90,12 @@ window.initMatanBook = function () {
     current=idx>=0?idx:Math.max(0,chapters.findIndex(c=>c.id===state.last));
     const chapter=chapters[current];state.last=chapter.id;
     const data=state.chapters[chapter.id]||{};
-    $('#chapter').innerHTML=`<h2>${escape(chapter.title)}</h2>`+chapter.html;
+    $('#chapter').innerHTML=`<h2>${escape(chapter.title)}</h2>`+material.html;
     // Keep proof steps available on demand, without hiding definitions.
     $('#chapter').querySelectorAll('p').forEach(p=>{
       if(/^Доказательство[:.]/i.test(p.textContent.trim())){const d=document.createElement('details');const s=document.createElement('summary');s.textContent='Идея доказательства';p.before(d);d.append(s,p);}
     });
-    addVisuals($('#chapter'), chapter.id);
+    addVisuals($('#chapter'));
     const links=document.createElement('p');links.className='note';links.innerHTML='Практика по главе: '+lessonLinks[current].map((slug,i)=>`<a href="${route?route.page("lessons/"+slug):"lessons/"+slug+".html"}">Тренажёр ${i+1}</a>`).join(' · ');$('#chapter').append(links);
     $('#chapter-note').value=data.note||'';
     $('#bookmark').textContent=data.bookmark?'★ В закладках':'В закладки';$('#bookmark').setAttribute('aria-pressed',String(Boolean(data.bookmark)));
@@ -117,7 +117,7 @@ window.initMatanBook = function () {
   $('#next-chapter').onclick=()=>{if(current<5)chapterGo(chapters[current+1].id);};
   $('#print-book').onclick=()=>window.print();
   $('#original').ontoggle=()=>{if($('#original').open&&!$('#pdf-view iframe')){const f=document.createElement('iframe');f.title='Оригинал учебника, глава '+(current+1);f.src=$('#pdf-link').href;$('#pdf-view').append(f);}};
-  const plain=chapters.map(c=>{const d=document.createElement('div');d.innerHTML=c.html;return d.textContent;});
+  const plain = chapters.map(chapter => chapter.keywords);
   $('#book-search').oninput=e=>{
     const q=e.target.value.trim().toLocaleLowerCase('ru');$('#search-results').replaceChildren();if(q.length<2)return;
     const matches=chapters.map((c,i)=>({c,i,pos:plain[i].toLocaleLowerCase('ru').indexOf(q)})).filter(m=>m.pos>=0);
@@ -151,4 +151,3 @@ window.initMatanBook = function () {
   }
   if(!route)window.addEventListener('hashchange',()=>{render();$('#chapter').focus();});render();
 };
-if(document.querySelector("#chapter"))window.initMatanBook();

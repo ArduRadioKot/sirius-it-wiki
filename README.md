@@ -156,7 +156,7 @@ For reminders while the app is closed, subscribe to the calendar.
 
 ## Offline and install
 
-**Install app** shows the browser's PWA prompt or a short hint (HTTPS required; localhost is fine). After the first load reports "ready offline", the shell, all article text with formulas and the latest timetable work without a network (about 2 MB). PDFs, remote images and external links are not cached. **Update** refreshes the timetable, clears the old cache and reloads; on iPhone you may need to close and reopen the app once.
+**Install app** shows the browser's PWA prompt or a short hint (HTTPS required; localhost is fine). The shell, the latest timetable and materials opened after the offline cache is installed work without a network. PDFs, remote images and external links are not cached. **Update** refreshes the timetable, clears the old cache and reloads; on iPhone you may need to close and reopen the app once.
 
 The theme button cycles **system → light → dark**; the choice is stored locally.
 

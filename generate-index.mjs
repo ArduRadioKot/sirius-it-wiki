@@ -34,6 +34,14 @@ function fallbackTitle(slug) {
     .replace(/^./, char => char.toUpperCase());
 }
 
+function searchMetadata(markdown) {
+  const body = markdown.replace(/^---[\s\S]*?\r?\n---\s*/, '');
+  return {
+    keywords: [...body.matchAll(/^#{1,6}\s+(.+)$/gm)].map(match => match[1].trim()).join(' ').slice(0, 1800),
+    quizCount: (body.match(/^:::quiz\s*$[\s\S]*?^:::\s*$/gm) || []).length,
+  };
+}
+
 async function markdownFiles(dir) {
   try {
     const entries = await fs.readdir(dir, { withFileTypes: true });
@@ -59,7 +67,7 @@ async function buildLife() {
       type: 'life',
       path: `life/${file}`,
       slug,
-      content: md,
+      ...searchMetadata(md),
       day: null,
       ...meta
     });
@@ -95,7 +103,7 @@ async function buildArticles() {
         type: 'article',
         path: `articles/${day}/${file}`,
         slug,
-        content: md,
+        ...searchMetadata(md),
         day,
         ...meta
       });
