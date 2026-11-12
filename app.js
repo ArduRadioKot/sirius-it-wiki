@@ -475,6 +475,7 @@ function studyPage({ day = null, subject = null, view = "day" } = {}) {
   app.innerHTML = `<section class="page"><div class="page-top"><div><span class="eyebrow">Раздел 01</span><h1>Учёба</h1></div><p class="page-description">Конспекты и учебные материалы по дням и предметам. Выберите нужную дату или дисциплину в списке.</p></div>
   <a class="study-review" href="#/study/review"><img class="study-review-art" src="assets/cards/pattern-23.svg" alt="" loading="lazy"><div class="study-review-text"><span class="study-review-title">Самопроверка</span><p>Короткие тесты по конспектам с разбором каждого ответа</p><span class="study-review-meta">${questionsLabel(questionCount)} · ${subjectCount} ${plural(subjectCount, "предмет", "предмета", "предметов")}</span></div>${ROUND_ARROW}</a>
   <a class="study-review" href="#/study/matan"><img class="study-review-art" src="assets/cards/pattern-24.svg" alt="" loading="lazy"><div class="study-review-text"><span class="study-review-title">Курс математического анализа</span><p>Уроки, интерактивный учебник, тренажёры и карточки к коллоквиуму</p><span class="study-review-meta">9 уроков · 6 глав · 26 вопросов</span></div>${ROUND_ARROW}</a>
+  <a class="study-review" href="#/study/linear"><img class="study-review-art" src="assets/cards/pattern-22.svg" alt="" loading="lazy"><div class="study-review-text"><span class="study-review-title">Учебник по линейной алгебре</span><p>Планиметрия, движения плоскости и доказательства к коллоквиуму</p><span class="study-review-meta">6 глав · 17 ответов</span></div>${ROUND_ARROW}</a>
   <div class="study-switch" role="group" aria-label="Способ сортировки"><button type="button" class="study-switch-button ${studyView === "day" ? "active" : ""}" aria-pressed="${studyView === "day"}" data-view="day">По дням</button><button type="button" class="study-switch-button ${studyView === "subject" ? "active" : ""}" aria-pressed="${studyView === "subject"}" data-view="subject">По предметам</button></div>
   <div class="content-layout"><aside class="sidebar"><p class="sidebar-title">${studyView === "subject" ? "По предметам" : "По дням"}</p>${sidebarItems}</aside><div class="entries">${items.map((x) => entryRow(x, studyView)).join("") || '<div class="empty-state">Пока нет учебных материалов.</div>'}</div></div></section>`;
 
@@ -630,6 +631,183 @@ function notFound() {
     '<section class="article-page"><h1>404</h1><p>Такой страницы нет.</p><p><a class="back-link" href="#/"><span class="icon icon-arrow-left" aria-hidden="true"></span>На главную</a></p></section>';
 }
 
+const LINEAR_CHAPTERS = [
+  { id: "start", title: "Учебник по линейной алгебре", nav: "Как готовиться" },
+  { id: "triangles", title: "Стороны, углы и медианы", keywords: "проекции теорема косинусов теорема синусов радиус" },
+  { id: "cevians", title: "Чева, Менелай и Дезарг", keywords: "чевианы точка Жергонна направленные отрезки" },
+  { id: "area", title: "Трезубец и площадь", keywords: "инцентр эксцентр площадь прямоугольника" },
+  { id: "mappings", title: "Отображения, прямые и три отражения", keywords: "лемма о трёх гвоздях образ прямой биекция" },
+  { id: "motions", title: "Пять видов движений", keywords: "перенос поворот центральная осевая скользящая симметрия" },
+  { id: "compositions", title: "Композиции и теорема Шаля", keywords: "классификация движения композиция ориентация неподвижная точка" },
+  { id: "answers", title: "Полный разбор 17 вопросов", keywords: "ответы к коллоквиуму линейная алгебра билеты доказательства" },
+];
+
+function linearLink(id) {
+  return `#/study/linear?chapter=${id}`;
+}
+
+function addLinearFigureViewer(reader) {
+  const dialog = document.createElement("dialog");
+  dialog.className = "textbook-figure-view";
+  dialog.setAttribute("aria-label", "Увеличенная схема");
+  dialog.innerHTML = '<form method="dialog"><button type="submit" class="matan-button" autofocus>Закрыть</button></form><div class="textbook-figure-scroll" tabindex="0"><img alt=""></div><p></p>';
+  const view = dialog.querySelector("img");
+  for (const picture of reader.querySelectorAll(".linear-reading img")) {
+    const figure = document.createElement("figure");
+    figure.className = "textbook-figure";
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "textbook-figure-button";
+    button.setAttribute("aria-label", "Увеличить схему: " + picture.alt);
+    const caption = document.createElement("figcaption");
+    caption.textContent = picture.alt;
+    picture.parentElement.replaceWith(figure);
+    picture.loading = "lazy";
+    button.append(picture);
+    button.onclick = () => {
+      view.src = picture.src;
+      view.alt = picture.alt;
+      dialog.querySelector("p").textContent = picture.alt;
+      dialog.showModal();
+      view.parentElement.scrollLeft = 0;
+    };
+    figure.append(button, caption);
+  }
+  if (reader.querySelector(".textbook-figure")) reader.append(dialog);
+}
+
+function addMotionLab(reader) {
+  const lab = document.createElement("section");
+  lab.className = "linear-lab";
+  lab.innerHTML = `<h2>Тренажёр координат</h2><p>Измени координаты точки P и сравни её с образом P′.</p>
+    <div class="lab-grid">
+      <label>Преобразование <select>
+        <option value="central">Центральная симметрия относительно начала</option>
+        <option value="axis">Отражение относительно оси x</option>
+        <option value="shift">Перенос на (3, 1)</option>
+        <option value="turn">Поворот на 90° против часовой стрелки</option>
+        <option value="glide">Отражение относительно оси x и сдвиг на (3, 0)</option>
+      </select></label>
+      <label>x <input aria-label="Координата x" type="range" min="-4" max="4" value="2"></label>
+      <label>y <input aria-label="Координата y" type="range" min="-4" max="4" value="1"></label>
+    </div>
+    <svg viewBox="0 0 340 340" role="img" aria-label="Координатная плоскость и образ точки">
+      <defs><pattern id="linear-grid" width="20" height="20" patternUnits="userSpaceOnUse">
+        <path d="M20 0H0V20" fill="none" stroke="var(--line)"/>
+      </pattern></defs>
+      <rect x="10" y="10" width="320" height="320" fill="url(#linear-grid)"/>
+      <path d="M10 170h320M170 330V10" fill="none" stroke="var(--muted)"/>
+      <text x="321" y="159" fill="currentColor">x</text><text x="180" y="20" fill="currentColor">y</text>
+      <line stroke="var(--accent-dark)" stroke-width="2" stroke-dasharray="5 4"/>
+      <circle r="6" fill="var(--accent-dark)"/><circle r="6" fill="var(--violet)"/>
+    </svg><p class="linear-lab-result" aria-live="polite"></p>`;
+  const [xInput, yInput] = lab.querySelectorAll("input");
+  const choice = lab.querySelector("select");
+  const transforms = {
+    central: (x, y) => [-x, -y],
+    axis: (x, y) => [x, -y],
+    shift: (x, y) => [x + 3, y + 1],
+    turn: (x, y) => [-y, x],
+    glide: (x, y) => [x + 3, -y],
+  };
+  const points = lab.querySelectorAll("circle");
+  const segment = lab.querySelector("line");
+  function update() {
+    const x = Number(xInput.value), y = Number(yInput.value);
+    const [newX, newY] = transforms[choice.value](x, y);
+    [[x, y], [newX, newY]].forEach(([px, py], index) => {
+      const cx = 170 + 20 * px, cy = 170 - 20 * py;
+      points[index].setAttribute("cx", cx);
+      points[index].setAttribute("cy", cy);
+      segment.setAttribute("x" + (index + 1), cx);
+      segment.setAttribute("y" + (index + 1), cy);
+    });
+    lab.querySelector(".linear-lab-result").textContent = `P (${x}, ${y}) → P′ (${newX}, ${newY})`;
+  }
+  lab.addEventListener("input", update);
+  update();
+  reader.querySelector(".linear-reading h2")?.before(lab);
+}
+
+async function linearCoursePage(params) {
+  const hash = location.hash;
+  const id = params.get("chapter") || "start";
+  const position = LINEAR_CHAPTERS.findIndex(chapter => chapter.id === id);
+  if (position < 0) return notFound();
+  const chapter = LINEAR_CHAPTERS[position];
+  const progressKey = "sirius-linear-chapters-v1";
+  let completed = new Set();
+  try {
+    const saved = JSON.parse(localStorage.getItem(progressKey) || "[]");
+    if (Array.isArray(saved)) completed = new Set(saved);
+  } catch {}
+  const previous = LINEAR_CHAPTERS[position - 1];
+  const next = LINEAR_CHAPTERS[position + 1];
+  app.innerHTML = `<section class="page matan-page linear-page">
+    <a class="back-link" href="#/study"><span class="icon icon-arrow-left" aria-hidden="true"></span>Учёба</a>
+    <div class="matan-layout">
+      <aside class="sidebar matan-sidebar" aria-label="Содержание учебника"><details class="matan-course-toc" ${innerWidth > 900 ? "open" : ""}><summary>Содержание учебника</summary><nav>
+        <p class="sidebar-title">Линейная алгебра</p>
+        ${LINEAR_CHAPTERS.map(item => `<a class="matan-nav-link ${item.id === id ? "active" : ""}" ${item.id === id ? 'aria-current="page"' : ""} href="${linearLink(item.id)}" data-linear-chapter="${item.id}">${item.nav || item.title}${completed.has(item.id) ? " ✓" : ""}</a>`).join("")}
+      </nav></details></aside>
+      <article class="markdown matan-content linear-reader"><h1>${chapter.title}</h1><p role="status">Загружаем главу…</p></article>
+    </div></section>`;
+  const reader = app.querySelector(".linear-reader");
+  try {
+    const response = await fetch(siteUrl(`courses/linear/${id}.md`));
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const text = await response.text();
+    if (hash !== location.hash || !reader.isConnected) return;
+
+    const html = text.split(/^:::solution[ \t]*\r?\n([\s\S]*?)^:::[ \t]*$/gm)
+      .map((part, i) => i % 2 ? `<details class="textbook-worked"><summary>Показать решение</summary>${parseMarkdown(part)}</details>` : parseMarkdown(part))
+      .join("");
+    reader.innerHTML = `<h1>${chapter.title}</h1><div class="linear-reading">${html}</div>
+      ${position > 0 && id !== "answers" ? '<button type="button" class="matan-button linear-complete">Отметить главу прочитанной</button>' : ""}
+      <nav class="lesson-nav" aria-label="Переход между главами">
+        ${previous ? `<a class="matan-button" href="${linearLink(previous.id)}">← ${previous.nav || previous.title}</a>` : ""}
+        ${next ? `<a class="matan-button" href="${linearLink(next.id)}">${next.title} →</a>` : ""}
+      </nav>`;
+    addLinearFigureViewer(reader);
+    if (id === "motions") addMotionLab(reader);
+    const complete = reader.querySelector(".linear-complete");
+    if (complete) {
+      function updateProgress() {
+        const read = completed.has(id);
+        complete.setAttribute("aria-pressed", String(read));
+        complete.textContent = read ? "✓ Глава прочитана" : "Отметить главу прочитанной";
+        app.querySelector(`[data-linear-chapter="${id}"]`).textContent = chapter.title + (read ? " ✓" : "");
+      }
+      updateProgress();
+      complete.onclick = () => {
+        if (completed.has(id)) completed.delete(id);
+        else completed.add(id);
+        try { localStorage.setItem(progressKey, JSON.stringify([...completed])); } catch {}
+        updateProgress();
+      };
+    }
+    if (id === "answers") {
+      const questions = [...reader.querySelectorAll(".linear-reading h3")];
+      const picker = document.createElement("label");
+      picker.className = "linear-question-picker";
+      picker.innerHTML = `Перейти к вопросу <select><option value="">Выбрать из 17 вопросов</option>${questions.map(heading => `<option value="${esc(heading.id)}">${esc(heading.textContent)}</option>`).join("")}</select>`;
+      reader.querySelector(".linear-reading").before(picker);
+      picker.querySelector("select").onchange = event => {
+        document.getElementById(event.target.value)?.scrollIntoView({ block: "start" });
+      };
+      const question = params.get("question");
+      const target = questions.find(heading => question && heading.textContent.startsWith(question + "."));
+      if (target) requestAnimationFrame(() => {
+        if (hash === location.hash) target.scrollIntoView({ block: "start", behavior: "instant" });
+      });
+    }
+    SiriusSwipe.setRoutes(reader, previous && linearLink(previous.id), next && linearLink(next.id));
+    renderMath();
+  } catch (error) {
+    if (hash === location.hash && reader.isConnected) showMaterialError(error);
+  }
+}
+
 async function router() {
   const initialHash = location.hash;
   const raw = location.hash.slice(1) || "/";
@@ -658,6 +836,9 @@ async function router() {
     } catch (error) {
       if (location.hash === initialHash) showMaterialError(error);
     }
+  }
+  else if (parts[0] === "study" && parts[1] === "linear") {
+    await linearCoursePage(new URLSearchParams(qs || ""));
   }
   else if (parts[0] === "study" && parts[1] === "review") {
     const p = new URLSearchParams(qs || "");
@@ -768,7 +949,11 @@ function renderSearch(q) {
   const tokens = searchTokens(q);
   const articles = [...(index?.life || []), ...(index?.articles || [])];
   const coursePages = window.SiriusMatan.searchPages();
-  const catalog = [...SITE_PAGES, ...coursePages, ...articles];
+  const linearPages = LINEAR_CHAPTERS.map(chapter => ({
+    type: "page", title: chapter.title, keywords: chapter.keywords,
+    subject: "Линейная алгебра", href: linearLink(chapter.id),
+  }));
+  const catalog = [...SITE_PAGES, ...coursePages, ...linearPages, ...articles];
   const ranked = tokens.length
     ? catalog
         .map((item) => ({ item, score: matchScore(item, tokens) }))

@@ -3429,3 +3429,34 @@ a:focus-visible .round-arrow .icon {
   font-size: 16px;
   line-height: 1.4;
 }
+
+.linear-reader h3 {
+  scroll-margin-top: 110px;
+}
+.linear-question-picker {
+  display: grid;
+  gap: 8px;
+  margin: 24px 0;
+}
+.linear-question-picker select {
+  width: 100%;
+}
+.linear-lab {
+  padding: 20px;
+  margin: 24px 0;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--panel);
+}
+.linear-lab h2 {
+  margin-top: 0;
+}
+.linear-lab svg {
+  display: block;
+  width: min(100%, 340px);
+  margin: 16px auto;
+}
+.linear-lab-result {
+  text-align: center;
+  font-weight: 600;
+}
