@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 345" role="img" aria-labelledby="title">
+  <title id="title">Два способа найти площадь многоугольника</title>
+  <defs><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="context-stroke"/></marker></defs>
+  <rect width="640" height="345" rx="24" fill="#f1fafb"/>
+  <g font-family="system-ui,sans-serif">
+    <text x="28.00" y="41.00" font-size="23" fill="#163b45" font-weight="750" text-anchor="start">Два способа найти площадь многоугольника</text>
+    <polygon points="55.00,302.00 313.00,302.00 313.00,216.00 141.00,216.00 141.00,87.00 55.00,87.00" fill="#d8f1ee" stroke="#137f83" stroke-width="3.5" stroke-linejoin="round"/><line x1="55.00" y1="216.00" x2="141.00" y2="216.00" stroke="#137f83" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="7 6"/><polygon points="141.00,216.00 313.00,216.00 313.00,87.00 141.00,87.00" fill="none" stroke="#a35e19" stroke-width="2" stroke-linejoin="round"/><text x="135.00" y="274.00" font-size="20" fill="#137f83" font-weight="700" text-anchor="start">6 × 2</text><text x="69.00" y="157.00" font-size="17" fill="#137f83" font-weight="700" text-anchor="start">2 × 3</text><text x="180.00" y="159.00" font-size="22" fill="#a35e19" font-weight="700" text-anchor="start">4 × 3</text><text x="371.00" y="126.00" font-size="22" fill="#163b45" font-weight="650" text-anchor="start">Сложить части</text><text x="371.00" y="160.00" font-size="25" fill="#137f83" font-weight="700" text-anchor="start">12 + 6 = 18</text><text x="371.00" y="233.00" font-size="22" fill="#163b45" font-weight="650" text-anchor="start">Вычесть вырез</text><text x="371.00" y="267.00" font-size="25" fill="#a35e19" font-weight="700" text-anchor="start">30 − 12 = 18</text>
+  </g>
+</svg>

@@ -475,7 +475,7 @@ function studyPage({ day = null, subject = null, view = "day" } = {}) {
   app.innerHTML = `<section class="page"><div class="page-top"><div><span class="eyebrow">Раздел 01</span><h1>Учёба</h1></div><p class="page-description">Конспекты и учебные материалы по дням и предметам. Выберите нужную дату или дисциплину в списке.</p></div>
   <a class="study-review" href="#/study/review"><img class="study-review-art" src="assets/cards/pattern-23.svg" alt="" loading="lazy"><div class="study-review-text"><span class="study-review-title">Самопроверка</span><p>Короткие тесты по конспектам с разбором каждого ответа</p><span class="study-review-meta">${questionsLabel(questionCount)} · ${subjectCount} ${plural(subjectCount, "предмет", "предмета", "предметов")}</span></div>${ROUND_ARROW}</a>
   <a class="study-review" href="#/study/matan"><img class="study-review-art" src="assets/cards/pattern-24.svg" alt="" loading="lazy"><div class="study-review-text"><span class="study-review-title">Курс математического анализа</span><p>Уроки, интерактивный учебник, тренажёры и карточки к коллоквиуму</p><span class="study-review-meta">9 уроков · 6 глав · 26 вопросов</span></div>${ROUND_ARROW}</a>
-  <a class="study-review" href="#/study/linear"><img class="study-review-art" src="assets/cards/pattern-22.svg" alt="" loading="lazy"><div class="study-review-text"><span class="study-review-title">Учебник по линейной алгебре</span><p>Планиметрия, движения плоскости и доказательства к коллоквиуму</p><span class="study-review-meta">6 глав · 17 ответов</span></div>${ROUND_ARROW}</a>
+  <a class="study-review" href="#/study/linear"><img class="study-review-art" src="assets/cards/pattern-22.svg" alt="" loading="lazy"><div class="study-review-text"><span class="study-review-title">Учебник по линейной алгебре</span><p>Планиметрия, движения плоскости и доказательства к коллоквиуму</p><span class="study-review-meta">6 глав · 17 билетов · 34 разбора</span></div>${ROUND_ARROW}</a>
   <div class="study-switch" role="group" aria-label="Способ сортировки"><button type="button" class="study-switch-button ${studyView === "day" ? "active" : ""}" aria-pressed="${studyView === "day"}" data-view="day">По дням</button><button type="button" class="study-switch-button ${studyView === "subject" ? "active" : ""}" aria-pressed="${studyView === "subject"}" data-view="subject">По предметам</button></div>
   <div class="content-layout"><aside class="sidebar"><p class="sidebar-title">${studyView === "subject" ? "По предметам" : "По дням"}</p>${sidebarItems}</aside><div class="entries">${items.map((x) => entryRow(x, studyView)).join("") || '<div class="empty-state">Пока нет учебных материалов.</div>'}</div></div></section>`;
 
@@ -646,6 +646,34 @@ function linearLink(id) {
   return `#/study/linear?chapter=${id}`;
 }
 
+// Reserve space for lazy diagrams so links to questions keep their scroll position.
+const LINEAR_FIGURE_SIZES = {
+  "axial-symmetry.svg": [760, 300],
+  "ceva.svg": [760, 336],
+  "cosine-projections.svg": [800, 318],
+  "desargues.svg": [648, 444],
+  "glide-reflection.svg": [1000, 350],
+  "la-area-grid.svg": [760, 398],
+  "la-coordinate-motions.svg": [1110, 350],
+  "la-cosine-vectors.svg": [675, 350],
+  "la-five-motions.svg": [736, 623],
+  "la-line-image.svg": [704, 343],
+  "la-motion-comparison.svg": [760, 350],
+  "la-polygon-area.svg": [640, 345],
+  "la-three-nails.svg": [645, 372],
+  "la-triangle-types.svg": [760, 322],
+  "la-trident-external.svg": [743, 453],
+  "la-trident.svg": [850, 645],
+  "law-of-sines.svg": [820, 320],
+  "mapping-types.svg": [760, 300],
+  "median-length.svg": [820, 316],
+  "menelaus.svg": [900, 310],
+  "plane-motion-classification.svg": [1000, 420],
+  "plane-motions.svg": [760, 250],
+  "reflections-translation-rotation.svg": [1000, 390],
+  "three-reflections.svg": [760, 290],
+};
+
 function addLinearFigureViewer(reader) {
   const dialog = document.createElement("dialog");
   dialog.className = "textbook-figure-view";
@@ -662,6 +690,8 @@ function addLinearFigureViewer(reader) {
     const caption = document.createElement("figcaption");
     caption.textContent = picture.alt;
     picture.parentElement.replaceWith(figure);
+    const dimensions = LINEAR_FIGURE_SIZES[picture.getAttribute("src").split("/").at(-1)];
+    if (dimensions) [picture.width, picture.height] = dimensions;
     picture.loading = "lazy";
     button.append(picture);
     button.onclick = () => {
@@ -787,19 +817,29 @@ async function linearCoursePage(params) {
       };
     }
     if (id === "answers") {
+      reader.classList.add("linear-answers");
       const questions = [...reader.querySelectorAll(".linear-reading h3")];
       const picker = document.createElement("label");
       picker.className = "linear-question-picker";
       picker.innerHTML = `Перейти к вопросу <select><option value="">Выбрать из 17 вопросов</option>${questions.map(heading => `<option value="${esc(heading.id)}">${esc(heading.textContent)}</option>`).join("")}</select>`;
       reader.querySelector(".linear-reading").before(picker);
-      picker.querySelector("select").onchange = event => {
-        document.getElementById(event.target.value)?.scrollIntoView({ block: "start" });
+      const select = picker.querySelector("select");
+      const numberOf = heading => heading.textContent.match(/^([12]\.\d+)\./)?.[1];
+      select.onchange = () => {
+        const heading = questions.find(item => item.id === select.value);
+        if (!heading) return;
+        const number = numberOf(heading);
+        if (number) history.replaceState(history.state, "", `${linearLink(id)}&question=${number}`);
+        heading.scrollIntoView({ block: "start" });
       };
       const question = params.get("question");
-      const target = questions.find(heading => question && heading.textContent.startsWith(question + "."));
-      if (target) requestAnimationFrame(() => {
-        if (hash === location.hash) target.scrollIntoView({ block: "start", behavior: "instant" });
-      });
+      const target = question && questions.find(heading => numberOf(heading) === question);
+      if (target) {
+        select.value = target.id;
+        requestAnimationFrame(() => {
+          if (hash === location.hash) target.scrollIntoView({ block: "start", behavior: "instant" });
+        });
+      }
     }
     SiriusSwipe.setRoutes(reader, previous && linearLink(previous.id), next && linearLink(next.id));
     renderMath();

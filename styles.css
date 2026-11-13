@@ -3434,12 +3434,36 @@ a:focus-visible .round-arrow .icon {
   scroll-margin-top: 110px;
 }
 .linear-question-picker {
+  position: sticky;
+  top: 88px;
+  z-index: 2;
   display: grid;
-  gap: 8px;
+  gap: 4px;
   margin: 24px 0;
+  padding: 8px 12px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--bg);
+  font-size: 14px;
 }
 .linear-question-picker select {
   width: 100%;
+}
+.linear-answers .linear-reading h3 {
+  scroll-margin-top: 180px;
+}
+@media (max-width: 850px) {
+  .linear-question-picker {
+    top: calc(72px + env(safe-area-inset-top));
+  }
+  .linear-answers .linear-reading h3 {
+    scroll-margin-top: calc(164px + env(safe-area-inset-top));
+  }
+}
+@media print {
+  .linear-question-picker {
+    display: none;
+  }
 }
 .linear-lab {
   padding: 20px;
