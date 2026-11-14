@@ -70,6 +70,7 @@
     try { localStorage.setItem('sirius-schedule', JSON.stringify(data)); }
     catch { throw new Error('Не удалось сохранить расписание. Освободите место в хранилище браузера.'); }
     snapshot = data; failure = false; deviceFailed = false;
+    window.SiriusStudentAccount?.refreshSchedule();
     put('sirius-schedule-origin', 'device');
     showDeviceMessage('Расписание сохранено на устройстве.');
     if (active()) render();
@@ -188,6 +189,7 @@
       const keepCompleteLocal = completeSnapshot() && !complete;
       if (newer && !keepCompleteLocal) {
         snapshot = data;
+        window.SiriusStudentAccount?.refreshSchedule();
         put('sirius-schedule', JSON.stringify(data));
         put('sirius-schedule-origin', 'server');
       }
@@ -226,7 +228,7 @@
       if (!map.has(key)) map.set(key, []);
       map.get(key).push(e);
     }
-    return [...map.values()];
+    return [...map.values()].sort(([a], [b]) => a.start.localeCompare(b.start) || a.end.localeCompare(b.end));
   };
   const pairsOn = (iso) => slotsFor(lessons().filter((e) => e.date === iso)).length;
   function lessonCard(slot) {
@@ -253,12 +255,21 @@
     } else {
       metaBits.push(`<span>${slot.length} потока</span>`);
     }
+    const records = window.SiriusStudentAccount?.lessonRecord(slot, group) || [];
+    const journal = records.filter(record => record.status || record.topic || record.homework).map(record => `
+      <div class="lesson-journal">
+        <a href="#/study/account">${escape(slot.length > 1 ? record.subject + ' · Журнал' : 'Электронный журнал')}</a>
+        ${record.status ? `<strong>${escape(record.status)}</strong>` : ''}
+        ${record.topic ? `<span>${escape(record.topic)}</span>` : ''}
+        ${record.homework ? `<span>ДЗ · ${escape(record.homework)}</span>` : ''}
+      </div>`).join('');
     return `<article class="lesson${slot.length > 1 ? ' lesson-multi' : ''}" data-start="${instant(e)}" data-end="${instant(e, 'end')}">
       <div class="lesson-time"><time>${escape(e.start)}</time><span>${escape(e.end)}</span></div>
       <div class="lesson-body">
         <h3>${escape(titles.join(' / '))}</h3>
         <p class="lesson-meta-line">${metaBits.join('')}</p>
         ${variants}
+        ${journal}
         ${comments.map((c) => `<p class="lesson-comment">${escape(c)}</p>`).join('')}
       </div>
       <div class="lesson-room">${
@@ -331,6 +342,22 @@
     render(animate ? direction : '');
   }
 
+  function lessonsWithBreaks(slots) {
+    let busyUntil = '';
+    return slots.map(slot => {
+      const { start, end } = slot[0];
+      let pause = '';
+      if (busyUntil && start > busyUntil) {
+        const [hours, minutes] = start.split(':').map(Number);
+        const [previousHours, previousMinutes] = busyUntil.split(':').map(Number);
+        const duration = (hours - previousHours) * 60 + minutes - previousMinutes;
+        pause = `<div class="schedule-break"><span>${escape(busyUntil)}–${escape(start)}</span><span>Перерыв · ${duration} мин</span></div>`;
+      }
+      if (end > busyUntil) busyUntil = end;
+      return pause + lessonCard(slot);
+    }).join('');
+  }
+
   function render(direction = '') {
     const rows = lessons().filter((e) => e.date === date);
     const slots = slotsFor(rows);
@@ -371,7 +398,7 @@
           </div>
           <div class="lesson-list">
             <div class="lesson-list-head" aria-hidden="true"><span>Время</span><span>Пара</span><span>Аудитория</span><span>Преподаватель</span></div>
-            ${slots.map(lessonCard).join('') || empty}
+            ${lessonsWithBreaks(slots) || empty}
           </div>
         </div>
       </div>
@@ -611,7 +638,10 @@
     setTimeout(() => URL.revokeObjectURL(url), 10000);
     showCalendarMessage('Файл скачан. Это разовый снимок — для автообновления используйте подписку.');
   }
-  window.SiriusSchedule={render,refresh,moveDate};
+  window.SiriusSchedule = {
+    render, refresh, moveDate,
+    accountSchedule: () => ({ group, rows: lessons(), from: snapshot?.fromDate, to: snapshot?.toDate }),
+  };
   let lastEnter = 0;
   const refreshOnEnter = () => {
     const now = Date.now();

@@ -21,7 +21,7 @@ ALLOWED = {'/', '/livewire/message/main-grid'}
 NO_CACHE = {'.html', '.js', '.css', '.json', '.ics', '.webmanifest', ''}
 PUBLIC_FILES = {
     'index.html', 'styles.css', 'theme.js', 'app.js', 'pwa.js', 'sw.js',
-    'gestures.js', 'schedule.js', 'schedule-source.js', 'manifest.webmanifest',
+    'gestures.js', 'schedule.js', 'student-account.js', 'schedule-source.js', 'manifest.webmanifest',
     'content-index.json', 'robots.txt',
 }
 PUBLIC_DIRECTORIES = {'articles', 'life', 'courses', 'assets', 'data', 'vendor'}

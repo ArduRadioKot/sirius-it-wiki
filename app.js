@@ -476,6 +476,7 @@ function studyPage({ day = null, subject = null, view = "day" } = {}) {
   <a class="study-review" href="#/study/review"><img class="study-review-art" src="assets/cards/pattern-23.svg" alt="" loading="lazy"><div class="study-review-text"><span class="study-review-title">Самопроверка</span><p>Короткие тесты по конспектам с разбором каждого ответа</p><span class="study-review-meta">${questionsLabel(questionCount)} · ${subjectCount} ${plural(subjectCount, "предмет", "предмета", "предметов")}</span></div>${ROUND_ARROW}</a>
   <a class="study-review" href="#/study/matan"><img class="study-review-art" src="assets/cards/pattern-24.svg" alt="" loading="lazy"><div class="study-review-text"><span class="study-review-title">Курс математического анализа</span><p>Уроки, интерактивный учебник, тренажёры и карточки к коллоквиуму</p><span class="study-review-meta">9 уроков · 6 глав · 26 вопросов</span></div>${ROUND_ARROW}</a>
   <a class="study-review" href="#/study/linear"><img class="study-review-art" src="assets/cards/pattern-22.svg" alt="" loading="lazy"><div class="study-review-text"><span class="study-review-title">Учебник по линейной алгебре</span><p>Планиметрия, движения плоскости и доказательства к коллоквиуму</p><span class="study-review-meta">6 глав · 17 билетов · 34 разбора</span></div>${ROUND_ARROW}</a>
+  <a class="study-review" href="#/study/account"><div class="study-review-text"><span class="study-review-title">Личный кабинет</span><p>Оценки, посещаемость, домашние задания и сессия</p></div>${ROUND_ARROW}</a>
   <div class="study-switch" role="group" aria-label="Способ сортировки"><button type="button" class="study-switch-button ${studyView === "day" ? "active" : ""}" aria-pressed="${studyView === "day"}" data-view="day">По дням</button><button type="button" class="study-switch-button ${studyView === "subject" ? "active" : ""}" aria-pressed="${studyView === "subject"}" data-view="subject">По предметам</button></div>
   <div class="content-layout"><aside class="sidebar"><p class="sidebar-title">${studyView === "subject" ? "По предметам" : "По дням"}</p>${sidebarItems}</aside><div class="entries">${items.map((x) => entryRow(x, studyView)).join("") || '<div class="empty-state">Пока нет учебных материалов.</div>'}</div></div></section>`;
 
@@ -864,9 +865,11 @@ async function router() {
   });
 
   // The schedule lives in its own module, so it opens without waiting for the article index.
-  if (parts[0] !== "schedule") await indexReady;
+  const accountRoute = parts[0] === "study" && parts[1] === "account";
+  if (parts[0] !== "schedule" && !accountRoute) await indexReady;
   if (!parts.length) home();
   else if (parts[0] === "schedule") window.SiriusSchedule.render();
+  else if (accountRoute) window.SiriusStudentAccount.render(app, new URLSearchParams(qs || ""), window.SiriusSchedule.accountSchedule);
   else if (parts[0] === "life" && parts.length === 1) lifePage();
   else if (parts[0] === "life" && parts[1])
     await articlePage(index.life.find((x) => x.slug === parts[1]));
@@ -911,6 +914,13 @@ const searchInput = document.getElementById("searchInput");
 const searchResults = document.getElementById("searchResults");
 
 const SITE_PAGES = [
+  {
+    type: "page",
+    title: "Личный кабинет",
+    description: "Оценки, посещаемость, домашние задания, новости, уведомления и сессия",
+    href: "#/study/account",
+    keywords: "лк лкс оценки посещаемость журнал зачеты экзамены",
+  },
   {
     type: "page",
     title: "Главная",

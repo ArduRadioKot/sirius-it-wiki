@@ -3484,3 +3484,66 @@ a:focus-visible .round-arrow .icon {
   text-align: center;
   font-weight: 600;
 }
+
+.schedule-break {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 18px;
+  padding: 9px 14px;
+  color: var(--muted);
+  border-block: 1px solid var(--line);
+  background: var(--panel);
+  font-size: .78rem;
+  font-variant-numeric: tabular-nums;
+}
+.lesson-journal {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 9px;
+  margin-top: 8px;
+  font-size: .78rem;
+  overflow-wrap: anywhere;
+}
+.lesson-journal a, .journal-link { color: var(--accent-dark); text-decoration: underline; text-underline-offset: 3px; }
+.study-review.study-account-link { min-height: 0; align-items: center; }
+.student-account .page-top { margin-top: 12px; }
+.journal-tabs { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 15px; }
+.journal-tabs a {
+  padding: 8px 12px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  color: var(--text);
+  font-size: .84rem;
+  text-decoration: none;
+}
+.journal-tabs a[aria-current="page"] { background: var(--accent-soft); color: var(--accent-dark); border-color: var(--accent-dark); }
+.journal-import, .journal-block {
+  margin-block: 14px;
+  padding: 15px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface);
+  overflow-wrap: anywhere;
+}
+.journal-import summary { cursor: pointer; font-weight: 650; }
+[data-journal-sources] { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(215px, 100%), 1fr)); gap: 10px; }
+.journal-source, .journal-row { display: grid; gap: 5px; padding: 10px; border-radius: 8px; background: var(--panel); min-width: 0; }
+.journal-source input { width: 100%; min-width: 0; font-size: .82rem; }
+.journal-meta, .journal-row span { color: var(--muted); font-size: .84rem; line-height: 1.5; }
+.journal-source .journal-meta { margin: 0; }
+.journal-source .journal-meta:empty { display: none; }
+.journal-import button, .journal-semester select {
+  padding: 7px 10px;
+  color: var(--text);
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  font: inherit;
+  font-size: .84rem;
+}
+.journal-import button { margin-top: 12px; cursor: pointer; }
+.journal-semester select { max-width: 100%; }
+.journal-block h2 { margin: 0 0 8px; font-size: 1.05rem; }
+.journal-row + .journal-row { margin-top: 6px; }
