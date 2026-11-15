@@ -861,14 +861,21 @@ async function linearCoursePage(params) {
   }
 }
 
+function mobileSectionRoute(parts) {
+  if (parts[0] === "study" && parts[1] === "account") return "#/study/account";
+  return `#/${parts[0] || ""}`;
+}
+
+const mobileLinks = [...document.querySelectorAll(".mobile-nav a")];
+
 async function router() {
   const initialHash = location.hash;
   const raw = location.hash.slice(1) || "/";
   const [path, qs] = raw.split("?");
   const parts = path.split("/").filter(Boolean).map(safeDecode);
 
-  const currentSection = parts[0] === "study" && parts[1] === "account" ? "#/study/account" : `#/${parts[0] || ""}`;
-  document.querySelectorAll(".mobile-nav a").forEach((link) => {
+  const currentSection = mobileSectionRoute(parts);
+  mobileLinks.forEach((link) => {
     if (link.getAttribute("href") === currentSection) {
       link.setAttribute("aria-current", parts.length > 1 && currentSection !== "#/study/account" ? "location" : "page");
     } else {
@@ -1050,7 +1057,7 @@ document.addEventListener("keydown", (e) => {
   }
 });
 
-const sectionRoutes = ["#/", "#/study", "#/schedule"];
+const sectionRoutes = mobileLinks.map(link => link.getAttribute("href"));
 const swipeNavigation = SiriusSwipe.bind(app, (target) => {
   const week = target.closest(".schedule-week");
   const day = target.closest("#scheduleSwipeArea");
@@ -1064,8 +1071,8 @@ const swipeNavigation = SiriusSwipe.bind(app, (target) => {
       }),
     };
   }
-  const section = location.hash.split(/[/?]/)[1];
-  const position = sectionRoutes.indexOf(section ? `#/${section}` : "#/");
+  const parts = location.hash.slice(1).split("?")[0].split("/").filter(Boolean).map(safeDecode);
+  const position = sectionRoutes.indexOf(mobileSectionRoute(parts));
   if (position < 0) return null;
   return { panel: app, destination: (step) => ({ hash: sectionRoutes[position + step] }) };
 });
