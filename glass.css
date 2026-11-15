@@ -274,6 +274,7 @@ body { font-family: var(--font); }
 .lk-steps li:not(:last-child)::after { content: ""; position: absolute; left: 14px; top: 36px; bottom: 4px; width: 2px; background: var(--line); }
 .lk-steps li > span { display: block; max-width: 60ch; padding-top: 4px; }
 .lk-step-action { margin-top: 10px; }
+.lk-paste-field { display: block; width: 100%; max-width: 60ch; margin-top: 10px; padding: 10px 12px; border: 1px solid var(--outline); border-radius: var(--r-md); background: var(--surface); color: var(--text); font: 500 14px var(--font); resize: vertical; }
 .lk-status { min-height: 1.5em; margin: 4px 0 10px; color: var(--accent-dark); font-weight: 700; }
 .lk-status:empty { display: none; }
 .lk-files { padding-top: 14px; border-top: 1px solid var(--line); }

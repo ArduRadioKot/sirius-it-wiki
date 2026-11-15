@@ -562,10 +562,10 @@
   function steps() {
     const open = `<a class="lk-button" href="${origin}/dashboard" target="_blank" rel="noopener noreferrer">Открыть ЛК</a>`;
     const copy = '<button type="button" class="lk-button is-primary" data-lk-copy>Скопировать код</button>';
-    const paste = '<button type="button" class="lk-button is-primary" data-lk-paste>Вставить из буфера</button>';
+    const paste = '<button type="button" class="lk-button" data-lk-paste>Вставить из буфера</button>';
     const last = isIOS && standalone()
-      ? ['В окошке на сайте ЛК нажмите «Скопировать», вернитесь сюда и вставьте данные.', paste]
-      : ['В окошке на сайте ЛК нажмите «Открыть в вики». Оценки появятся на этой странице.', ''];
+      ? ['В окошке на сайте ЛК нажмите «Скопировать», вернитесь сюда и вставьте данные.', paste.replace('lk-button"', 'lk-button is-primary"')]
+      : ['В окошке на сайте ЛК нажмите «Открыть в вики» — оценки появятся на этой странице. Если вики не открылась, нажмите там «Скопировать», вернитесь сюда и вставьте данные.', paste];
     if (device === 'desktop') return [
       ['Перетащите кнопку на панель закладок браузера. Панель показывается по Ctrl+Shift+B, на Mac — ⌘+Shift+B.', '<a class="lk-button is-primary lk-bookmarklet" data-lk-bookmarklet>Оценки → Вики</a>'],
       ['Откройте ЛК, войдите и нажмите эту закладку.', open],
@@ -660,12 +660,27 @@
         catch { status.textContent = 'Браузер не дал скопировать код. Откройте вики в Safari или Chrome и попробуйте ещё раз.'; }
       };
       const paste = $('[data-lk-paste]');
+      const accept = text => {
+        let payload;
+        try { payload = JSON.parse(text); } catch { payload = null; }
+        if (payload?.type !== 'sirius-lk') { status.textContent = 'Это не данные из закладки. Нажмите «Скопировать» на сайте ЛК и вставьте ещё раз.'; return; }
+        if (!importPages(payload.pages).loaded.length) status.textContent = 'В скопированных данных нет оценок. Скопируйте их на сайте ЛК ещё раз.';
+      };
       if (paste) paste.onclick = async () => {
-        try {
-          const payload = JSON.parse(await navigator.clipboard.readText());
-          if (payload?.type !== 'sirius-lk') throw new Error();
-          if (!importPages(payload.pages).loaded.length) status.textContent = 'В буфере нет оценок. Скопируйте их на сайте ЛК ещё раз.';
-        } catch { status.textContent = 'В буфере нет данных из закладки. Нажмите «Скопировать» на сайте ЛК и вернитесь сюда.'; }
+        try { accept(await navigator.clipboard.readText()); }
+        catch {
+          // Some browsers do not let a page read the clipboard: offer a field to paste into by hand.
+          if (!paste.parentElement.querySelector('textarea')) {
+            const field = node('textarea', '', 'lk-paste-field');
+            field.rows = 3;
+            field.placeholder = 'Вставьте скопированные данные сюда';
+            field.setAttribute('aria-label', 'Данные из закладки');
+            field.oninput = () => { if (field.value.trim()) accept(field.value); };
+            paste.parentElement.append(field);
+            field.focus();
+          }
+          status.textContent = 'Браузер не дал прочитать буфер. Вставьте данные в поле вручную.';
+        }
       };
     }
 
