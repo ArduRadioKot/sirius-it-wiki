@@ -44,6 +44,15 @@ const slugify = (s) =>
     .replace(/[^a-zа-яё0-9]+/gi, "-")
     .replace(/^-|-$/g, "");
 
+function isMaterialLink(value) {
+  try {
+    const url = new URL(value, APP_BASE_URL);
+    return ["https:", "http:", "mailto:", "tel:"].includes(url.protocol);
+  } catch {
+    return false;
+  }
+}
+
 function inlineMarkdown(text) {
   const math = [];
   const protectedText = String(text).replace(
@@ -55,15 +64,18 @@ function inlineMarkdown(text) {
   );
   return esc(protectedText)
     .replace(/`([^`]+)`/g, "<code>$1</code>")
-    .replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1">')
+    .replace(/!\[([^\]]*)\]\(([^)]+)\)/g, (_, label, url) => isMaterialLink(url) ? `<img src="${url}" alt="${label}">` : label)
     .replace(
       /\[([^\]]+)\]\(([^)]+)\)/g,
-      (_, label, url) => url.startsWith('#/') ? `<a href="${url}">${label}</a>` : `<a href="${url}" target="_blank" rel="noopener">${label}</a>`,
+      (_, label, url) => {
+        if (!isMaterialLink(url)) return label;
+        return url.startsWith('#/') ? `<a href="${url}">${label}</a>` : `<a href="${url}" target="_blank" rel="noopener">${label}</a>`;
+      },
     )
     .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
     .replace(/__([^_]+)__/g, "<strong>$1</strong>")
     .replace(/(?<!\*)\*([^*]+)\*(?!\*)/g, "<em>$1</em>")
-    .replace(/\u0000MATH(\d+)\u0000/g, (_, i) => math[i]);
+    .replace(/\u0000MATH(\d+)\u0000/g, (_, i) => esc(math[i]));
 }
 
 function downloadBlock(fields) {
@@ -1084,13 +1096,7 @@ window.addEventListener("hashchange", router);
 if (location.hash.startsWith("#/schedule")) router();
 else indexLoad.then(router, () => {});
 
-// The service worker answers from its cache first and reports when a newer index arrives.
-navigator.serviceWorker?.addEventListener("message", async (event) => {
-  if (
-    event.data?.type !== "JSON_UPDATED" ||
-    event.data.path !== "content-index.json"
-  )
-    return;
+async function refreshIndexLists() {
   try {
     index = await loadGeneratedIndex();
   } catch {
@@ -1105,4 +1111,36 @@ navigator.serviceWorker?.addEventListener("message", async (event) => {
   const y = window.scrollY;
   await router();
   window.scrollTo(0, y);
+}
+
+// The service worker answers from its cache first and reports when a newer index arrives.
+navigator.serviceWorker?.addEventListener("message", (event) => {
+  if (event.data?.type === "JSON_UPDATED" && event.data.path === "content-index.json") refreshIndexLists();
 });
+
+const nativeLibrary = window.Capacitor?.isNativePlatform?.() && window.Capacitor.Plugins?.SiriusWikiContent;
+if (nativeLibrary) {
+  let refreshing;
+  const refresh = (force = false) => {
+    if (!refreshing) {
+      refreshing = nativeLibrary.sync({ force })
+        .then(async ({ updated }) => {
+          if (updated) {
+            await indexReady;
+            await refreshIndexLists();
+          }
+        })
+        .finally(() => { refreshing = null; });
+    }
+    return refreshing;
+  };
+  window.SiriusContent = { refresh };
+  const check = () => {
+    if (navigator.onLine && !document.hidden) refresh().catch(() => {});
+  };
+  window.addEventListener("online", check);
+  window.addEventListener("focus", check);
+  document.addEventListener("visibilitychange", check);
+  setInterval(check, 60_000);
+  check();
+}

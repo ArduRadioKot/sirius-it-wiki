@@ -6,14 +6,22 @@
   const updateStatus = document.getElementById('updateStatus');
   if (window.Capacitor?.isNativePlatform?.()) {
     button.hidden = true;
-    if (versionEl) versionEl.textContent = 'Android 1.0';
+    if (versionEl) versionEl.textContent = 'Android 1.1';
     if (updateButton) {
       updateButton.disabled = false;
-      updateButton.textContent = 'Обновить расписание';
+      updateButton.textContent = 'Обновить материалы и расписание';
       updateButton.onclick = async () => {
         updateButton.disabled = true;
-        try { await window.SiriusSchedule?.refresh(); }
-        finally { updateButton.disabled = false; }
+        updateStatus.hidden = false;
+        updateStatus.textContent = 'Проверяем обновления…';
+        try {
+          await Promise.all([window.SiriusSchedule.refresh(), window.SiriusContent.refresh(true)]);
+          updateStatus.textContent = 'Материалы доступны офлайн.';
+        } catch {
+          updateStatus.textContent = 'Не удалось обновить материалы. Сохранённая версия доступна офлайн.';
+        } finally {
+          updateButton.disabled = false;
+        }
       };
     }
     return;

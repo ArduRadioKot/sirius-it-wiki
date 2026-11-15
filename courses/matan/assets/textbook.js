@@ -1,3 +1,19 @@
+function textbookChapter(html) {
+  const template = document.createElement('template');
+  template.innerHTML = html;
+  const tags = new Set('H2 H3 H4 H5 DIV P SPAN OL UL LI TABLE THEAD TBODY TR TH TD STRONG EM B I BLOCKQUOTE PRE CODE HR BR DL DT DD'.split(' '));
+  for (const element of template.content.querySelectorAll('*')) {
+    if (!tags.has(element.tagName)) {
+      element.remove();
+      continue;
+    }
+    for (const attribute of [...element.attributes]) {
+      if (attribute.name !== 'class' && attribute.name !== 'id') element.removeAttribute(attribute.name);
+    }
+  }
+  return template.content;
+}
+
 window.initMatanBook = function (material) {
   const chapters=window.MatanChapters;
   const route=window.MatanBookRoute;
@@ -39,7 +55,7 @@ window.initMatanBook = function (material) {
       const figure = document.createElement('figure');
       figure.className = 'textbook-figure';
       const url = asset('../../assets/diagrams/' + diagram.file);
-      figure.innerHTML = `<button class="textbook-figure-button" type="button" aria-label="Увеличить схему: ${escape(diagram.alt)}"><img src="${escape(url)}" width="1000" height="${diagram.height || 440}" loading="lazy" alt="${escape(diagram.alt)}"><span aria-hidden="true">Увеличить</span></button><figcaption>${escape(diagram.caption)}</figcaption>`;
+      figure.innerHTML = `<button class="textbook-figure-button" type="button" aria-label="Увеличить схему: ${escape(diagram.alt)}"><img src="${escape(url)}" width="1000" height="${Number(diagram.height) || 440}" loading="lazy" alt="${escape(diagram.alt)}"><span aria-hidden="true">Увеличить</span></button><figcaption>${escape(diagram.caption)}</figcaption>`;
       figure.querySelector('button').onclick = () => {
         const image = viewer.querySelector('img');
         image.src = url;
@@ -90,7 +106,9 @@ window.initMatanBook = function (material) {
     current=idx>=0?idx:Math.max(0,chapters.findIndex(c=>c.id===state.last));
     const chapter=chapters[current];state.last=chapter.id;
     const data=state.chapters[chapter.id]||{};
-    $('#chapter').innerHTML=`<h2>${escape(chapter.title)}</h2>`+material.html;
+    const heading = document.createElement('h2');
+    heading.textContent = chapter.title;
+    $('#chapter').replaceChildren(heading, textbookChapter(material.html));
     // Keep proof steps available on demand, without hiding definitions.
     $('#chapter').querySelectorAll('p').forEach(p=>{
       if(/^Доказательство[:.]/i.test(p.textContent.trim())){const d=document.createElement('details');const s=document.createElement('summary');s.textContent='Идея доказательства';p.before(d);d.append(s,p);}
