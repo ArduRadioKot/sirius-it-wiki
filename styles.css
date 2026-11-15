@@ -1536,11 +1536,14 @@ button:disabled {
 }
 
 .schedule-reminders #notificationStatus:empty,
+.schedule-reminders #endReminderStatus:empty,
 .schedule-reminders #calendarStatus:empty {
   display: none;
 }
 
 .schedule-reminders #notificationStatus,
+.schedule-reminders #endReminderStatus,
+.schedule-reminders #liveTimerStatus,
 .schedule-reminders #calendarStatus {
   color: var(--muted);
   font-size: 13px;

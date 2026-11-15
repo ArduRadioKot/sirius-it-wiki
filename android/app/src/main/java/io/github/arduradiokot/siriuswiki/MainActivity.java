@@ -1,5 +1,6 @@
 package io.github.arduradiokot.siriuswiki;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.webkit.WebResourceRequest;
@@ -9,6 +10,21 @@ import com.getcapacitor.BridgeActivity;
 import com.getcapacitor.BridgeWebViewClient;
 
 public class MainActivity extends BridgeActivity {
+    static String widgetRoute(Intent intent) {
+        if (intent == null) return "";
+        String route = intent.getStringExtra(ScheduleWidget.ROUTE);
+        if (route == null || !(route.equals("#/study/account") || route.equals("#/study/review")
+            || route.matches("#/schedule\\?date=\\d{4}-\\d{2}-\\d{2}"))) return "";
+        return route;
+    }
+
+    @Override
+    public void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        if (bridge != null && !widgetRoute(intent).isEmpty()) bridge.triggerWindowJSEvent("sirius-widget-open");
+    }
+
     @Override
     public void onCreate(Bundle state) {
         registerPlugin(AccountPlugin.class);

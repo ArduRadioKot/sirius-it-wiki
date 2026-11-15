@@ -36,6 +36,32 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths"></meta-data>
         </provider>
+
+        <service android:name=".WidgetRefreshJob" android:exported="true" android:permission="android.permission.BIND_JOB_SERVICE" />
+
+        <receiver android:name=".ScheduleWidget$Next" android:exported="false" android:label="@string/widget_next">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="android.intent.action.TIME_SET" />
+                <action android:name="android.intent.action.DATE_CHANGED" />
+                <action android:name="android.intent.action.TIMEZONE_CHANGED" />
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider" android:resource="@xml/widget_next_info" />
+        </receiver>
+
+        <receiver android:name=".ScheduleWidget$Day" android:exported="false" android:label="@string/widget_day">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider" android:resource="@xml/widget_day_info" />
+        </receiver>
+
+        <receiver android:name=".ScheduleWidget$Board" android:exported="false" android:label="@string/widget_board">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider" android:resource="@xml/widget_board_info" />
+        </receiver>
     </application>
 
     <!-- Permissions -->

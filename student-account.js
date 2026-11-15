@@ -7,7 +7,7 @@
   };
   const tabs = { overview: 'Обзор', grades: 'Оценки', visits: 'Посещаемость', homework: 'Домашние задания', news: 'Новости и уведомления', session: 'Сессия' };
   const data = {};
-  const androidAccount = window.Capacitor?.isNativePlatform?.() && window.Capacitor?.Plugins?.SiriusAccount;
+  const nativeAccount = window.Capacitor?.isNativePlatform?.() && window.Capacitor?.Plugins?.SiriusAccount;
   let nativeSync = null;
   let nativeMessage = '';
   let nativeNeedsLogin = false;
@@ -23,10 +23,10 @@
   const remember = () => storage.get(REMEMBER) !== 'false';
   function save() {
     if (demo) return;
-    if (androidAccount) {
+    if (nativeAccount) {
       storage.drop(STORE);
       const value = remember() && Object.keys(data).length ? JSON.stringify(data) : '';
-      androidAccount.saveCache({ value }).catch(() => {
+      nativeAccount.saveCache({ value }).catch(() => {
         nativeMessage = 'Данные открыты, но не удалось обновить офлайн-копию.';
         redraw();
       });
@@ -40,7 +40,7 @@
     if (Array.isArray(saved?.trajectory?.value)) data.trajectory = saved.trajectory;
     if (Array.isArray(saved?.dashboard?.value?.news)) data.dashboard = saved.dashboard;
   }
-  const cacheReady = androidAccount ? androidAccount.loadCache().then(({ value }) => {
+  const cacheReady = nativeAccount ? nativeAccount.loadCache().then(({ value }) => {
     if (remember() && value && !Object.keys(data).length && !demo) restore(JSON.parse(value));
     redraw();
     if (location.hash.startsWith('#/schedule')) window.SiriusSchedule?.render();
@@ -48,7 +48,7 @@
     nativeMessage = 'Не удалось открыть сохранённую копию ЛК.';
     redraw();
   }) : Promise.resolve();
-  if (!androidAccount) {
+  if (!nativeAccount) {
     try { if (remember()) restore(JSON.parse(storage.get(STORE) || 'null')); } catch {}
   }
   let refreshSession = () => {};
@@ -397,7 +397,7 @@
     return { loaded, failed };
   }
   addEventListener('message', event => {
-    if (androidAccount || event.origin !== origin || event.data?.type !== 'sirius-lk') return;
+    if (nativeAccount || event.origin !== origin || event.data?.type !== 'sirius-lk') return;
     const result = importPages(event.data.pages);
     event.source?.postMessage({ type: 'sirius-lk-done', ok: result.loaded.length > 0 }, origin);
   });
@@ -408,7 +408,7 @@
     nativeSync = (async () => {
       await cacheReady;
       try {
-        const { pages } = await (signIn ? androidAccount.signIn() : androidAccount.refresh());
+        const { pages } = await (signIn ? nativeAccount.signIn() : nativeAccount.refresh());
         const result = importPages(pages, { replace: true });
         if (!result.loaded.length) throw new Error('ЛК вернул страницу в неизвестном формате.');
         nativeNeedsLogin = false;
@@ -657,7 +657,7 @@
       </div>
       <section class="lk-connect" data-lk-connect hidden>
         <h2 data-lk-connect-title></h2>
-        ${androidAccount ? `<p class="lk-lead">Войдите на официальной странице Сириуса. Вики загрузит журнал, учебную траекторию и уведомления. Сохранённые данные доступны без сети.</p>
+        ${nativeAccount ? `<p class="lk-lead">Войдите на официальной странице Сириуса. Вики загрузит журнал, учебную траекторию и уведомления. Сохранённые данные доступны без сети.</p>
         <button type="button" class="lk-button is-primary" data-native-login>Войти в ЛК</button>
         <div class="lk-connect-foot" data-lk-connect-foot></div>` : `<p class="lk-lead">Сайт ЛК не отдаёт оценки другим сайтам, поэтому их переносит закладка в вашем браузере. Пароль вы вводите только на lks.siriusuniversity.ru, оценки остаются на этом устройстве.</p>
         <div class="lk-devices" role="group" aria-label="Устройство"></div>
@@ -670,15 +670,15 @@
         </details>
         <div class="lk-connect-foot" data-lk-connect-foot></div>`}
       </section>
-      ${androidAccount ? '<p class="lk-status" data-lk-status role="status"></p>' : ''}
+      ${nativeAccount ? '<p class="lk-status" data-lk-status role="status"></p>' : ''}
       <nav class="journal-tabs" aria-label="Разделы личного кабинета" hidden></nav>
       <label class="journal-semester" hidden>Семестр <select></select></label>
       <div data-journal-content></div>
       <details class="lk-data" data-lk-data hidden>
         <summary>Данные на этом устройстве</summary>
         <label><input type="checkbox" data-lk-remember ${remember() ? 'checked' : ''}> Хранить оценки на этом устройстве</label>
-        <p class="journal-meta">${androidAccount ? 'Если выключить, данные будут доступны до закрытия приложения.' : 'Если выключить, оценки пропадут после закрытия вкладки.'}</p>
-        <button type="button" class="lk-button" data-journal-clear>${androidAccount ? 'Отключить ЛК и удалить данные' : 'Удалить оценки с устройства'}</button>
+        <p class="journal-meta">${nativeAccount ? 'Если выключить, данные будут доступны до закрытия приложения.' : 'Если выключить, оценки пропадут после закрытия вкладки.'}</p>
+        <button type="button" class="lk-button" data-journal-clear>${nativeAccount ? 'Отключить ЛК и удалить данные' : 'Удалить оценки с устройства'}</button>
       </details>
     </section>`;
     const page = app.querySelector('.student-account');
@@ -750,7 +750,7 @@
       $('[data-lk-demo-bar]').hidden = !demo;
       $('[data-lk-refresh]').hidden = !ready || demo;
       $('[data-lk-refresh]').textContent = connectOpen ? 'Скрыть' : 'Обновить оценки';
-      if (androidAccount) {
+      if (nativeAccount) {
         const refresh = $('[data-lk-refresh]');
         refresh.textContent = nativeNeedsLogin ? 'Войти снова' : 'Обновить оценки';
         refresh.disabled = Boolean(nativeSync) || nativeClearing;
@@ -788,16 +788,16 @@
       }
     };
 
-    $('[data-lk-refresh]').onclick = () => { if (androidAccount) return syncAndroid(nativeNeedsLogin); connectOpen = !connectOpen; draw(); if (connectOpen) connect.scrollIntoView({ block: 'nearest' }); };
+    $('[data-lk-refresh]').onclick = () => { if (nativeAccount) return syncAndroid(nativeNeedsLogin); connectOpen = !connectOpen; draw(); if (connectOpen) connect.scrollIntoView({ block: 'nearest' }); };
     $('[data-lk-demo-stop]').onclick = () => { stopDemo(); location.hash = '#/study/account'; };
     $('[data-lk-remember]').onchange = event => { storage.set(REMEMBER, String(event.target.checked)); save(); };
-    if (androidAccount) $('[data-native-login]').onclick = () => syncAndroid(true);
+    if (nativeAccount) $('[data-native-login]').onclick = () => syncAndroid(true);
     $('[data-journal-clear]').onclick = async () => {
-      if (androidAccount) {
+      if (nativeAccount) {
         if (nativeClearing || nativeSync) return;
         nativeClearing = true;
         draw();
-        try { await androidAccount.clear(); }
+        try { await nativeAccount.clear(); }
         catch {
           nativeMessage = 'Не удалось отключить ЛК.';
           return;
@@ -812,7 +812,7 @@
       storage.drop(STORE);
       connectOpen = false;
       draw();
-      if (!androidAccount) status.textContent = 'Оценки удалены с этого устройства.';
+      if (!nativeAccount) status.textContent = 'Оценки удалены с этого устройства.';
     };
     selectTerm.onchange = () => { if (data.trajectory) { data.trajectory.semester = selectTerm.value; save(); } draw(); };
     const input = $('.lk-files input');
@@ -840,7 +840,7 @@
       if (location.hash.includes('demo=1')) { location.hash = '#/study/account'; return; }
       draw();
     };
-    if (androidAccount) {
+    if (nativeAccount) {
       cacheReady.then(() => {
         const at = data.journal?.at;
         if (page.isConnected && !demo && !nativeNeedsLogin && at && Date.now() - at > 15 * 60_000 && navigator.onLine) syncAndroid();

@@ -44,7 +44,8 @@ public final class AccountLoginActivity extends Activity {
         loginPage.getSettings().setMixedContentMode(android.webkit.WebSettings.MIXED_CONTENT_NEVER_ALLOW);
         CookieManager cookies = CookieManager.getInstance();
         cookies.setAcceptCookie(true);
-        cookies.setAcceptThirdPartyCookies(loginPage, false);
+        // The official form embeds Yandex SmartCaptcha in a cross-site iframe.
+        cookies.setAcceptThirdPartyCookies(loginPage, true);
         loginPage.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {

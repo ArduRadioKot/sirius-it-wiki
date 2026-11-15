@@ -25,7 +25,6 @@ import java.util.Map;
 @CapacitorPlugin(name = "SiriusAccount")
 public final class AccountPlugin extends Plugin {
     static final String ORIGIN = "https://lks.siriusuniversity.ru";
-    private static final String SCHEDULE = "https://arduradiokot.github.io/sirius-it-wiki/data/schedule.json";
     private static final int MAX_PAGE_SIZE = 8 * 1024 * 1024;
     private static final Map<String, String> PAGES = new LinkedHashMap<>();
     static {
@@ -90,11 +89,26 @@ public final class AccountPlugin extends Plugin {
     public void schedule(PluginCall call) {
         scheduleWork.execute(() -> {
             try {
-                call.resolve(new JSObject(read(SCHEDULE, false, 2 * 1024 * 1024)));
+                JSObject data = new JSObject(read(WidgetSchedule.URL, false, 2 * 1024 * 1024));
+                WidgetSchedule.save(getContext(), data);
+                ScheduleWidget.redraw(getContext());
+                call.resolve(data);
             } catch (Exception error) {
                 call.reject("Не удалось обновить расписание.", "NETWORK");
             }
         });
+    }
+
+    @PluginMethod
+    public void setScheduleGroup(PluginCall call) {
+        if (WidgetSchedule.select(getContext(), call.getString("group"))) ScheduleWidget.redraw(getContext());
+        call.resolve();
+    }
+
+    @PluginMethod
+    public void widgetRoute(PluginCall call) {
+        MainActivity activity = (MainActivity) getActivity();
+        call.resolve(new JSObject().put("route", MainActivity.widgetRoute(activity.getIntent())));
     }
 
     @PluginMethod
@@ -141,7 +155,7 @@ public final class AccountPlugin extends Plugin {
         });
     }
 
-    private String read(String address, boolean account, int limit) throws Exception {
+    static String read(String address, boolean account, int limit) throws Exception {
         HttpURLConnection request = (HttpURLConnection) new URL(address).openConnection();
         try {
             request.setInstanceFollowRedirects(false);

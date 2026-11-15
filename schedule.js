@@ -48,6 +48,56 @@
     /^172\.(1[6-9]|2\d|3[0-1])\.\d{1,3}\.\d{1,3}$/.test(hostname);
   const canScrape = () => Boolean(window.SiriusSource);
   const nativeSchedule = window.Capacitor?.isNativePlatform?.() && window.Capacitor?.Plugins?.SiriusAccount;
+  const iosSchedule = window.Capacitor?.getPlatform?.() === 'ios' && nativeSchedule;
+  let endReminders = null, endRemindersBusy = false, endReminderError = '';
+  let liveTimer = null, liveTimerBusy = false, liveTimerError = '';
+  if (iosSchedule) {
+    iosSchedule.getEndReminderSettings().then(settings => {
+      endReminders = settings;
+      if (active()) render();
+    }).catch(() => {});
+    iosSchedule.getLiveTimerSettings().then(settings => {
+      liveTimer = settings;
+      if (active()) render();
+    }).catch(() => {});
+  }
+
+  async function toggleLiveTimer() {
+    if (liveTimerBusy) return;
+    liveTimerBusy = true;
+    liveTimerError = '';
+    render();
+    try {
+      liveTimer = await iosSchedule.setLiveTimerSettings({ enabled: !liveTimer.enabled });
+    } catch (error) {
+      liveTimerError = error.code === 'PERMISSION'
+        ? 'Разрешите «Активности» для Сириус Wiki в настройках iPhone.'
+        : 'Не удалось изменить настройку таймера.';
+    } finally {
+      liveTimerBusy = false;
+      if (active()) render();
+    }
+  }
+
+  async function setEndReminders(enabled, lead) {
+    if (endRemindersBusy) return;
+    endRemindersBusy = true;
+    endReminderError = '';
+    render();
+    try {
+      endReminders = await iosSchedule.setEndReminderSettings({ enabled, lead });
+    } catch (error) {
+      endReminderError = error.code === 'PERMISSION'
+        ? 'Разрешите уведомления для Сириус Wiki в настройках iPhone.'
+        : 'Не удалось обновить напоминания.';
+    } finally {
+      endRemindersBusy = false;
+      if (active()) render();
+    }
+  }
+  function syncWidgetGroup() {
+    nativeSchedule?.setScheduleGroup?.({ group }).catch(() => {});
+  }
   const localCollector = () => !nativeSchedule && canScrape() && isLocalHost(location.hostname);
   let deviceLoading = false;
   let lastDeviceAttempt = Number(get('sirius-device-attempt', '0')) || 0;
@@ -426,12 +476,23 @@
           <span id="notificationStatus" role="status">${escape(note)}</span>
           <span id="calendarStatus" role="status">${escape(calendarMessage)}</span>
         </div>
+        ${endReminders ? `<div class="schedule-reminders">
+          <label for="endReminderLead">До конца пары</label>
+          <select id="endReminderLead" ${endRemindersBusy ? 'disabled' : ''}>${[3, 5, 10].map(v => `<option value="${v}" ${v === endReminders.lead ? 'selected' : ''}>за ${v} мин</option>`).join('')}</select>
+          <button id="endReminderToggle" type="button" aria-pressed="${endReminders.enabled}" ${endRemindersBusy ? 'disabled' : ''}>${endReminders.enabled ? 'Выключить' : 'Напоминать'}</button>
+          <span id="endReminderStatus" role="status">${escape(endReminderError)}</span>
+        </div>` : ''}
+        ${liveTimer?.available ? `<div class="schedule-reminders">
+          <button id="liveTimerToggle" type="button" aria-pressed="${liveTimer.enabled}" ${liveTimerBusy ? 'disabled' : ''}>Таймер на экране блокировки</button>
+          <span id="liveTimerStatus" role="status">${escape(liveTimerError || (liveTimer.enabled ? 'Включён' : 'Выключен'))}</span>
+        </div>` : ''}
         <p class="schedule-meta schedule-meta-foot" role="status">${escape(statusLine())} · <a href="https://schedule.siriusuniversity.ru" target="_blank" rel="noopener">Источник</a></p>
       </footer>
     </section>`;
     document.getElementById('scheduleGroup').onchange = (e) => {
       group = e.target.value;
       put('sirius-group', group);
+      syncWidgetGroup();
       render();
       tick();
       if (!snapshot?.groups[group]) refresh();
@@ -448,6 +509,11 @@
       render();
     };
     document.getElementById('enableReminders').onclick = toggleReminders;
+    if (endReminders) {
+      document.getElementById('endReminderLead').onchange = (event) => setEndReminders(endReminders.enabled, Number(event.target.value));
+      document.getElementById('endReminderToggle').onclick = () => setEndReminders(!endReminders.enabled, endReminders.lead);
+    }
+    if (liveTimer?.available) document.getElementById('liveTimerToggle').onclick = toggleLiveTimer;
     document.getElementById('exportCalendar').onclick = exportCalendar;
     document.getElementById('googleCalendar').onclick = addToGoogle;
     document.getElementById('notionCalendar').onclick = addToNotion;
@@ -652,8 +718,16 @@
   }
   window.SiriusSchedule = {
     render, refresh, moveDate,
+    open: (requested) => /^\d{4}-\d{2}-\d{2}$/.test(requested || '') && Number.isFinite(instant({date: requested, start: '00:00'}))
+      ? setDate(requested, false) : render(),
     rows: () => lessons(), group: () => group, ready: () => Boolean(snapshot?.groups[group]),
-    setGroup: (value) => { if (GROUPS.includes(value)) { group = value; put('sirius-group', group); if (!snapshot?.groups[group]) refresh(); } },
+    setGroup: (value) => {
+      if (!GROUPS.includes(value)) return;
+      group = value;
+      put('sirius-group', group);
+      syncWidgetGroup();
+      if (!snapshot?.groups[group]) refresh();
+    },
     groups: GROUPS,
     accountSchedule: () => ({ group, rows: lessons(), from: snapshot?.fromDate, to: snapshot?.toDate }),
   };
@@ -669,5 +743,5 @@
   window.addEventListener('focus', refreshOnEnter);
   window.addEventListener('pageshow', refreshOnEnter);
   document.addEventListener('visibilitychange',()=>{if(document.hidden) return; const pending=refreshOnEnter(); tick(); return pending;});
-  setInterval(autoRefresh, 60000);setInterval(tick,15000);refreshOnEnter();
+  setInterval(autoRefresh, 60000);setInterval(tick,15000);syncWidgetGroup();refreshOnEnter();
 })();

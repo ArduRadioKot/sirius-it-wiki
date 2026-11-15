@@ -1,0 +1,5 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:id="@+id/widget_root" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:padding="12dp" android:background="@drawable/widget_background">
+<TextView android:id="@+id/widget_preview_heading" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="#62E5E0" android:textSize="13sp" android:text="Расписание на день" android:textStyle="bold"/>
+<TextView android:id="@+id/widget_preview_sample" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="#F4F8F8" android:textSize="16sp" android:text="10:20 · Линейная алгебра" android:layout_marginTop="6dp"/>
+<TextView android:id="@+id/widget_preview_second" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="#A7C7CB" android:textSize="13sp" android:text="11:50 · Математический анализ"/>
+</LinearLayout>

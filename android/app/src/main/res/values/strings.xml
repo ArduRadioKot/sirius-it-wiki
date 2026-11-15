@@ -5,4 +5,11 @@
     <string name="package_name">io.github.arduradiokot.siriuswiki</string>
     <string name="custom_url_scheme">io.github.arduradiokot.siriuswiki</string>
     <string name="account_login_back">Вернуться в Сириус Wiki</string>
+    <string name="widget_next">Ближайшая пара</string>
+    <string name="widget_day">Расписание на день</string>
+    <string name="widget_board">Учебная панель</string>
+    <string name="widget_next_description">Время, предмет и аудитория ближайшей пары</string>
+    <string name="widget_day_description">Пары на сегодня для выбранной группы</string>
+    <string name="widget_board_description">Расписание, личный кабинет и самопроверка</string>
+    <string name="widget_refresh">Обновить расписание</string>
 </resources>

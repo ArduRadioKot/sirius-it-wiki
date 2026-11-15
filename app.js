@@ -899,7 +899,7 @@ async function router() {
   const accountRoute = parts[0] === "study" && parts[1] === "account";
   if (parts[0] !== "schedule" && !accountRoute) await indexReady;
   if (!parts.length) home();
-  else if (parts[0] === "schedule") window.SiriusSchedule.render();
+  else if (parts[0] === "schedule") window.SiriusSchedule.open(new URLSearchParams(qs || "").get("date"));
   else if (accountRoute) window.SiriusStudentAccount.render(app, new URLSearchParams(qs || ""), window.SiriusSchedule.accountSchedule);
   else if (parts[0] === "life" && parts.length === 1) lifePage();
   else if (parts[0] === "life" && parts[1])
@@ -1093,6 +1093,17 @@ const indexLoad = loadIndex();
 // Later navigations render with whatever index is available; a failed first load keeps its error page.
 const indexReady = indexLoad.catch(() => {});
 window.addEventListener("hashchange", router);
+if (window.Capacitor?.isNativePlatform?.()) {
+  const openWidgetRoute = async () => {
+    const { route } = await window.Capacitor.Plugins.SiriusAccount.widgetRoute();
+    if (!route) return;
+    if (route === location.hash) await router();
+    else location.hash = route;
+  };
+  const fromWidget = () => openWidgetRoute().catch(() => {});
+  window.addEventListener("sirius-widget-open", fromWidget);
+  fromWidget();
+}
 if (location.hash.startsWith("#/schedule")) router();
 else indexLoad.then(router, () => {});
 
