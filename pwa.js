@@ -4,6 +4,20 @@
   const updateButton = document.getElementById('updateApp');
   const versionEl = document.getElementById('appVersion');
   const updateStatus = document.getElementById('updateStatus');
+  if (window.Capacitor?.isNativePlatform?.()) {
+    button.hidden = true;
+    if (versionEl) versionEl.textContent = 'Android 1.0';
+    if (updateButton) {
+      updateButton.disabled = false;
+      updateButton.textContent = 'Обновить расписание';
+      updateButton.onclick = async () => {
+        updateButton.disabled = true;
+        try { await window.SiriusSchedule?.refresh(); }
+        finally { updateButton.disabled = false; }
+      };
+    }
+    return;
+  }
   const VERSION_KEY = 'sirius-app-version';
   let prompt = null;
   let updating = false;

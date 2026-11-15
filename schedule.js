@@ -47,7 +47,8 @@
     /^192\.168\.\d{1,3}\.\d{1,3}$/.test(hostname) ||
     /^172\.(1[6-9]|2\d|3[0-1])\.\d{1,3}\.\d{1,3}$/.test(hostname);
   const canScrape = () => Boolean(window.SiriusSource);
-  const localCollector = () => canScrape() && isLocalHost(location.hostname);
+  const nativeSchedule = window.Capacitor?.isNativePlatform?.() && window.Capacitor?.Plugins?.SiriusAccount;
+  const localCollector = () => !nativeSchedule && canScrape() && isLocalHost(location.hostname);
   let deviceLoading = false;
   let lastDeviceAttempt = Number(get('sirius-device-attempt', '0')) || 0;
   let deviceMessage = '';
@@ -165,7 +166,7 @@
       }
     }
 
-    if (!shouldFetchServer(force)) {
+    if (!shouldFetchServer(force) && !(nativeSchedule && !snapshot)) {
       if (active()) render();
       tick();
       return;
@@ -177,13 +178,27 @@
       if (active()) render();
     }
     try {
-      const url = new URL('data/schedule.json', base);
-      url.searchParams.set('t', String(Date.now()));
-      const res = await fetch(url, {cache:'reload', signal:AbortSignal.timeout(20000)});
-      if (!res.ok) throw new Error('Schedule unavailable');
-      const data = await res.json();
+      let data;
+      if (nativeSchedule) {
+        try {
+          if (!navigator.onLine) throw new Error('Offline');
+          data = await nativeSchedule.schedule();
+          failure = false;
+        } catch {
+          if (snapshot) throw new Error('Schedule unavailable');
+          const bundled = await fetch(new URL('data/schedule.json', base));
+          data = await bundled.json();
+          failure = true;
+        }
+      } else {
+        const url = new URL('data/schedule.json', base);
+        url.searchParams.set('t', String(Date.now()));
+        const res = await fetch(url, { cache: 'reload', signal: AbortSignal.timeout(20000) });
+        if (!res.ok) throw new Error('Schedule unavailable');
+        data = await res.json();
+        failure = res.headers?.get('X-Sirius-Offline') === 'true';
+      }
       if (!valid(data)) throw new Error('Invalid schedule');
-      failure = res.headers?.get('X-Sirius-Offline') === 'true';
       const complete = incomingComplete(data);
       const newer = !snapshot || Date.parse(data.updatedAt) >= Date.parse(snapshot.updatedAt);
       const keepCompleteLocal = completeSnapshot() && !complete;

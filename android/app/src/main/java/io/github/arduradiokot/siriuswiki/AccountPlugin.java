@@ -1,0 +1,182 @@
+package io.github.arduradiokot.siriuswiki;
+
+import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
+import android.webkit.CookieManager;
+import androidx.activity.result.ActivityResult;
+import com.getcapacitor.JSObject;
+import com.getcapacitor.Plugin;
+import com.getcapacitor.PluginCall;
+import com.getcapacitor.PluginMethod;
+import com.getcapacitor.annotation.ActivityCallback;
+import com.getcapacitor.annotation.CapacitorPlugin;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ExecutorService;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+@CapacitorPlugin(name = "SiriusAccount")
+public final class AccountPlugin extends Plugin {
+    static final String ORIGIN = "https://lks.siriusuniversity.ru";
+    private static final String SCHEDULE = "https://arduradiokot.github.io/sirius-it-wiki/data/schedule.json";
+    private static final int MAX_PAGE_SIZE = 8 * 1024 * 1024;
+    private static final Map<String, String> PAGES = new LinkedHashMap<>();
+    static {
+        PAGES.put("journal", "/journal/list");
+        PAGES.put("trajectory", "/student/trajectory");
+        PAGES.put("dashboard", "/dashboard");
+    }
+    private final ExecutorService accountWork = Executors.newSingleThreadExecutor();
+    private final ExecutorService cacheWork = Executors.newSingleThreadExecutor();
+    private final ExecutorService scheduleWork = Executors.newSingleThreadExecutor();
+
+
+    static boolean isAccountUri(Uri uri) {
+        return "https".equals(uri.getScheme()) && "lks.siriusuniversity.ru".equals(uri.getHost())
+            && (uri.getPort() == -1 || uri.getPort() == 443) && uri.getUserInfo() == null;
+    }
+
+    static boolean isAccountPage(String path) {
+        if (path == null) return false;
+        return PAGES.containsValue(path) || path.startsWith("/dashboard/");
+    }
+
+    @PluginMethod
+    public void signIn(PluginCall call) {
+        startActivityForResult(call, new Intent(getContext(), AccountLoginActivity.class), "loginFinished");
+    }
+
+    @ActivityCallback
+    private void loginFinished(PluginCall call, ActivityResult result) {
+        if (call == null) return;
+        if (result.getResultCode() != Activity.RESULT_OK) {
+            call.reject("Вход отменён.", "CANCELLED");
+            return;
+        }
+        refresh(call);
+    }
+
+    @PluginMethod
+    public void refresh(PluginCall call) {
+        accountWork.execute(() -> {
+            try {
+                JSObject pages = new JSObject();
+                for (Map.Entry<String, String> page : PAGES.entrySet()) {
+                    try {
+                        pages.put(page.getKey(), read(ORIGIN + page.getValue(), true, MAX_PAGE_SIZE));
+                    } catch (IOException error) {
+                        if ("journal".equals(page.getKey())) throw error;
+                    }
+                }
+                JSObject result = new JSObject();
+                result.put("pages", pages);
+                call.resolve(result);
+            } catch (LoginRequired error) {
+                call.reject("Войдите в ЛК Сириуса, чтобы обновить данные.", "LOGIN_REQUIRED");
+            } catch (Exception error) {
+                call.reject("Не удалось загрузить данные ЛК Сириуса.", "NETWORK");
+            }
+        });
+    }
+
+    @PluginMethod
+    public void schedule(PluginCall call) {
+        scheduleWork.execute(() -> {
+            try {
+                call.resolve(new JSObject(read(SCHEDULE, false, 2 * 1024 * 1024)));
+            } catch (Exception error) {
+                call.reject("Не удалось обновить расписание.", "NETWORK");
+            }
+        });
+    }
+
+    @PluginMethod
+    public void loadCache(PluginCall call) {
+        cacheWork.execute(() -> {
+            try {
+                String value = new AccountCache(getContext()).read();
+                JSObject result = new JSObject();
+                if (value != null) result.put("value", value);
+                call.resolve(result);
+            } catch (Exception error) {
+                call.reject("Не удалось прочитать сохранённые данные.", "CACHE");
+            }
+        });
+    }
+
+    @PluginMethod
+    public void saveCache(PluginCall call) {
+        String value = call.getString("value");
+        if (value == null || value.length() > MAX_PAGE_SIZE) {
+            call.reject("Данные ЛК не удалось сохранить.", "CACHE");
+            return;
+        }
+        cacheWork.execute(() -> {
+            try {
+                AccountCache cache = new AccountCache(getContext());
+                if (value.isEmpty()) cache.clear();
+                else cache.write(value);
+                call.resolve();
+            } catch (Exception error) {
+                call.reject("Не удалось сохранить данные ЛК.", "CACHE");
+            }
+        });
+    }
+
+    @PluginMethod
+    public void clear(PluginCall call) {
+        cacheWork.execute(() -> {
+            new AccountCache(getContext()).clear();
+            getActivity().runOnUiThread(() -> CookieManager.getInstance().removeAllCookies(removed -> {
+                CookieManager.getInstance().flush();
+                call.resolve();
+            }));
+        });
+    }
+
+    private String read(String address, boolean account, int limit) throws Exception {
+        HttpURLConnection request = (HttpURLConnection) new URL(address).openConnection();
+        try {
+            request.setInstanceFollowRedirects(false);
+            request.setUseCaches(false);
+            request.setConnectTimeout(8000);
+            request.setReadTimeout(12000);
+            if (account) {
+                String cookies = CookieManager.getInstance().getCookie(address);
+                if (cookies == null || cookies.isEmpty()) throw new LoginRequired();
+                request.setRequestProperty("Cookie", cookies);
+            }
+            int status = request.getResponseCode();
+            if (account && (status == 401 || status == 403 || (status >= 300 && status < 400))) throw new LoginRequired();
+            if (status != 200) throw new IOException("HTTP " + status);
+            if (account) {
+                for (Map.Entry<String, java.util.List<String>> header : request.getHeaderFields().entrySet()) {
+                    if ("Set-Cookie".equalsIgnoreCase(header.getKey())) {
+                        for (String cookie : header.getValue()) CookieManager.getInstance().setCookie(address, cookie);
+                    }
+                }
+                CookieManager.getInstance().flush();
+            }
+            try (InputStream input = request.getInputStream(); ByteArrayOutputStream output = new ByteArrayOutputStream()) {
+                byte[] buffer = new byte[8192];
+                int count;
+                while ((count = input.read(buffer)) != -1) {
+                    if (output.size() + count > limit) throw new IOException("Response too large");
+                    output.write(buffer, 0, count);
+                }
+                return new String(output.toByteArray(), StandardCharsets.UTF_8);
+            }
+        } finally {
+            request.disconnect();
+        }
+    }
+
+    private static final class LoginRequired extends Exception {}
+}

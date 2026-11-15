@@ -1,0 +1,8 @@
+{
+  "appId": "io.github.arduradiokot.siriuswiki",
+  "appName": "Сириус Wiki",
+  "loggingBehavior": "none",
+  "webDir": "dist/android-web",
+  "server": { "androidScheme": "https" },
+  "android": { "allowMixedContent": false }
+}
