@@ -129,7 +129,7 @@
     const count = s.todays.length;
     const stats = count ? `<dl class="now-stats">
         <div><dt>До конца пар</dt><dd data-now-dayleft>${s.phase === 'after' ? 'свободен' : span(s.dayEnd - s.now)}</dd></div>
-        <div><dt>Осталось</dt><dd>${s.left} ${plural(s.left, 'пара', 'пары', 'пар')} из ${count}</dd></div>
+        <div><dt>Осталось пар</dt><dd>${s.left} из ${count}</dd></div>
         <div><dt>Свободен с</dt><dd>${escape(s.todays[count - 1].end)}</dd></div>
       </dl>` : '';
     const focus = v.focus ? `<h2 class="now-title">${escape(titleOf(v.focus))}</h2>` : '<h2 class="now-title">Расписание пока пустое</h2>';

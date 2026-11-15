@@ -17,6 +17,7 @@
   };
   const remember = () => storage.get(REMEMBER) !== 'false';
   function save() {
+    if (demo) return;
     if (!remember() || !Object.keys(data).length) return storage.drop(STORE);
     storage.set(STORE, JSON.stringify(data));
   }
@@ -355,6 +356,7 @@
   const currentGroup = () => window.SiriusSchedule?.group?.() || '';
   let redraw = () => {};
   function importPages(pages) {
+    if (demo) stopDemo();
     const loaded = [], failed = [];
     for (const key of Object.keys(sources)) {
       if (typeof pages?.[key] !== 'string' || pages[key].length > 12 * 1024 * 1024) continue;
@@ -398,7 +400,7 @@
   function renderOverview(root) {
     const marks = data.journal?.value;
     if (!marks) {
-      root.append(node('p', 'Подключите личный кабинет — здесь появятся средний балл, посещаемость и последние оценки.', 'empty-state'));
+      root.append(node('p', 'В загруженных данных нет электронного журнала. Обновите оценки из ЛК.', 'empty-state'));
       return;
     }
     const graded = marks.filter(m => m.grade !== null);
@@ -445,7 +447,7 @@
     }).sort((a, b) => (b.avg ?? -1) - (a.avg ?? -1) || a.name.localeCompare(b.name, 'ru'));
     for (const subject of rows) {
       const item = node('a', '', 'lk-subject');
-      item.href = '#/study/account?tab=grades';
+      item.href = '#/study/account?tab=grades' + (demo ? '&demo=1' : '');
       const head = node('div', '', 'lk-subject-head');
       head.append(node('strong', subject.name));
       const avg = node('span', subject.avg === null ? '—' : fmt(subject.avg), 'lk-avg' + (subject.avg === null ? '' : ' g-' + tone(subject.avg, scale)));
@@ -490,80 +492,212 @@
     };
   }
 
+  // ---------- Saved pages: plain HTML, Chrome's MHTML and Safari's web archive ----------
+  async function fileText(file) {
+    const bytes = new Uint8Array(await file.arrayBuffer());
+    let text = new TextDecoder('utf-8').decode(bytes);
+    if (/Content-Transfer-Encoding:\s*quoted-printable/i.test(text.slice(0, 200000))) {
+      // MHTML keeps the page quoted-printable: "=\n" soft breaks and "=3D" style bytes.
+      const source = text.replace(/=\r?\n/g, '');
+      const out = new Uint8Array(source.length);
+      let length = 0;
+      const encoder = new TextEncoder();
+      for (let i = 0; i < source.length; i++) {
+        const hex = source[i] === '=' ? source.slice(i + 1, i + 3) : '';
+        if (/^[0-9A-Fa-f]{2}$/.test(hex)) { out[length++] = parseInt(hex, 16); i += 2; }
+        else if (source.charCodeAt(i) < 128) out[length++] = source.charCodeAt(i);
+        else for (const byte of encoder.encode(source[i])) out[length++] = byte;
+      }
+      text = new TextDecoder('utf-8').decode(out.subarray(0, length));
+    }
+    return text;
+  }
+  function importFileText(text) {
+    const loaded = [];
+    for (const key of Object.keys(sources)) {
+      let value;
+      try { value = readFile(text, key); } catch { continue; }
+      // The notifications menu sits on every page; keep it only from the dashboard itself.
+      if (key === 'dashboard' && !value.news.length && (loaded.length || data.dashboard)) continue;
+      data[key] = { value, group: currentGroup(), at: Date.now() };
+      revisions[key] = (revisions[key] || 0) + 1;
+      loaded.push(key);
+    }
+    if (loaded.length) save();
+    return loaded;
+  }
+
+  // ---------- Example data, so the page explains itself before the account is connected ----------
+  let demo = false;
+  function startDemo() {
+    const subjects = ['Математический анализ', 'Линейная алгебра', 'Алгоритмы и структуры данных', 'Физика', 'История России'];
+    const grades = [5, 4, 5, 3, 4, 5, 5, 4, 2, 5];
+    const marks = [];
+    const day = 86400000, start = Date.now();
+    for (let i = 0; i < 36; i++) {
+      const date = new Date(start - i * day * 0.8).toISOString().slice(0, 10);
+      marks.push({
+        subject: subjects[i % subjects.length], date, time: 620, kind: i % 2 ? 'Лекции' : 'Практические занятия',
+        grade: i % 3 === 2 ? null : grades[i % grades.length], absent: i % 11 === 5,
+        topic: 'Тема занятия ' + (36 - i), homework: i % 5 === 0 ? 'Задачи к следующему занятию' : '',
+      });
+    }
+    data.journal = { value: marks, group: currentGroup(), at: Date.now() };
+    data.dashboard = { value: { notices: [{ title: 'Новая оценка в журнале', text: 'Линейная алгебра' }], news: [] }, group: currentGroup(), at: Date.now() };
+    demo = true;
+  }
+  function stopDemo() {
+    if (!demo) return;
+    demo = false;
+    for (const key of Object.keys(sources)) delete data[key];
+  }
+
+  const ua = String(navigator.userAgent || '');
+  const isIOS = /iPad|iPhone|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+  const isAndroid = /Android/i.test(ua);
+  const standalone = () => { try { return matchMedia('(display-mode: standalone)').matches || navigator.standalone === true; } catch { return false; } };
+  let device = isIOS ? 'ios' : isAndroid ? 'android' : 'desktop';
+  const devices = { ios: 'iPhone', android: 'Android', desktop: 'Компьютер' };
+
+  function steps() {
+    const open = `<a class="lk-button" href="${origin}/dashboard" target="_blank" rel="noopener noreferrer">Открыть ЛК</a>`;
+    const copy = '<button type="button" class="lk-button is-primary" data-lk-copy>Скопировать код</button>';
+    const paste = '<button type="button" class="lk-button is-primary" data-lk-paste>Вставить из буфера</button>';
+    const last = isIOS && standalone()
+      ? ['В окошке на сайте ЛК нажмите «Скопировать», вернитесь сюда и вставьте данные.', paste]
+      : ['В окошке на сайте ЛК нажмите «Открыть в вики». Оценки появятся на этой странице.', ''];
+    if (device === 'desktop') return [
+      ['Перетащите кнопку на панель закладок браузера. Панель показывается по Ctrl+Shift+B, на Mac — ⌘+Shift+B.', '<a class="lk-button is-primary lk-bookmarklet" data-lk-bookmarklet>Оценки → Вики</a>'],
+      ['Откройте ЛК, войдите и нажмите эту закладку.', open],
+      last,
+    ];
+    if (device === 'ios') return [
+      ['Скопируйте код закладки.', copy],
+      ['В Safari нажмите «Поделиться» → «Добавить закладку» и сохраните. Затем откройте «Закладки» → «Править», выберите её и вставьте код вместо адреса.', ''],
+      ['Откройте ЛК в Safari, войдите, откройте «Закладки» и нажмите сохранённую.', open],
+      last,
+    ];
+    return [
+      ['Скопируйте код закладки.', copy],
+      ['В Chrome нажмите ⋮ → ☆, затем ⋮ → «Закладки» → ⋮ у новой закладки → «Изменить». Назовите её «вики» и вставьте код в поле адреса.', ''],
+      ['Откройте ЛК, войдите, нажмите на адресную строку, наберите «вики» и выберите строку со звёздочкой.', open],
+      last,
+    ];
+  }
+
   function render(app, params, getSchedule) {
     const schedule = getSchedule();
     const tab = Object.hasOwn(tabs, params.get('tab')) ? params.get('tab') : 'overview';
-    const connected = Object.keys(data).length > 0;
+    if (demo && params.get('demo') !== '1') stopDemo();
+    const connected = () => Object.keys(data).length > 0;
     app.innerHTML = `<section class="page student-account">
-      <a class="journal-link journal-back" href="#/study">← Учёба</a>
-      <div class="page-top lk-top"><h1>Личный кабинет</h1><p class="journal-meta" data-lk-updated></p></div>
-      <nav class="journal-tabs" aria-label="Разделы личного кабинета"></nav>
-      <details class="journal-import" ${connected ? '' : 'open'}>
-        <summary>${connected ? 'Обновить данные из ЛК' : 'Подключить личный кабинет'}</summary>
-        <ol class="lk-steps">
-          <li><span>Перетащите кнопку в панель закладок. На телефоне скопируйте код и сохраните его как адрес новой закладки.</span>
-            <div class="lk-step-actions"><a class="lk-bookmarklet" data-lk-bookmarklet>Оценки → Вики</a><button type="button" data-lk-copy>Скопировать код</button></div></li>
-          <li><span>Откройте <a class="journal-link" href="${origin}/dashboard" target="_blank" rel="noopener noreferrer">lks.siriusuniversity.ru</a>, войдите и нажмите закладку.</span></li>
-          <li><span>Нажмите «Открыть в вики». Если вики установлена как приложение на iPhone, выберите «Скопировать», а здесь — «Вставить из буфера».</span>
-            <div class="lk-step-actions"><button type="button" data-lk-paste>Вставить из буфера</button></div></li>
-        </ol>
-        <p class="journal-meta" data-lk-status role="status"></p>
+      <a class="back-link" href="#/study"><span class="icon icon-arrow-left" aria-hidden="true"></span>Учёба</a>
+      <header class="lk-head">
+        <div><h1>Личный кабинет</h1><p class="journal-meta" data-lk-updated></p></div>
+        <button type="button" class="lk-button" data-lk-refresh hidden>Обновить оценки</button>
+      </header>
+      <div class="lk-demo" data-lk-demo-bar hidden>
+        <span>Это пример с выдуманными оценками.</span>
+        <button type="button" class="lk-button is-primary" data-lk-demo-stop>Подключить свой ЛК</button>
+      </div>
+      <section class="lk-connect" data-lk-connect hidden>
+        <h2 data-lk-connect-title></h2>
+        <p class="lk-lead">Сайт ЛК не отдаёт оценки другим сайтам, поэтому их переносит закладка в вашем браузере. Пароль вы вводите только на lks.siriusuniversity.ru, оценки остаются на этом устройстве.</p>
+        <div class="lk-devices" role="group" aria-label="Устройство"></div>
+        <ol class="lk-steps"></ol>
+        <p class="lk-status" data-lk-status role="status"></p>
         <details class="lk-files">
-          <summary>Загрузить сохранённые страницы вручную</summary>
-          <p class="journal-meta">Группа в расписании: <strong></strong>. Сохраните раздел ЛК через «Сохранить как» в формате HTML и выберите файл.</p>
-          <div data-journal-sources></div>
+          <summary>Не получается? Загрузите страницу файлом</summary>
+          <p class="journal-meta">Войдите в ЛК и сохраните страницу «Электронный журнал»: на компьютере — «Сохранить как», на iPhone — «Поделиться» → «Параметры» → «Веб-архив» → «Сохранить в Файлы». Затем выберите файл здесь. Так же можно добавить «Учебную траекторию» и главную ЛК.</p>
+          <input type="file" multiple accept=".html,.htm,.mhtml,.mht,.webarchive,text/html" aria-label="Сохранённые страницы ЛК">
         </details>
-        <div class="lk-privacy">
-          <label><input type="checkbox" data-lk-remember ${remember() ? 'checked' : ''}> Хранить данные на этом устройстве</label>
-          <button type="button" data-journal-clear>Удалить загруженные данные</button>
-        </div>
-        <p class="journal-meta">Пароль вводится только на сайте университета. Оценки никуда не отправляются и лежат в этом браузере.</p>
-      </details>
+        <div class="lk-connect-foot" data-lk-connect-foot></div>
+      </section>
+      <nav class="journal-tabs" aria-label="Разделы личного кабинета" hidden></nav>
       <label class="journal-semester" hidden>Семестр <select></select></label>
       <div data-journal-content></div>
+      <details class="lk-data" data-lk-data hidden>
+        <summary>Данные на этом устройстве</summary>
+        <label><input type="checkbox" data-lk-remember ${remember() ? 'checked' : ''}> Хранить оценки на этом устройстве</label>
+        <p class="journal-meta">Если выключить, оценки пропадут после закрытия вкладки.</p>
+        <button type="button" class="lk-button" data-journal-clear>Удалить оценки с устройства</button>
+      </details>
     </section>`;
     const page = app.querySelector('.student-account');
-    const content = page.querySelector('[data-journal-content]');
-    const status = page.querySelector('[data-lk-status]');
-    page.querySelector('.lk-files strong').textContent = schedule.group;
-    const selectTerm = page.querySelector('.journal-semester select');
+    const $ = selector => page.querySelector(selector);
+    const content = $('[data-journal-content]');
+    const status = $('[data-lk-status]');
+    const connect = $('[data-lk-connect]');
+    const nav = $('.journal-tabs');
+    const selectTerm = $('.journal-semester select');
+    let connectOpen = false;
     for (const [key, title] of Object.entries(tabs)) {
-      const item = link(title, '#/study/account?tab=' + key);
+      const item = link(title, '#/study/account?tab=' + key + (demo ? '&demo=1' : ''));
       if (key === tab) item.setAttribute('aria-current', 'page');
-      page.querySelector('nav').append(item);
+      nav.append(item);
     }
-    const mark = page.querySelector('[data-lk-bookmarklet]');
-    mark.href = bookmarklet();
-    mark.onclick = event => { event.preventDefault(); status.textContent = 'Эту кнопку нужно перетащить в закладки, а нажимать уже на сайте ЛК.'; };
-    page.querySelector('[data-lk-copy]').onclick = async () => {
-      try { await navigator.clipboard.writeText(decodeURIComponent(bookmarklet())); status.textContent = 'Код закладки скопирован.'; }
-      catch { status.textContent = 'Не получилось скопировать. Перетащите кнопку в закладки.'; }
-    };
-    page.querySelector('[data-lk-paste]').onclick = async () => {
-      try {
-        const payload = JSON.parse(await navigator.clipboard.readText());
-        if (payload?.type !== 'sirius-lk') throw new Error();
-        const result = importPages(payload.pages);
-        status.textContent = result.loaded.length ? `Загружено разделов: ${result.loaded.length}.` : 'В буфере нет данных ЛК.';
-      } catch { status.textContent = 'В буфере нет данных из закладки. Скопируйте их на сайте ЛК ещё раз.'; }
-    };
-    page.querySelector('[data-lk-remember]').onchange = event => {
-      storage.set(REMEMBER, String(event.target.checked));
-      save();
-      status.textContent = event.target.checked ? 'Данные будут храниться на этом устройстве.' : 'Данные удалятся, когда вы закроете вкладку.';
-    };
+    nav.querySelector('[aria-current]')?.scrollIntoView({ block: 'nearest', inline: 'center' });
+
+    function drawSteps() {
+      const box = $('.lk-devices');
+      box.replaceChildren();
+      for (const [key, title] of Object.entries(devices)) {
+        const button = node('button', title);
+        button.type = 'button';
+        button.setAttribute('aria-pressed', String(key === device));
+        button.onclick = () => { device = key; drawSteps(); };
+        box.append(button);
+      }
+      $('.lk-steps').innerHTML = steps().map(([text, action]) => `<li><span>${text}</span>${action ? `<div class="lk-step-action">${action}</div>` : ''}</li>`).join('');
+      const mark = $('[data-lk-bookmarklet]');
+      if (mark) {
+        mark.href = bookmarklet();
+        mark.onclick = event => { event.preventDefault(); status.textContent = 'Кнопку нужно перетащить в закладки, а нажимать — уже на сайте ЛК.'; };
+      }
+      const copy = $('[data-lk-copy]');
+      if (copy) copy.onclick = async () => {
+        try { await navigator.clipboard.writeText(decodeURIComponent(bookmarklet())); status.textContent = 'Код скопирован. Теперь создайте закладку и вставьте его вместо адреса.'; }
+        catch { status.textContent = 'Браузер не дал скопировать код. Откройте вики в Safari или Chrome и попробуйте ещё раз.'; }
+      };
+      const paste = $('[data-lk-paste]');
+      if (paste) paste.onclick = async () => {
+        try {
+          const payload = JSON.parse(await navigator.clipboard.readText());
+          if (payload?.type !== 'sirius-lk') throw new Error();
+          if (!importPages(payload.pages).loaded.length) status.textContent = 'В буфере нет оценок. Скопируйте их на сайте ЛК ещё раз.';
+        } catch { status.textContent = 'В буфере нет данных из закладки. Нажмите «Скопировать» на сайте ЛК и вернитесь сюда.'; }
+      };
+    }
+
     const draw = () => {
       if (!page.isConnected) return;
-      const stamp = Math.max(0, ...Object.values(data).map(entry => entry.at || 0));
-      page.querySelector('[data-lk-updated]').textContent = stamp ? 'Обновлено ' + new Date(stamp).toLocaleString('ru-RU', { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' }) : '';
+      const ready = connected();
+      const stamp = demo ? 0 : Math.max(0, ...Object.values(data).map(entry => entry.at || 0));
+      $('[data-lk-updated]').textContent = stamp ? 'Обновлено ' + new Date(stamp).toLocaleString('ru-RU', { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' }) : '';
+      $('[data-lk-demo-bar]').hidden = !demo;
+      $('[data-lk-refresh]').hidden = !ready || demo;
+      $('[data-lk-refresh]').textContent = connectOpen ? 'Скрыть' : 'Обновить оценки';
+      $('[data-lk-data]').hidden = !ready || demo;
+      connect.hidden = ready && !connectOpen;
+      $('[data-lk-connect-title]').textContent = ready ? 'Обновить оценки' : 'Подключите ЛК, чтобы видеть оценки';
+      const foot = $('[data-lk-connect-foot]');
+      foot.replaceChildren();
+      if (!ready) {
+        const example = node('button', 'Посмотреть на примере', 'lk-button');
+        example.type = 'button';
+        example.onclick = () => { startDemo(); location.hash = '#/study/account?demo=1'; };
+        foot.append(example);
+      }
+      nav.hidden = !ready;
       content.replaceChildren();
       selectTerm.parentElement.hidden = true;
+      if (!ready) return;
       if (tab === 'overview') return renderOverview(content);
       if (tab === 'session') return renderSession(content, getSchedule(), selectTerm);
       if (tab !== 'news') return renderJournal(content, tab);
       const dashboard = data.dashboard?.value;
       if (!dashboard) {
-        content.append(node('p', 'Подключите личный кабинет, чтобы видеть новости и уведомления.', 'empty-state'));
+        content.append(node('p', 'Новости и уведомления появятся после следующего обновления из ЛК.', 'empty-state'));
         return;
       }
       for (const [key, title] of [['notices', 'Уведомления'], ['news', 'Новости']]) {
@@ -572,55 +706,52 @@
         if (!dashboard[key].length) block.append(node('p', 'Записей нет.', 'journal-meta'));
       }
     };
-    selectTerm.onchange = () => { if (data.trajectory) { data.trajectory.semester = selectTerm.value; save(); } draw(); };
-    const updates = page.querySelector('[data-journal-sources]');
-    const clear = page.querySelector('[data-journal-clear]');
-    const statuses = [];
-    for (const [key, source] of Object.entries(sources)) {
-      const block = node('div', '', 'journal-source');
-      const input = node('input');
-      input.type = 'file';
-      input.accept = '.html,.htm,text/html';
-      input.setAttribute('aria-label', source.title + ', загрузить HTML');
-      const fileStatus = node('p', data[key] ? 'Данные загружены для ' + data[key].group : '', 'journal-meta');
-      fileStatus.setAttribute('role', 'status');
-      statuses.push(fileStatus);
-      block.append(link(source.title + ' ↗', origin + source.path, true), input, fileStatus);
-      updates.append(block);
-      input.onchange = async () => {
-        const file = input.files[0];
-        input.value = '';
-        if (!file) return;
-        const revision = revisions[key] = (revisions[key] || 0) + 1;
-        fileStatus.textContent = 'Читаем файл…';
-        try {
-          if (file.size > 12 * 1024 * 1024) throw new Error('Файл больше 12 МБ. Сохраните страницу в формате «Только HTML».');
-          const value = readFile(await file.text(), key);
-          if (!page.isConnected || revisions[key] !== revision) return;
-          data[key] = { value, group: schedule.group, at: Date.now() };
-          save();
-          fileStatus.textContent = 'Данные загружены для ' + schedule.group;
-          draw();
-        } catch (error) {
-          if (page.isConnected && revisions[key] === revision) fileStatus.textContent = error.message;
-        }
-      };
-    }
-    clear.onclick = () => {
+
+    $('[data-lk-refresh]').onclick = () => { connectOpen = !connectOpen; draw(); if (connectOpen) connect.scrollIntoView({ block: 'nearest' }); };
+    $('[data-lk-demo-stop]').onclick = () => { stopDemo(); location.hash = '#/study/account'; };
+    $('[data-lk-remember]').onchange = event => { storage.set(REMEMBER, String(event.target.checked)); save(); };
+    $('[data-journal-clear]').onclick = () => {
       for (const key of Object.keys(sources)) { revisions[key] = (revisions[key] || 0) + 1; delete data[key]; }
       storage.drop(STORE);
-      for (const s of statuses) s.textContent = '';
-      status.textContent = 'Данные удалены.';
+      connectOpen = false;
       draw();
+      status.textContent = 'Оценки удалены с этого устройства.';
+    };
+    selectTerm.onchange = () => { if (data.trajectory) { data.trajectory.semester = selectTerm.value; save(); } draw(); };
+    const input = $('.lk-files input');
+    input.onchange = async () => {
+      const files = [...input.files];
+      input.value = '';
+      if (!files.length) return;
+      if (demo) stopDemo();
+      status.textContent = 'Читаем файл…';
+      const loaded = new Set();
+      for (const file of files) {
+        if (file.size > 20 * 1024 * 1024) continue;
+        try { for (const key of importFileText(await fileText(file))) loaded.add(key); } catch {}
+      }
+      if (!page.isConnected) return;
+      if (demo === false && loaded.size) connectOpen = false;
+      draw();
+      status.textContent = loaded.size
+        ? 'Загружено: ' + [...loaded].map(key => sources[key].title).join(', ') + '.'
+        : 'В файле нет данных ЛК. Сохраните страницу после входа в личный кабинет.';
     };
     redraw = () => {
       if (!page.isConnected) return;
-      status.textContent = 'Данные из ЛК обновлены.';
+      connectOpen = false;
+      if (location.hash.includes('demo=1')) { location.hash = '#/study/account'; return; }
       draw();
     };
+    drawSteps();
     draw();
     refreshSession = () => { if (tab === 'session' && page.isConnected) draw(); };
   }
 
-  window.SiriusStudentAccount = { render, lessonRecord, summary, refreshSchedule: () => refreshSession() };
+  window.SiriusStudentAccount = {
+    render,
+    lessonRecord: (slot, group) => demo ? [] : lessonRecord(slot, group),
+    summary: () => demo ? null : summary(),
+    refreshSchedule: () => refreshSession(),
+  };
 })();
