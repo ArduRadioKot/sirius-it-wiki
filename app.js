@@ -341,30 +341,70 @@ function home() {
     .filter((a) => /^\d{4}-\d{2}-\d{2}$/.test(a.day))
     .sort((a, b) => b.day.localeCompare(a.day) || a.title.localeCompare(b.title, "ru"))
     .slice(0, 6);
+  const lk = window.SiriusStudentAccount?.summary?.();
+  const groups = window.SiriusSchedule?.groups || [];
+  const group = window.SiriusSchedule?.group?.() || "";
+  const num = (n) => n.toLocaleString("ru", { maximumFractionDigits: 2 });
+  const zone = { timeZone: "Europe/Moscow" };
+  const hour = Number(new Intl.DateTimeFormat("ru-RU", { ...zone, hour: "numeric", hourCycle: "h23" }).format(new Date()));
+  const greeting = hour < 5 ? "Доброй ночи" : hour < 12 ? "Доброе утро" : hour < 18 ? "Добрый день" : "Добрый вечер";
+  const dateTitle = new Date().toLocaleDateString("ru-RU", { ...zone, weekday: "long", day: "numeric", month: "long" }).replace(/^./, (c) => c.toUpperCase());
+  const icon = (d) => `<span class="home-icon" aria-hidden="true"><svg viewBox="0 0 24 24">${d}</svg></span>`;
+  const lkBody = lk
+    ? `<div class="home-lk-figures">
+          <strong class="home-lk-avg">${lk.average === null ? "—" : num(lk.average)}</strong>
+          <span>средний балл${lk.attendance === null ? "" : ` · ${lk.attendance}% посещений`}</span>
+        </div>
+        ${lk.recent.length ? `<div class="lk-chips">${lk.recent.slice(0, 8).reverse().map((m) => `<span class="lk-grade g-${lk.tone(m.grade)}" title="${esc(m.subject)}">${esc(String(m.grade))}</span>`).join("")}</div>` : ""}`
+    : `<p>Оценки и посещаемость из ЛК — подключаются одной закладкой</p><span class="home-lk-cta">Подключить</span>`;
   app.innerHTML = `
-    <section class="hero">
-      <div class="hero-banner">
-        <span class="hero-deco hero-deco-circles" aria-hidden="true"></span>
-        <span class="hero-deco hero-deco-plus" aria-hidden="true"></span>
-        <span class="hero-deco hero-deco-rings" aria-hidden="true"></span>
-        <h1><span>Университет</span> <span>Сириус</span></h1>
-        <p class="hero-tagline">Вики про учёбу и жизнь</p>
-        <p class="hero-text">Инструкции, конспекты, полезные места и ответы на вопросы, которые обычно приходится искать в чатах.</p>
-        <div class="hero-actions"><a class="hero-cta" href="#/schedule">Открыть расписание</a><span class="hero-chevrons" aria-hidden="true"></span></div>
+    <section class="home-hero">
+      <div class="home-hero-top">
+        <div>
+          <p class="home-greet">${greeting}</p>
+          <h1>${esc(dateTitle)}</h1>
+        </div>
+        ${groups.length ? `<label class="home-group"><span class="visually-hidden">Группа</span><select id="homeGroup">${groups.map((g) => `<option ${g === group ? "selected" : ""}>${esc(g)}</option>`).join("")}</select></label>` : ""}
       </div>
-      <a class="section-card study" href="#/study">
-        <img class="card-art" src="assets/cards/study.svg" alt="" loading="lazy">
-        <h2>Учёба</h2>${ROUND_ARROW}
+      <div class="home-now" data-now-home></div>
+    </section>
+    <section class="home-grid" aria-label="Разделы">
+      <a class="home-tile home-lk${lk ? "" : " is-empty"}" href="#/study/account">
+        ${icon('<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>')}
+        <h2>Личный кабинет</h2>
+        ${lkBody}
       </a>
-      <a class="section-card life" href="#/life">
-        <img class="card-art" src="assets/cards/campus.png" alt="" loading="lazy">
-        <h2>Жизнь</h2>${ROUND_ARROW}
+      <a class="home-tile" href="#/schedule">
+        ${icon('<rect x="3" y="5" width="18" height="16" rx="3"/><path d="M8 3v4m8-4v4M3 10h18"/>')}
+        <h2>Расписание</h2>
+        <p>Неделя, аудитории, напоминания и календарь</p>
+      </a>
+      <a class="home-tile" href="#/study">
+        ${icon('<path d="M12 6v15M12 6C9 4 6 3 3 4v15c3-1 6 0 9 2 3-2 6-3 9-2V4c-3-1-6 0-9 2Z"/>')}
+        <h2>Конспекты</h2>
+        <p>${index.articles.length} материалов по дням и предметам</p>
+      </a>
+      <a class="home-tile" href="#/study/review">
+        ${icon('<path d="m9 12 2 2 4-4"/><circle cx="12" cy="12" r="9"/>')}
+        <h2>Самопроверка</h2>
+        <p>Тесты по конспектам с разбором ответов</p>
+      </a>
+      <a class="home-tile" href="#/life">
+        ${icon('<path d="M20.8 5.7a5 5 0 0 0-7.1 0L12 7.4l-1.7-1.7a5 5 0 0 0-7.1 7.1L12 21l8.8-8.2a5 5 0 0 0 0-7.1Z"/>')}
+        <h2>Жизнь</h2>
+        <p>Кампус, транспорт и сервисы</p>
       </a>
     </section>
     <section class="latest">
-      <div class="section-heading"><h2>Последние материалы</h2><p>${index.articles.length} материалов в учебной базе</p></div>
+      <div class="section-heading"><h2>Свежие конспекты</h2><a href="#/study">Все материалы</a></div>
       <div class="article-list">${latest.map(tile).join("") || '<div class="empty-state">Пока нет статей.</div>'}</div>
     </section>`;
+  window.SiriusNow?.mount(app.querySelector("[data-now-home]"));
+  const groupSelect = app.querySelector("#homeGroup");
+  if (groupSelect) groupSelect.onchange = () => {
+    window.SiriusSchedule.setGroup(groupSelect.value);
+    window.SiriusNow?.mount(app.querySelector("[data-now-home]"));
+  };
 }
 
 function tile(item, i = 0) {
@@ -377,7 +417,7 @@ function tile(item, i = 0) {
 }
 
 function lifePage() {
-  app.innerHTML = `<section class="page"><div class="page-top"><div><span class="eyebrow">Раздел 02</span><h1>Жизнь</h1></div><p class="page-description">Всё, что помогает быстрее освоиться: кампус, инфраструктура, документы, мероприятия, бытовые вопросы и полезные советы студентов.</p></div>
+  app.innerHTML = `<section class="page"><div class="page-top"><div><h1>Жизнь</h1></div><p class="page-description">Всё, что помогает быстрее освоиться: кампус, инфраструктура, документы, мероприятия, бытовые вопросы и полезные советы студентов.</p></div>
   <div class="content-layout"><aside class="sidebar"><p class="sidebar-title">Материалы</p>${index.life.map((x) => `<a href="${routeFor(x)}">${esc(x.title)}</a>`).join("")}</aside><div class="entries">${index.life.map(entryRow).join("") || '<div class="empty-state">Добавь Markdown-файлы в папку life/. На GitHub Pages они появятся автоматически после следующего push и деплоя.</div>'}</div></div></section>`;
 }
 
@@ -472,7 +512,7 @@ function studyPage({ day = null, subject = null, view = "day" } = {}) {
           )
           .join("");
 
-  app.innerHTML = `<section class="page"><div class="page-top"><div><span class="eyebrow">Раздел 01</span><h1>Учёба</h1></div><p class="page-description">Конспекты и учебные материалы по дням и предметам. Выберите нужную дату или дисциплину в списке.</p></div>
+  app.innerHTML = `<section class="page"><div class="page-top"><div><h1>Учёба</h1></div><p class="page-description">Конспекты и учебные материалы по дням и предметам. Выберите нужную дату или дисциплину в списке.</p></div>
   <a class="study-review" href="#/study/review"><img class="study-review-art" src="assets/cards/pattern-23.svg" alt="" loading="lazy"><div class="study-review-text"><span class="study-review-title">Самопроверка</span><p>Короткие тесты по конспектам с разбором каждого ответа</p><span class="study-review-meta">${questionsLabel(questionCount)} · ${subjectCount} ${plural(subjectCount, "предмет", "предмета", "предметов")}</span></div>${ROUND_ARROW}</a>
   <a class="study-review" href="#/study/matan"><img class="study-review-art" src="assets/cards/pattern-24.svg" alt="" loading="lazy"><div class="study-review-text"><span class="study-review-title">Курс математического анализа</span><p>Уроки, интерактивный учебник, тренажёры и карточки к коллоквиуму</p><span class="study-review-meta">9 уроков · 6 глав · 26 вопросов</span></div>${ROUND_ARROW}</a>
   <a class="study-review" href="#/study/linear"><img class="study-review-art" src="assets/cards/pattern-22.svg" alt="" loading="lazy"><div class="study-review-text"><span class="study-review-title">Учебник по линейной алгебре</span><p>Планиметрия, движения плоскости и доказательства к коллоквиуму</p><span class="study-review-meta">6 глав · 17 билетов · 34 разбора</span></div>${ROUND_ARROW}</a>
@@ -855,10 +895,10 @@ async function router() {
   const [path, qs] = raw.split("?");
   const parts = path.split("/").filter(Boolean).map(safeDecode);
 
-  const currentSection = `#/${parts[0] || ""}`;
+  const currentSection = parts[0] === "study" && parts[1] === "account" ? "#/study/account" : `#/${parts[0] || ""}`;
   document.querySelectorAll(".mobile-nav a").forEach((link) => {
     if (link.getAttribute("href") === currentSection) {
-      link.setAttribute("aria-current", parts.length > 1 ? "location" : "page");
+      link.setAttribute("aria-current", parts.length > 1 && currentSection !== "#/study/account" ? "location" : "page");
     } else {
       link.removeAttribute("aria-current");
     }

@@ -362,8 +362,7 @@
     const rows = lessons().filter((e) => e.date === date);
     const slots = slotsFor(rows);
     const covered = Array.isArray(snapshot?.groups[group]) && date >= snapshot.fromDate && date <= snapshot.toDate;
-    const [headline, detail] = nextText();
-    const dayTitle = dayLabel(date, { weekday: 'long', day: 'numeric', month: 'long' });
+        const dayTitle = dayLabel(date, { weekday: 'long', day: 'numeric', month: 'long' });
     const empty = `<div class="empty-state">${covered ? 'В этот день занятий нет.' : 'На этот день нет сохранённых данных.' + (snapshot ? ` Период: ${snapshot.fromDate} — ${snapshot.toDate}.` : '')}</div>`;
     const note = notificationError || (enabled ? 'Уведомления включены' : '');
     document.getElementById('app').innerHTML = `<section class="schedule-page">
@@ -384,10 +383,7 @@
       ${deviceBanner()}
       <div class="schedule-shell">
         <aside class="schedule-rail">
-          <div class="schedule-next">
-            <strong id="nextHeadline">${escape(headline)}</strong>
-            <span id="nextDetail">${escape(detail)}</span>
-          </div>
+          <div class="schedule-now" data-now-mount aria-live="off"></div>
           ${weekNav()}
           <p class="schedule-meta schedule-meta-rail" role="status">${escape(statusLine())} · <a href="https://schedule.siriusuniversity.ru" target="_blank" rel="noopener">Источник</a></p>
         </aside>
@@ -450,6 +446,7 @@
       btn.onclick = () => setDate(btn.dataset.date);
     });
     paintTime();
+    window.SiriusNow?.mount(document.querySelector('[data-now-mount]'), { compact: true });
   }
   // The worker can still be installing on the first launch; never wait forever (e.g. local preview has none).
   async function worker() {
@@ -640,6 +637,9 @@
   }
   window.SiriusSchedule = {
     render, refresh, moveDate,
+    rows: () => lessons(), group: () => group, ready: () => Boolean(snapshot?.groups[group]),
+    setGroup: (value) => { if (GROUPS.includes(value)) { group = value; put('sirius-group', group); if (!snapshot?.groups[group]) refresh(); } },
+    groups: GROUPS,
     accountSchedule: () => ({ group, rows: lessons(), from: snapshot?.fromDate, to: snapshot?.toDate }),
   };
   let lastEnter = 0;

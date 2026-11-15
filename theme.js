@@ -30,8 +30,10 @@
     if (!order.includes(choice)) choice = "system";
     const dark = choice === "dark" || (choice === "system" && media.matches);
     document.documentElement.dataset.theme = dark ? "dark" : "light";
-    const meta = document.querySelector('meta[name="theme-color"]');
-    if (meta) meta.content = dark ? "#000000" : "#00a7a7";
+    document.querySelectorAll('meta[name="theme-color"]').forEach((meta) => {
+      meta.removeAttribute("media");
+      meta.content = dark ? "#000000" : "#00a7a7";
+    });
     try {
       localStorage.setItem("sirius-theme", choice);
     } catch {}

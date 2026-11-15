@@ -1,0 +1,13 @@
+const fs=require('fs'),vm=require('vm'),assert=require('assert');
+const ctx={window:{},document:{addEventListener(){}},navigator:{},Intl,Date,Math,String,Number,Set,Map,setInterval,clearInterval,console};
+vm.runInNewContext(fs.readFileSync(require('path').join(__dirname,'..','now.js'),'utf8'),ctx);
+const {state,clock,span}=ctx.window.SiriusNow;
+const rows=[{date:'2026-11-16',start:'10:20',end:'11:40',title:'A'},{date:'2026-11-16',start:'10:20',end:'11:40',title:'A'},{date:'2026-11-16',start:'11:55',end:'13:15',title:'B'},{date:'2026-11-17',start:'09:00',end:'10:20',title:'C'}];
+const t=s=>new Date(s+'+03:00').getTime();
+let s=state(rows,t('2026-11-16T10:50:00'));assert.equal(s.phase,'lesson');assert.equal(s.todays.length,2);assert.equal(s.left,2);
+s=state(rows,t('2026-11-16T11:45:00'));assert.equal(s.phase,'break');assert.equal(s.nextToday.start,'11:55');
+s=state(rows,t('2026-11-16T08:00:00'));assert.equal(s.phase,'before');
+s=state(rows,t('2026-11-16T14:00:00'));assert.equal(s.phase,'after');assert.equal(s.upcoming.list[0].title,'C');assert.equal(s.left,0);
+s=state(rows,t('2026-11-15T12:00:00'));assert.equal(s.phase,'none');
+assert.equal(clock(65000),'01:05');assert.equal(clock(3725000),'1:02:05');assert.equal(span(95*60000),'1 ч 35 мин');
+console.log('now.js ok');
