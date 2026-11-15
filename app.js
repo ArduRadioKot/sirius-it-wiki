@@ -342,12 +342,7 @@ function home() {
     .sort((a, b) => b.day.localeCompare(a.day) || a.title.localeCompare(b.title, "ru"))
     .slice(0, 6);
   const lk = window.SiriusStudentAccount?.summary?.();
-  const groups = window.SiriusSchedule?.groups || [];
-  const group = window.SiriusSchedule?.group?.() || "";
   const num = (n) => n.toLocaleString("ru", { maximumFractionDigits: 2 });
-  const dateTitle = new Date()
-    .toLocaleDateString("ru-RU", { timeZone: "Europe/Moscow", weekday: "short", day: "numeric", month: "long" })
-    .replace(/^./, (c) => c.toUpperCase());
   const lkText = lk
     ? `<p>${lk.average === null ? "Оценок пока нет" : `Средний балл ${num(lk.average)}`}${lk.attendance === null ? "" : `, посещаемость ${lk.attendance}%`}</p>
        ${lk.recent.length ? `<div class="lk-chips">${lk.recent.slice(0, 8).reverse().map((m) => `<span class="lk-grade g-${lk.tone(m.grade)}" title="${esc(m.subject)}">${esc(String(m.grade))}</span>`).join("")}</div>` : ""}`
@@ -360,14 +355,8 @@ function home() {
         <span class="hero-deco hero-deco-rings" aria-hidden="true"></span>
         <h1><span>Университет</span> <span>Сириус</span></h1>
         <p class="hero-tagline">Вики про учёбу и жизнь</p>
-        <div class="home-now">
-          <div class="home-now-head">
-            <strong>${esc(dateTitle)}</strong>
-            ${groups.length ? `<label><span class="visually-hidden">Группа</span><select id="homeGroup">${groups.map((g) => `<option ${g === group ? "selected" : ""}>${esc(g)}</option>`).join("")}</select></label>` : ""}
-          </div>
-          <div data-now-home></div>
-          <a class="home-now-link" href="#/schedule">Открыть расписание</a>
-        </div>
+        <p class="hero-text">Инструкции, конспекты, полезные места и ответы на вопросы, которые обычно приходится искать в чатах.</p>
+        <div class="hero-actions"><a class="hero-cta" href="#/schedule">Открыть расписание</a><span class="hero-chevrons" aria-hidden="true"></span></div>
       </div>
       <a class="section-card study" href="#/study">
         <img class="card-art" src="assets/cards/study.svg" alt="" loading="lazy">
@@ -386,12 +375,6 @@ function home() {
       <div class="section-heading"><h2>Последние материалы</h2><p>${index.articles.length} материалов в учебной базе</p></div>
       <div class="article-list">${latest.map(tile).join("") || '<div class="empty-state">Пока нет статей.</div>'}</div>
     </section>`;
-  window.SiriusNow?.mount(app.querySelector("[data-now-home]"));
-  const groupSelect = app.querySelector("#homeGroup");
-  if (groupSelect) groupSelect.onchange = () => {
-    window.SiriusSchedule.setGroup(groupSelect.value);
-    window.SiriusNow?.mount(app.querySelector("[data-now-home]"));
-  };
 }
 
 function tile(item, i = 0) {
@@ -1065,7 +1048,7 @@ document.addEventListener("keydown", (e) => {
   }
 });
 
-const sectionRoutes = ["#/", "#/study", "#/life", "#/schedule"];
+const sectionRoutes = ["#/", "#/study", "#/schedule"];
 const swipeNavigation = SiriusSwipe.bind(app, (target) => {
   const week = target.closest(".schedule-week");
   const day = target.closest("#scheduleSwipeArea");
