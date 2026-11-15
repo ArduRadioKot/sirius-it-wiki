@@ -30,7 +30,8 @@ body { font-family: var(--font); }
 .visually-hidden { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
 /* ---------- Compact header ---------- */
-.site-header { height: 60px; padding: 0 24px; gap: 16px; }
+:root { --site-header-height: 60px; }
+.site-header { height: var(--site-header-height); padding: 0 24px; gap: 16px; }
 .brand { gap: 12px; }
 .brand-logo { width: 128px; max-height: 34px; }
 .brand-separator { height: 22px; }
@@ -71,8 +72,11 @@ body { font-family: var(--font); }
 
 /* ---------- Phone: header and floating tab bar ---------- */
 @media screen and (max-width: 850px), screen and (pointer: coarse) and (max-height: 550px) {
-  :root { --mobile-nav-height: calc(70px + max(8px, env(safe-area-inset-bottom) - 14px)); }
-  .site-header { height: calc(52px + env(safe-area-inset-top)); padding: env(safe-area-inset-top) 14px 0; }
+  :root {
+    --site-header-height: calc(52px + env(safe-area-inset-top));
+    --mobile-nav-height: calc(70px + max(8px, env(safe-area-inset-bottom) - 14px));
+  }
+  .site-header { padding: env(safe-area-inset-top) 14px 0; }
   .brand-logo { width: 108px; }
   .brand-separator { height: 18px; }
   .brand-wiki { font-size: 12px; }
@@ -96,36 +100,63 @@ body { font-family: var(--font); }
 
 /* ---------- Home ---------- */
 .schedule-toolbar select { font-family: var(--font); font-weight: 700; }
-/* Smaller blocks on the home page */
-.home-hero { max-width: 1120px; gap: 14px; padding-top: 18px; }
-.home-hero .hero-banner { min-height: 360px; padding: 64px 32px 36px; border-radius: 24px; }
-.home-hero .hero-banner h1 { font-size: clamp(26px, 8.4cqi, 72px); }
-.home-hero .hero-tagline { font-size: clamp(15px, 3.8cqi, 32px); }
-.home-hero .hero-banner .hero-text { margin-top: 12px; font-size: 15px; }
+/* The banner and all four links fill the first screen together. */
+.home-overview {
+  --home-spacing: clamp(12px, 2.3svh, 24px);
+  display: grid;
+  grid-template-rows: 1fr auto;
+  gap: var(--home-spacing);
+  min-height: calc(100vh - var(--site-header-height) - var(--mobile-nav-height, 0px));
+  min-height: calc(100svh - var(--site-header-height) - var(--mobile-nav-height, 0px));
+  padding: var(--home-spacing) var(--home-gutter);
+}
+.home-overview, .home-overview + .latest { --home-gutter: clamp(16px, 2.75vw, 48px); }
+.home-hero, .home-links {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  gap: var(--home-spacing);
+}
+.home-hero .hero-banner {
+  min-height: 0;
+  padding: clamp(32px, 6svh, 76px) clamp(18px, 3vw, 46px) clamp(24px, 4svh, 52px);
+  border-radius: 24px;
+}
+.home-hero .hero-banner h1 { font-size: clamp(26px, min(8.4cqi, 9svh), 100px); }
+.home-hero .hero-tagline { font-size: clamp(15px, min(3.8cqi, 4.5svh), 40px); }
+.home-hero .hero-banner .hero-text { margin-top: 12px; font-size: clamp(15px, 1.3vw, 20px); }
 .home-hero .hero-actions { margin-top: 22px; }
 .home-hero .hero-cta { padding: 12px 22px; border-radius: 12px; font-size: 16px; }
 .home-hero .hero-chevrons { width: 48px; height: 30px; }
 .home-hero .hero-deco-plus { top: 26px; width: 100px; height: 28px; }
 .home-hero .hero-deco-rings { width: 110px; height: 88px; }
-.home-hero .section-card { min-height: 0; padding: 20px; border-radius: 24px; }
-.home-hero .section-card h2 { font-size: clamp(22px, 2vw, 28px); }
+.home-hero .section-card:is(.study, .life) { min-height: 0; padding: 20px; border-radius: 24px; }
+.home-hero .section-card h2 { font-size: clamp(22px, 2.4vw, 36px); }
 .home-hero .section-card .round-arrow,
 .home-links .round-arrow { width: 42px; height: 42px; }
-.home-links .study-review { min-height: 0; padding: 20px 22px; border-radius: 24px; }
-.home-links .study-review-title { font-size: 22px; }
-.home-links .study-review p { font-size: 14px; }
-.home-hero ~ .latest { max-width: 1120px; padding-top: 44px; }
-.home-hero ~ .latest .section-heading h2 { font-size: clamp(24px, 2.6vw, 34px); }
-.home-hero ~ .latest .article-list { gap: 24px 22px; }
-.home-hero ~ .latest .article-tile { padding: 20px; gap: 12px; }
+.home-links .study-review { min-height: 0; padding: clamp(16px, 3.3svh, 36px) clamp(16px, 2.1vw, 34px); border-radius: 24px; }
+.home-links .study-review-title { font-size: clamp(20px, 2vw, 29px); }
+.home-links .study-review p { font-size: clamp(14px, 1.15vw, 17px); }
+.home-overview + .latest {
+  max-width: none;
+  min-height: calc(100vh - var(--site-header-height) - var(--mobile-nav-height, 0px));
+  min-height: calc(100svh - var(--site-header-height) - var(--mobile-nav-height, 0px));
+  display: grid;
+  grid-template-rows: auto 1fr;
+  padding: clamp(24px, 5svh, 54px) var(--home-gutter);
+}
+.home-overview + .latest .section-heading h2 { font-size: clamp(24px, 3.5vw, 48px); }
+.home-overview + .latest .article-list { gap: 24px 22px; }
+.home-overview + .latest .article-tile { padding: 20px; gap: 12px; }
+
+@media (min-width: 1001px) {
+  .home-overview + .latest .article-list { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
 
 .home-links {
-  max-width: 1120px;
-  margin: 0 auto;
-  padding: 14px var(--gutter) 0;
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 .home-links .study-review { margin-top: 0; }
 .home-lk .lk-chips { margin-top: 10px; }
@@ -362,22 +393,27 @@ body { font-family: var(--font); }
 
 /* ---------- Responsive ---------- */
 @media (max-width: 1000px) {
-  .home-links { grid-template-columns: 1fr; gap: 14px; }
+  .home-hero { grid-template-rows: 1fr auto; }
+  .home-hero .section-card:is(.study, .life) { min-height: clamp(100px, 17svh, 160px); align-items: flex-start; }
+  .home-hero .section-card .round-arrow { position: absolute; right: 14px; bottom: 14px; }
   .lk-summary { grid-template-columns: 1fr 1fr; }
   .lk-metric.is-lead { grid-column: 1 / -1; }
 }
 @media (max-width: 640px) {
-  .home-links { padding-top: 12px; }
-  .home-hero { grid-template-columns: 1fr 1fr; grid-template-rows: auto; gap: 10px; padding-top: 12px; }
-  .home-hero .hero-banner { min-height: 0; padding: 44px 16px 22px; border-radius: 20px; }
+  .home-overview { --home-spacing: 10px; }
+  .home-hero { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .home-hero .hero-banner { padding: 32px 16px 22px; border-radius: 20px; }
   .home-hero .hero-banner h1 { font-size: clamp(24px, 10cqi, 52px); }
   .home-hero .hero-banner .hero-text { font-size: 14px; }
   .home-hero .hero-actions { margin-top: 16px; }
   .home-hero .hero-cta { padding: 11px 18px; font-size: 15px; }
-  .home-links .study-review { padding: 16px; border-radius: 20px; }
-  .home-links .study-review-title { font-size: 19px; }
+  .home-links .study-review { padding: 12px 12px 37px; border-radius: 20px; align-items: flex-start; }
+  .home-links .study-review-title { font-size: clamp(15px, 4.1vw, 19px); }
+  .home-links .study-review p { font-size: 12px; }
+  .home-links .round-arrow { position: absolute; right: 10px; bottom: 9px; width: 26px; height: 26px; }
+  .home-links .round-arrow .icon { width: 14px; height: 14px; }
   .home-hero .hero-banner { grid-column: 1 / -1; grid-row: auto; }
-  .home-hero .section-card { min-height: 104px; padding: 14px; border-radius: 20px; }
+  .home-hero .section-card:is(.study, .life) { min-height: 104px; padding: 14px; border-radius: 20px; }
   .home-hero .section-card h2 { font-size: 19px; }
   .home-hero .section-card .round-arrow { width: 34px; height: 34px; }
   .now-card { grid-template-columns: 112px minmax(0, 1fr); gap: 14px 16px; }
@@ -403,6 +439,16 @@ body { font-family: var(--font); }
   .lk-metric:not(.is-lead) span { font-size: 12px; }
   .lk-metric.is-lead { min-height: 112px; }
   .lk-dist span { min-width: 36px; padding: 0 8px; }
+}
+
+@media (max-width: 400px) and (max-height: 650px) {
+  .home-hero .hero-banner { padding-block: 24px; }
+  .home-hero .hero-banner .hero-text,
+  .home-links .study-review p,
+  .home-links .study-review-meta,
+  .home-lk .lk-chips { display: none; }
+  .home-hero .section-card:is(.study, .life) { min-height: 74px; padding: 10px; }
+  .home-links .study-review { min-height: 70px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

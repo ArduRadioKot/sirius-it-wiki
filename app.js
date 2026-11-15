@@ -348,29 +348,31 @@ function home() {
        ${lk.recent.length ? `<div class="lk-chips">${lk.recent.slice(0, 8).reverse().map((m) => `<span class="lk-grade g-${lk.tone(m.grade)}" title="${esc(m.subject)}">${esc(String(m.grade))}</span>`).join("")}</div>` : ""}`
     : `<p>Оценки, посещаемость и домашние задания из ЛК Сириуса</p><span class="study-review-meta">Не подключён</span>`;
   app.innerHTML = `
-    <section class="hero home-hero">
-      <div class="hero-banner">
-        <span class="hero-deco hero-deco-circles" aria-hidden="true"></span>
-        <span class="hero-deco hero-deco-plus" aria-hidden="true"></span>
-        <span class="hero-deco hero-deco-rings" aria-hidden="true"></span>
-        <h1><span>Университет</span> <span>Сириус</span></h1>
-        <p class="hero-tagline">Вики про учёбу и жизнь</p>
-        <p class="hero-text">Инструкции, конспекты, полезные места и ответы на вопросы, которые обычно приходится искать в чатах.</p>
-        <div class="hero-actions"><a class="hero-cta" href="#/schedule">Открыть расписание</a><span class="hero-chevrons" aria-hidden="true"></span></div>
-      </div>
-      <a class="section-card study" href="#/study">
-        <img class="card-art" src="assets/cards/study.svg" alt="" loading="lazy">
-        <h2>Учёба</h2>${ROUND_ARROW}
-      </a>
-      <a class="section-card life" href="#/life">
-        <img class="card-art" src="assets/cards/campus.png" alt="" loading="lazy">
-        <h2>Жизнь</h2>${ROUND_ARROW}
-      </a>
-    </section>
-    <section class="home-links">
-      <a class="study-review home-lk" href="#/study/account"><div class="study-review-text"><span class="study-review-title">Личный кабинет</span>${lkText}</div>${ROUND_ARROW}</a>
-      <a class="study-review" href="#/study/review"><img class="study-review-art" src="assets/cards/pattern-23.svg" alt="" loading="lazy"><div class="study-review-text"><span class="study-review-title">Самопроверка</span><p>Короткие тесты по конспектам с разбором каждого ответа</p></div>${ROUND_ARROW}</a>
-    </section>
+    <div class="home-overview">
+      <section class="hero home-hero">
+        <div class="hero-banner">
+          <span class="hero-deco hero-deco-circles" aria-hidden="true"></span>
+          <span class="hero-deco hero-deco-plus" aria-hidden="true"></span>
+          <span class="hero-deco hero-deco-rings" aria-hidden="true"></span>
+          <h1><span>Университет</span> <span>Сириус</span></h1>
+          <p class="hero-tagline">Вики про учёбу и жизнь</p>
+          <p class="hero-text">Инструкции, конспекты, полезные места и ответы на вопросы, которые обычно приходится искать в чатах.</p>
+          <div class="hero-actions"><a class="hero-cta" href="#/schedule">Открыть расписание</a><span class="hero-chevrons" aria-hidden="true"></span></div>
+        </div>
+        <a class="section-card study" href="#/study">
+          <img class="card-art" src="assets/cards/study.svg" alt="" loading="lazy">
+          <h2>Учёба</h2>${ROUND_ARROW}
+        </a>
+        <a class="section-card life" href="#/life">
+          <img class="card-art" src="assets/cards/campus.png" alt="" loading="lazy">
+          <h2>Жизнь</h2>${ROUND_ARROW}
+        </a>
+      </section>
+      <section class="home-links">
+        <a class="study-review home-lk" href="#/study/account"><div class="study-review-text"><span class="study-review-title">Личный кабинет</span>${lkText}</div>${ROUND_ARROW}</a>
+        <a class="study-review" href="#/study/review"><img class="study-review-art" src="assets/cards/pattern-23.svg" alt="" loading="lazy"><div class="study-review-text"><span class="study-review-title">Самопроверка</span><p>Короткие тесты по конспектам с разбором каждого ответа</p></div>${ROUND_ARROW}</a>
+      </section>
+    </div>
     <section class="latest">
       <div class="section-heading"><h2>Последние материалы</h2><p>${index.articles.length} материалов в учебной базе</p></div>
       <div class="article-list">${latest.map(tile).join("") || '<div class="empty-state">Пока нет статей.</div>'}</div>
