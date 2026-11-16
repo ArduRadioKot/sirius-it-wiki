@@ -85,14 +85,17 @@ struct ScheduleProvider: TimelineProvider {
     }
 }
 
-private struct WidgetCountdownText: View {
+struct WidgetCountdownText: View {
     let interval: ClosedRange<Date>?
     let fallback: String
 
     var body: some View {
-        if let interval {
-            if #available(iOSApplicationExtension 16.0, *) {
-                Text(timerInterval: interval, pauseTime: interval.upperBound, countsDown: true, showsHours: true)
+        if let interval, interval.lowerBound < interval.upperBound {
+            if #available(iOSApplicationExtension 18.0, *) {
+                Text(.currentDate, format: .timer(countingDownIn: interval.lowerBound..<interval.upperBound))
+                    .lineLimit(1)
+            } else if #available(iOSApplicationExtension 16.0, *) {
+                Text(timerInterval: interval, countsDown: true, showsHours: true)
                     .lineLimit(1)
             } else {
                 Text(interval.upperBound, style: .timer).lineLimit(1)

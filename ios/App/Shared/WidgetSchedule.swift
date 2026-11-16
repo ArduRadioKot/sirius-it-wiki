@@ -91,7 +91,13 @@ enum WidgetSchedule {
         return defaults
     }
 
-    private static var cache: URL? { container?.appendingPathComponent("widget-schedule.json") }
+    private static var cache: URL? {
+        if let container { return container.appendingPathComponent("widget-schedule.json") }
+        let files = FileManager.default
+        let directory = try? files.url(for: .applicationSupportDirectory, in: .userDomainMask,
+                                       appropriateFor: nil, create: true)
+        return directory?.appendingPathComponent("widget-schedule.json")
+    }
 
     static var group: String {
         let value = preferences.string(forKey: groupKey) ?? ""
@@ -175,8 +181,9 @@ enum WidgetSchedule {
         var coordinationError: NSError?
         var changed = false
         coordinator.coordinate(writingItemAt: cache, options: .forReplacing, error: &coordinationError) { target in
-            let old = (try? Data(contentsOf: target)).flatMap(decode) ?? bundledData().flatMap(decode)
-            guard incoming.updatedAt > (old?.updatedAt ?? .distantPast) else { return }
+            let saved = (try? Data(contentsOf: target)).flatMap(decode)
+            let bundled = bundledData().flatMap(decode)
+            guard incoming.updatedAt > max(saved?.updatedAt ?? .distantPast, bundled?.updatedAt ?? .distantPast) else { return }
             do {
                 try data.write(to: target, options: .atomic)
                 changed = true
@@ -198,7 +205,8 @@ enum WidgetSchedule {
            http.url == remoteURL, let incoming = decode(data),
            incoming.updatedAt >= (existing?.updatedAt ?? .distantPast) {
             save(data)
-            return current() ?? incoming
+            if let cached = current(), cached.updatedAt >= incoming.updatedAt { return cached }
+            return incoming
         }
         return existing
     }

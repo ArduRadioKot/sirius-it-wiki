@@ -51,14 +51,9 @@ struct LessonTimerActivity: Widget {
         }
     }
 
-    @ViewBuilder
     private func countdown(_ context: ActivityViewContext<LessonTimerAttributes>) -> some View {
-        if context.isStale {
-            Text("0:00")
-        } else {
-            Text(timerInterval: context.attributes.start...context.attributes.end,
-                 pauseTime: context.attributes.end, countsDown: true, showsHours: true)
-        }
+        WidgetCountdownText(interval: context.isStale ? nil : context.attributes.start...context.attributes.end,
+                            fallback: "0:00")
     }
 
     private func scheduleURL(_ context: ActivityViewContext<LessonTimerAttributes>) -> URL? {
