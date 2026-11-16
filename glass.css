@@ -223,6 +223,18 @@ body { font-family: var(--font); }
 .now-compact .now-stats div { display: flex; justify-content: space-between; align-items: baseline; padding: 8px 0; }
 .now-compact .now-stats div + div { padding-left: 0; border-left: 0; border-top: 1px solid var(--line); }
 
+@media (max-width: 979.98px) {
+  .now-compact[data-layout="live"] {
+    --schedule-dial-size: clamp(86px, 27vw, 112px);
+    grid-template-columns: var(--schedule-dial-size) minmax(0, 1fr);
+    grid-template-areas: "dial body" "stats stats" "ribbon ribbon";
+    column-gap: 12px;
+  }
+  .now-compact[data-layout="live"] .now-dial { width: var(--schedule-dial-size); }
+  .now-compact[data-layout="live"] .now-dial-face strong { font-size: clamp(18px, 5.8vw, 25px); }
+  .now-compact[data-layout="live"] .now-body { overflow-wrap: anywhere; }
+}
+
 /* Progress of the current pair in the day list */
 .lesson.current::after {
   content: "";
