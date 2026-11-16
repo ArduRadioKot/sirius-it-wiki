@@ -6,7 +6,7 @@
   const updateStatus = document.getElementById('updateStatus');
   if (window.Capacitor?.isNativePlatform?.()) {
     button.hidden = true;
-    if (versionEl) versionEl.textContent = window.Capacitor.getPlatform() === 'ios' ? 'iOS 1.5.7' : 'Android 1.2.8';
+    if (versionEl) versionEl.textContent = window.Capacitor.getPlatform() === 'ios' ? 'iOS 1.5.8' : 'Android 1.2.9';
     if (updateButton) {
       updateButton.disabled = false;
       updateButton.textContent = 'Обновить материалы и расписание';
