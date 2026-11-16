@@ -26,9 +26,25 @@
       }
     }
   } catch {}
-  const lessons = () => snapshot?.groups[group] || [];
+  const accountSource = window.SiriusAccountSchedule;
+  const emptyRows = [];
+  let preferAccount = true;
+  let previousPublicRows, previousPersonalWeeks, mergedRows;
+  const personalWeeks = () => preferAccount && window.SiriusStudentAccount?.personalWeeks?.() || null;
+  const personalWeek = iso => accountSource && personalWeeks()?.[accountSource.week(iso)?.from];
+  const publicRows = () => snapshot?.groups[group] || emptyRows;
+  function lessons() {
+    const published = publicRows(), personal = personalWeeks();
+    if (!personal || !accountSource) return published;
+    if (published !== previousPublicRows || personal !== previousPersonalWeeks) {
+      mergedRows = accountSource.merge(published, personal);
+      previousPublicRows = published;
+      previousPersonalWeeks = personal;
+    }
+    return mergedRows;
+  }
   const active = () => location.hash.startsWith('#/schedule');
-  const fresh = () => snapshot && Date.now() - Date.parse(snapshot.updatedAt) < 24 * 3600000;
+  const fresh = () => Date.now() - (personalWeek(today())?.at ?? Date.parse(snapshot?.updatedAt)) < 24 * 3600000;
   const completeSnapshot = () => GROUPS.every((g) => Array.isArray(snapshot?.groups[g]));
   const UPDATE_INTERVAL = 4 * 60 * 60 * 1000;
   const isLocalHost = (hostname) => hostname === 'localhost' || hostname === '127.0.0.1' || hostname === '0.0.0.0' ||
@@ -299,6 +315,15 @@
     const monday = shiftDate(iso, -offset);
     return Array.from({ length: 7 }, (_, i) => shiftDate(monday, i));
   };
+  function refreshPersonal(force = false) {
+    if (!accountSource || !preferAccount) return;
+    const current = today();
+    const weeks = new Map([current, date, shiftDate(current, 7)].map(iso => {
+      const period = accountSource.week(iso);
+      return [period.from, period];
+    }));
+    for (const period of weeks.values()) window.SiriusStudentAccount?.refreshPersonalWeek?.(period, force);
+  }
   const dayLabel = (iso, opts) =>
     new Date(`${iso}T12:00:00+03:00`).toLocaleDateString('ru-RU', { timeZone: 'Europe/Moscow', ...opts });
   const slotsFor = (rows) => {
@@ -368,6 +393,12 @@
 
   function statusLine() {
     const bits = [];
+    const personal = personalWeek(date);
+    if (personal) {
+      if (!navigator.onLine) bits.push('Без интернета');
+      bits.push('Персональное расписание из ЛК');
+      return bits.join(' · ');
+    }
     if (!navigator.onLine) bits.push('Без интернета');
     else if (failure) bits.push('Офлайн-копия');
     else if (snapshot && !completeSnapshot()) bits.push('Не все группы');
@@ -401,6 +432,7 @@
   }
 
   function deviceBanner() {
+    if (personalWeek(date)) return '';
     if (deviceLoading) {
       return `<p class="schedule-device-banner" data-device-status role="status">${escape(deviceMessage || 'Загружаем расписание…')}</p>`;
     }
@@ -422,6 +454,7 @@
     date = nextDate;
     followsToday = follow;
     render(animate ? direction : '');
+    refreshPersonal();
   }
 
   function lessonsWithBreaks(slots) {
@@ -445,7 +478,10 @@
   function render(direction = '') {
     const rows = lessons().filter((e) => e.date === date);
     const slots = slotsFor(rows);
-    const covered = Array.isArray(snapshot?.groups[group]) && date >= snapshot.fromDate && date <= snapshot.toDate;
+    const personal = personalWeek(date);
+    const covered = personal || (Array.isArray(snapshot?.groups[group]) && date >= snapshot.fromDate && date <= snapshot.toDate);
+    const sourceURL = personal ? 'https://lks.siriusuniversity.ru/schedule/students' : 'https://schedule.siriusuniversity.ru';
+    const canSelectPersonal = Boolean(window.SiriusStudentAccount?.personalWeeks?.());
         const dayTitle = dayLabel(date, { weekday: 'long', day: 'numeric', month: 'long' });
     const empty = `<div class="empty-state">${covered ? 'В этот день занятий нет.' : 'На этот день нет сохранённых данных.' + (snapshot ? ` Период: ${snapshot.fromDate} — ${snapshot.toDate}.` : '')}</div>`;
     const note = notificationError || (enabled ? 'Уведомления включены' : '');
@@ -453,7 +489,7 @@
       <header class="schedule-head">
         <h1>Расписание</h1>
         <div class="schedule-toolbar">
-          <select id="scheduleGroup" aria-label="Группа">${GROUPS.map((g) => `<option ${g === group ? 'selected' : ''}>${g}</option>`).join('')}</select>
+          <select id="scheduleGroup" aria-label="Группа">${canSelectPersonal ? `<option value="personal" ${preferAccount ? 'selected' : ''}>Из личного кабинета</option>` : ''}${GROUPS.map((g) => `<option ${g === group && (!canSelectPersonal || !preferAccount) ? 'selected' : ''}>${g}</option>`).join('')}</select>
           <div class="schedule-date">
             <button id="previousDay" aria-label="Предыдущий день">←</button>
             <input id="scheduleDate" type="date" value="${escape(date)}" aria-label="Дата">
@@ -473,7 +509,7 @@
             <span id="widgetTimerStatus" role="status">Разрешение помогает переключать таймер в момент начала и конца пары.</span>
           </div>` : ''}
           ${weekNav()}
-          <p class="schedule-meta schedule-meta-rail" role="status">${escape(statusLine())} · <a href="https://schedule.siriusuniversity.ru" target="_blank" rel="noopener">Источник</a></p>
+          <p class="schedule-meta schedule-meta-rail" role="status">${escape(statusLine())} · <a href="${sourceURL}" target="_blank" rel="noopener">Источник</a></p>
         </aside>
         <div class="schedule-main${direction === 'next' ? ' schedule-transition-next' : direction === 'previous' ? ' schedule-transition-previous' : ''}" id="scheduleSwipeArea">
           <div class="schedule-day-bar">
@@ -509,10 +545,12 @@
           <button id="liveTimerToggle" type="button" aria-pressed="${liveTimer.enabled}" ${liveTimerBusy ? 'disabled' : ''}>Таймер на экране блокировки</button>
           <span id="liveTimerStatus" role="status">${escape(liveTimerError || (liveTimer.enabled ? 'Включён' : 'Выключен'))}</span>
         </div>` : ''}
-        <p class="schedule-meta schedule-meta-foot" role="status">${escape(statusLine())} · <a href="https://schedule.siriusuniversity.ru" target="_blank" rel="noopener">Источник</a></p>
+        <p class="schedule-meta schedule-meta-foot" role="status">${escape(statusLine())} · <a href="${sourceURL}" target="_blank" rel="noopener">Источник</a></p>
       </footer>
     </section>`;
     document.getElementById('scheduleGroup').onchange = (e) => {
+      preferAccount = e.target.value === 'personal';
+      if (preferAccount) { render(); refreshPersonal(); tick(); return; }
       group = e.target.value;
       put('sirius-group', group);
       syncWidgetGroup();
@@ -745,15 +783,23 @@
     showCalendarMessage('Файл скачан. Это разовый снимок — для автообновления используйте подписку.');
   }
   window.SiriusSchedule = {
-    render, refresh, moveDate,
+    render, refresh, moveDate, refreshPersonal,
+    preferPersonal: () => { preferAccount = true; },
+    personalChanged: () => {
+      if (active()) render();
+      window.SiriusStudentAccount?.refreshSchedule?.();
+      tick();
+    },
     syncToday: (day) => {
       if (!active() || !followsToday || date === day) return false;
       setDate(day, false, true);
       return true;
     },
-    open: (requested) => /^\d{4}-\d{2}-\d{2}$/.test(requested || '') && Number.isFinite(instant({date: requested, start: '00:00'}))
-      ? setDate(requested, false) : render(),
-    rows: () => lessons(), group: () => group, ready: () => Boolean(snapshot?.groups[group]),
+    open: (requested) => {
+      if (/^\d{4}-\d{2}-\d{2}$/.test(requested || '') && Number.isFinite(instant({date: requested, start: '00:00'}))) setDate(requested, false);
+      else { render(); refreshPersonal(); }
+    },
+    rows: lessons, group: () => group, ready: () => Boolean(snapshot?.groups[group] || personalWeeks()),
     setGroup: (value) => {
       if (!GROUPS.includes(value)) return;
       group = value;
@@ -769,9 +815,10 @@
     const now = Date.now();
     if (lastEnter && now - lastEnter < 2000) return;
     lastEnter = now;
+    refreshPersonal();
     return refresh({force:true, background:true});
   };
-  const autoRefresh = () => refresh({force:false, background:true});
+  const autoRefresh = () => { refreshPersonal(); return refresh({force:false, background:true}); };
   window.addEventListener('online', refreshOnEnter);
   window.addEventListener('focus', refreshOnEnter);
   window.addEventListener('pageshow', refreshOnEnter);

@@ -8,7 +8,7 @@ final class SiriusAccountPlugin: CAPPlugin, CAPBridgedPlugin {
     let identifier = "SiriusAccountPlugin"
     let jsName = "SiriusAccount"
     let pluginMethods = [
-        "signIn", "refresh", "schedule", "cachedSchedule", "cacheSchedule", "loadCache", "saveCache", "clear", "setScheduleGroup", "widgetRoute",
+        "signIn", "refresh", "personalSchedule", "schedule", "cachedSchedule", "cacheSchedule", "loadCache", "saveCache", "clear", "setScheduleGroup", "widgetRoute",
         "getEndReminderSettings", "setEndReminderSettings", "getLiveTimerSettings", "setLiveTimerSettings"
     ]
         .compactMap { CAPPluginMethod(name: $0, returnType: CAPPluginReturnPromise) }
@@ -56,8 +56,11 @@ final class SiriusAccountPlugin: CAPPlugin, CAPBridgedPlugin {
 
     private enum AccountError: Error { case loginRequired }
 
-    @MainActor private func readPage(_ path: String, generation started: Int) async throws -> String {
-        let url = Self.origin.appendingPathComponent(path)
+    @MainActor private func readPage(_ path: String, generation started: Int,
+                                     query: [URLQueryItem] = [], limit: Int = 8 * 1024 * 1024) async throws -> String {
+        var components = URLComponents(url: Self.origin.appendingPathComponent(path), resolvingAgainstBaseURL: false)
+        if !query.isEmpty { components?.queryItems = query }
+        guard let url = components?.url else { throw URLError(.badURL) }
         let store = Self.cookies()
         let cookies = await store.allCookies().filter { cookie in
             let domain = cookie.domain.trimmingCharacters(in: CharacterSet(charactersIn: "."))
@@ -69,7 +72,7 @@ final class SiriusAccountPlugin: CAPPlugin, CAPBridgedPlugin {
         guard started == generation, !cookies.isEmpty else { throw AccountError.loginRequired }
         var request = URLRequest(url: url)
         for (key, value) in HTTPCookie.requestHeaderFields(with: cookies) { request.setValue(value, forHTTPHeaderField: key) }
-        let (data, response) = try await WikiNetwork.data(request, limit: 8 * 1024 * 1024)
+        let (data, response) = try await WikiNetwork.data(request, limit: limit)
         guard started == generation else { throw AccountError.loginRequired }
         if [401, 403].contains(response.statusCode) || (300..<400).contains(response.statusCode) {
             throw AccountError.loginRequired
@@ -85,6 +88,26 @@ final class SiriusAccountPlugin: CAPPlugin, CAPBridgedPlugin {
             await store.setCookie(cookie)
         }
         return html
+    }
+
+    @objc func personalSchedule(_ call: CAPPluginCall) {
+        Task { @MainActor in
+            guard let from = call.getString("from"), let to = call.getString("to"),
+                  WidgetSchedule.validDay(from), WidgetSchedule.validDay(to), from <= to else {
+                call.reject("Неверная неделя.", "DATE")
+                return
+            }
+            let filters = ["lectures", "seminars", "practices", "laboratories", "exams", "other"]
+            let query = [URLQueryItem(name: "from", value: from), URLQueryItem(name: "to", value: to)]
+                + filters.map { URLQueryItem(name: $0, value: "0") }
+            do {
+                let calendar = try await readPage("schedule/export/students", generation: generation,
+                                                  query: query, limit: 2 * 1024 * 1024)
+                call.resolve(["calendar": calendar])
+            } catch AccountError.loginRequired {
+                call.reject("Войдите в ЛК Сириуса.", "LOGIN_REQUIRED")
+            } catch { call.reject("Личное расписание недоступно.", "NETWORK") }
+        }
     }
 
     @objc func refresh(_ call: CAPPluginCall) {

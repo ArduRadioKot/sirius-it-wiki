@@ -90,6 +90,25 @@ public final class AccountPlugin extends Plugin {
     }
 
     @PluginMethod
+    public void personalSchedule(PluginCall call) {
+        String from = call.getString("from", ""), to = call.getString("to", "");
+        if (!from.matches("\\d{4}-\\d{2}-\\d{2}") || !to.matches("\\d{4}-\\d{2}-\\d{2}") || from.compareTo(to) > 0) {
+            call.reject("Неверная неделя.", "DATE");
+            return;
+        }
+        String address = Uri.parse(ORIGIN + "/schedule/export/students").buildUpon()
+            .appendQueryParameter("from", from).appendQueryParameter("to", to)
+            .appendQueryParameter("lectures", "0").appendQueryParameter("seminars", "0")
+            .appendQueryParameter("practices", "0").appendQueryParameter("laboratories", "0")
+            .appendQueryParameter("exams", "0").appendQueryParameter("other", "0").build().toString();
+        accountWork.execute(() -> {
+            try { call.resolve(new JSObject().put("calendar", read(address, true, 2 * 1024 * 1024))); }
+            catch (LoginRequired error) { call.reject("Войдите в ЛК Сириуса.", "LOGIN_REQUIRED"); }
+            catch (Exception error) { call.reject("Личное расписание недоступно.", "NETWORK"); }
+        });
+    }
+
+    @PluginMethod
     public void schedule(PluginCall call) {
         scheduleWork.execute(() -> {
             try {

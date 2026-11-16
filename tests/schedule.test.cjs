@@ -3,9 +3,11 @@ const assert=require('node:assert/strict');
 const vm=require('node:vm');
 const fs=require('node:fs');
 const source=fs.readFileSync('schedule.js','utf8');
+const accountSource=fs.readFileSync('student-account.js','utf8');
+const accountCalendar=require('../account-schedule.js');
 const group='ИОП-ИТ-26/1';
 const realDate=Date;
-async function setup({offline=false,stale=false,denied=false,legacy=false,host='wiki.test',checked=false,session,nativeCache}={}) {
+async function setup({offline=false,stale=false,denied=false,legacy=false,host='wiki.test',checked=false,session,nativeCache,personalSchedule,webAccount}={}) {
   let now=Date.parse('2026-09-15T05:36:00Z');
   const data={version:1,updatedAt:new Date(now-(stale?2*86400000:0)).toISOString(),fromDate:'2026-09-14',toDate:'2026-10-04',groups:{[group]:[{id:'1',date:'2026-09-15',start:'08:45',end:'10:05',title:'Математика, логика; проверка'.repeat(6),room:'Альфа 5.8',teachers:'Преподаватель',kind:'Лекция',comment:''}], 'ИОП-ИТ-26/2':[], 'ИОП-ИТ-25/1':[], 'ИОП-ИТ-25/2':[], 'ИОП-ИТ-24/1':[], 'ИОП-ИТ-24/2':[]}};
   if(legacy){for(const name of ['ИОП-ИТ-24/1','ИОП-ИТ-24/2']) delete data.groups[name];}
@@ -18,7 +20,7 @@ async function setup({offline=false,stale=false,denied=false,legacy=false,host='
   class TestURL extends URL {static createObjectURL(b){blob=b;return 'blob:test';}static revokeObjectURL(){}}
   const opened=[];let copied='';
   const widgetWrites = [];
-  const context={URL:TestURL,Blob,TextEncoder,Intl,Date:Clock,AbortSignal,console,document,location:{hash:'#/schedule',hostname:host,protocol:host==='127.0.0.1'||host==='localhost'?'http:':'https:'},localStorage:{getItem:k=>store.get(k)??null,setItem:(k,v)=>store.set(k,v)},sessionStorage:{getItem:k=>sessionStore.get(k)??null,setItem:(k,v)=>sessionStore.set(k,v),removeItem:k=>sessionStore.delete(k)},navigator:{onLine:!offline,clipboard:{writeText:async(text)=>{copied=text;}},serviceWorker:{getRegistration:async()=>({active:true,showNotification:async(...v)=>sent.push(v)})}},Notification:{permission:denied?'denied':'granted',requestPermission:async()=>denied?'denied':'granted'},fetch:async()=>{requests++;if(offline)throw Error('offline');return{ok:true,json:async()=>JSON.parse(JSON.stringify(data))};},setTimeout(){},setInterval(fn,ms){timers.push({fn,ms});},addEventListener(name,fn){events[name]=fn;},open(url){opened.push(url);}};
+  const context={URL:TestURL,Blob,TextEncoder,Intl,Date:Clock,AbortSignal,console,document,location:{hash:'#/schedule',hostname:host,protocol:host==='127.0.0.1'||host==='localhost'?'http:':'https:'},localStorage:{getItem:k=>store.get(k)??null,setItem:(k,v)=>store.set(k,v)},sessionStorage:{getItem:k=>sessionStore.get(k)??null,setItem:(k,v)=>sessionStore.set(k,v),removeItem:k=>sessionStore.delete(k)},navigator:{onLine:!offline,clipboard:{writeText:async(text)=>{copied=text;}},serviceWorker:{getRegistration:async()=>({active:true,showNotification:async(...v)=>sent.push(v)})}},Notification:{permission:denied?'denied':'granted',requestPermission:async()=>denied?'denied':'granted'},fetch:async()=>{requests++;if(offline)throw Error('offline');return{ok:true,json:async()=>JSON.parse(JSON.stringify(data))};},setTimeout(){},setInterval(fn,ms){timers.push({fn,ms});},addEventListener(name,fn){const previous=events[name];events[name]=previous ? event=>{previous(event);return fn(event);} : fn;},open(url){opened.push(url);}};
   if (nativeCache) context.Capacitor = {
     isNativePlatform: () => true, getPlatform: () => 'android',
     Plugins: { SiriusAccount: {
@@ -26,10 +28,58 @@ async function setup({offline=false,stale=false,denied=false,legacy=false,host='
       cacheSchedule: async ({ value }) => widgetWrites.push(JSON.parse(value)),
     } },
   };
+  if (personalSchedule) context.Capacitor = {
+    isNativePlatform: () => true, getPlatform: () => 'android',
+    Plugins: { SiriusAccount: {
+      loadCache: async () => ({}), saveCache: async () => {},
+      schedule: async () => structuredClone(data), personalSchedule,
+    } },
+  };
+  if (personalSchedule || webAccount) {
+    context.window = context;
+    context.SiriusAccountSchedule = accountCalendar;
+    vm.runInNewContext(accountSource,context);
+  }
   context.window=context;vm.runInNewContext(source,context);await new Promise(resolve=>setImmediate(resolve));
   return {context,nodes,sent,store,events,timers,data,widgetWrites,advance:ms=>now+=ms,requests:()=>requests,blob:()=>blob,opened,copied:()=>copied};
 }
 test('saved offline schedule and Moscow reminder work under a repository subpath',async()=>{const h=await setup({offline:true});assert.match(h.nodes.get('app').innerHTML,/08:45/);assert.match(h.nodes.get('app').innerHTML,/data-now-mount/);assert.match(h.nodes.get('app').innerHTML,/Без интернета/);assert.equal(h.sent.length,1);assert.equal(h.sent[0][0],'До пары 9 мин');assert.match(h.sent[0][1].data.url,/\/repo\/#\/schedule\?date=2026-09-15$/);await h.context.SiriusSchedule.refresh();assert.equal(h.sent.length,1);});
+
+const personalExport = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'BEGIN:VEVENT', 'UID:personal',
+  'DTSTART;TZID=Europe/Moscow:20260915T093000', 'DTEND;TZID=Europe/Moscow:20260915T105000',
+  'SUMMARY:Мой семинар из ЛК', 'END:VEVENT', 'END:VCALENDAR'].join('\r\n');
+
+test('signed-in mobile users get personal events by default and can select a group', async () => {
+  let expired = false;
+  const h = await setup({ personalSchedule: async ({ from }) => {
+    if (expired) throw Object.assign(new Error('Login'), { code: 'LOGIN_REQUIRED' });
+    return { calendar: from === '2026-09-14' ? personalExport : '' };
+  }});
+  const html = () => h.nodes.get('app').innerHTML;
+  assert.match(html(), /Персональное расписание из ЛК/);
+  assert.match(html(), /Мой семинар из ЛК/);
+  assert.doesNotMatch(html(), /Математика, логика/);
+  const choice = h.nodes.get('scheduleGroup');
+  choice.onchange({ target: { value: group } });
+  assert.match(html(), /Математика, логика/);
+  choice.onchange({ target: { value: 'personal' } });
+  assert.match(html(), /Мой семинар из ЛК/);
+  expired = true;
+  h.context.SiriusSchedule.refreshPersonal(true);
+  await new Promise(resolve => setImmediate(resolve));
+  assert.match(html(), /Математика, логика/);
+  assert.doesNotMatch(html(), /Мой семинар из ЛК/);
+});
+
+test('a browser transfer from the official account imports the personal calendar', async () => {
+  const h = await setup({ webAccount: true, offline: true });
+  const sends = [];
+  h.events.message({ origin: 'https://lks.siriusuniversity.ru', source: { postMessage: (...args) => sends.push(args) },
+    data: { type: 'sirius-lk', pages: {}, personal: { period: accountCalendar.week('2026-09-15'), calendar: personalExport } } });
+  assert.equal(sends[0][0].ok, true);
+  assert.equal(h.context.SiriusSchedule.rows()[0].title, 'Мой семинар из ЛК');
+  assert.equal(JSON.parse(h.store.get('sirius-schedule')).groups[group][0].start, '08:45');
+});
 test('the app uses the widget schedule when it has a newer offline copy', async () => {
   const h = await setup({ offline: true, nativeCache: data => {
     data.updatedAt = '2026-09-15T05:36:01Z';

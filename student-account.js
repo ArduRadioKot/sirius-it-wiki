@@ -8,6 +8,11 @@
   const tabs = { overview: 'Обзор', grades: 'Оценки', visits: 'Посещаемость', homework: 'Домашние задания', news: 'Новости и уведомления', session: 'Сессия' };
   const data = {};
   const nativeAccount = window.Capacitor?.isNativePlatform?.() && window.Capacitor?.Plugins?.SiriusAccount;
+  const personalSource = window.SiriusAccountSchedule;
+  const personalChecked = new Map();
+  const personalRequests = new Map();
+  let personalRevision = 0;
+  let personalNeedsLogin = false;
   let nativeSync = null;
   let nativeMessage = '';
   let nativeNeedsLogin = false;
@@ -39,6 +44,10 @@
     if (Array.isArray(saved?.journal?.value)) data.journal = saved.journal;
     if (Array.isArray(saved?.trajectory?.value)) data.trajectory = saved.trajectory;
     if (Array.isArray(saved?.dashboard?.value?.news)) data.dashboard = saved.dashboard;
+    if (personalSource && saved?.schedule && typeof saved.schedule === 'object') {
+      const weeks = Object.values(saved.schedule).filter(item => item && personalSource.week(item.from)?.to === item.to && Array.isArray(item.rows));
+      if (weeks.length) data.schedule = Object.fromEntries(weeks.map(item => [item.from, item]));
+    }
   }
   const cacheReady = nativeAccount ? nativeAccount.loadCache().then(({ value }) => {
     if (remember() && value && !Object.keys(data).length && !demo) restore(JSON.parse(value));
@@ -93,6 +102,55 @@
       const day = new Date(value + 'T00:00:00Z');
       return Number.isFinite(+day) && day.toISOString().startsWith(value);
     });
+  }
+
+  function updatePersonalWeek(period, result) {
+    if (!result && !data.schedule?.[period.from]) return;
+    const weeks = { ...data.schedule };
+    if (result) weeks[period.from] = { ...result, at: Date.now() };
+    else delete weeks[period.from];
+    const latest = Object.values(weeks).sort((a, b) => b.at - a.at).slice(0, 8);
+    if (latest.length) data.schedule = Object.fromEntries(latest.map(item => [item.from, item]));
+    else delete data.schedule;
+    save();
+    window.SiriusSchedule?.personalChanged?.();
+  }
+
+  function resetPersonalSchedule({ persist = true } = {}) {
+    personalRevision++;
+    personalChecked.clear();
+    personalRequests.clear();
+    if (!data.schedule) return;
+    delete data.schedule;
+    if (persist) save();
+    window.SiriusSchedule?.personalChanged?.();
+  }
+
+  function refreshPersonalWeek(period, force = false) {
+    if (!personalSource || !nativeAccount?.personalSchedule || !navigator.onLine || demo || nativeClearing || personalNeedsLogin) return;
+    if (personalRequests.has(period.from)) return personalRequests.get(period.from);
+    if (!force && Date.now() - (personalChecked.get(period.from) || 0) < 15 * 60_000) return;
+    personalChecked.set(period.from, Date.now());
+    const revision = personalRevision;
+    const request = cacheReady.then(async () => {
+      if (revision !== personalRevision || personalNeedsLogin || nativeClearing) return;
+      try {
+        const { calendar } = await nativeAccount.personalSchedule(period);
+        if (revision === personalRevision) updatePersonalWeek(period, personalSource.parse(calendar, period));
+      } catch (error) {
+        if (revision !== personalRevision) return;
+        if (error.code === 'LOGIN_REQUIRED') {
+          personalNeedsLogin = true;
+          resetPersonalSchedule();
+        } else if (navigator.onLine) {
+          updatePersonalWeek(period, null);
+        }
+      }
+    }).finally(() => {
+      if (personalRequests.get(period.from) === request) personalRequests.delete(period.from);
+    });
+    personalRequests.set(period.from, request);
+    return request;
   }
 
   function readJournal(weeks) {
@@ -314,10 +372,10 @@
   }
 
   // ---------- One-click import from lks.siriusuniversity.ru ----------
-  // Runs on the university site as a bookmarklet: it reads the three account pages
+  // Runs on the university site as a bookmarklet: it reads the account pages
   // with the student's own session and hands only the needed fragments to the wiki.
   function bridge(wiki) {
-    if (location.hostname !== 'lks.siriusuniversity.ru') {
+    if (location.origin !== 'https://lks.siriusuniversity.ru') {
       alert('Откройте lks.siriusuniversity.ru, войдите и нажмите закладку ещё раз.');
       return;
     }
@@ -327,12 +385,12 @@
     box.style.cssText = 'position:fixed;z-index:2147483647;right:16px;bottom:16px;max-width:320px;padding:18px;border-radius:22px;background:rgba(4,34,38,.92);backdrop-filter:blur(16px);color:#e8fbfa;font:14px/1.45 system-ui,sans-serif;box-shadow:0 18px 50px rgba(0,0,0,.35)';
     const text = document.createElement('p');
     text.style.margin = '0 0 12px';
-    text.textContent = 'Собираем оценки из личного кабинета…';
+    text.textContent = 'Собираем данные из личного кабинета…';
     box.append(text);
     document.body.append(box);
     const names = { journal: ['/journal/list', 'journal-list'], trajectory: ['/student/trajectory', 'trajectory'], dashboard: ['/dashboard', 'user-notifications-menu'] };
     const pages = {};
-    Promise.all(Object.entries(names).map(async ([key, [path, name]]) => {
+    const jobs = Object.entries(names).map(async ([key, [path, name]]) => {
       const html = await (await fetch(path, { credentials: 'same-origin' })).text();
       const doc = new DOMParser().parseFromString(html, 'text/html');
       const element = [...doc.querySelectorAll('[wire\\:initial-data]')].find(el => {
@@ -342,11 +400,26 @@
       let out = element.outerHTML;
       if (key === 'dashboard') out += [...doc.querySelectorAll('a[href*="/news/show/"]')].map(a => a.outerHTML).join('');
       pages[key] = out;
-    })).then(() => {
-      const count = Object.keys(pages).length;
-      text.textContent = count ? `Готово: ${count} из 3 разделов.` : 'Данных не нашли. Проверьте, что вы вошли в личный кабинет.';
+    });
+    let personal;
+    jobs.push((async () => {
+      const today = new Intl.DateTimeFormat('sv-SE', { timeZone: 'Europe/Moscow' }).format(Date.now());
+      const day = new Date(today + 'T12:00:00Z');
+      day.setUTCDate(day.getUTCDate() - (day.getUTCDay() + 6) % 7);
+      const from = day.toISOString().slice(0, 10);
+      day.setUTCDate(day.getUTCDate() + 6);
+      const period = { from, to: day.toISOString().slice(0, 10) };
+      const params = new URLSearchParams({ ...period, lectures: 0, seminars: 0, practices: 0, laboratories: 0, exams: 0, other: 0 });
+      const result = await fetch('/schedule/export/students?' + params, { credentials: 'same-origin', cache: 'no-store' });
+      if (!result.ok) return;
+      const calendar = await result.text();
+      if (/^\s*BEGIN:VCALENDAR/i.test(calendar) && calendar.length <= 2 * 1024 * 1024) personal = { period, calendar };
+    })());
+    Promise.allSettled(jobs).then(() => {
+      const count = Object.keys(pages).length + Number(Boolean(personal));
+      text.textContent = count ? 'Готово. Можно открыть данные в вики.' : 'Данных не нашли. Проверьте, что вы вошли в личный кабинет.';
       if (!count) return;
-      const payload = { type: 'sirius-lk', pages, at: Date.now() };
+      const payload = { type: 'sirius-lk', pages, personal, at: Date.now() };
       const button = (label, onClick) => {
         const b = document.createElement('button');
         b.textContent = label;
@@ -363,7 +436,7 @@
         addEventListener('message', event => {
           if (event.source !== target || event.data?.type !== 'sirius-lk-done') return;
           clearInterval(timer);
-          text.textContent = event.data.ok ? 'Оценки в вики. Эту вкладку можно закрыть.' : 'Вики не смогла прочитать данные.';
+          text.textContent = event.data.ok ? 'Данные в вики. Эту вкладку можно закрыть.' : 'Вики не смогла прочитать данные.';
         });
       });
       button('Скопировать', async () => {
@@ -396,10 +469,20 @@
     redraw();
     return { loaded, failed };
   }
+  function importTransfer(payload) {
+    const grades = importPages(payload.pages).loaded.length > 0;
+    const period = payload.personal?.period;
+    const week = personalSource?.parse(payload.personal?.calendar, period);
+    if (week) {
+      window.SiriusSchedule?.preferPersonal?.();
+      updatePersonalWeek(period, week);
+    }
+    if (grades || week) redraw();
+    return grades || Boolean(week);
+  }
   addEventListener('message', event => {
     if (nativeAccount || event.origin !== origin || event.data?.type !== 'sirius-lk') return;
-    const result = importPages(event.data.pages);
-    event.source?.postMessage({ type: 'sirius-lk-done', ok: result.loaded.length > 0 }, origin);
+    event.source?.postMessage({ type: 'sirius-lk-done', ok: importTransfer(event.data) }, origin);
   });
 
   function syncAndroid(signIn = false) {
@@ -409,13 +492,27 @@
       await cacheReady;
       try {
         const { pages } = await (signIn ? nativeAccount.signIn() : nativeAccount.refresh());
+        if (signIn) {
+          for (const key of Object.keys(sources)) delete data[key];
+          resetPersonalSchedule({ persist: false });
+          window.SiriusSchedule?.preferPersonal?.();
+        }
+        personalNeedsLogin = false;
+        window.SiriusSchedule?.refreshPersonal?.(true);
         const result = importPages(pages, { replace: true });
-        if (!result.loaded.length) throw new Error('ЛК вернул страницу в неизвестном формате.');
+        if (!result.loaded.length) {
+          if (signIn) save();
+          throw new Error('ЛК вернул страницу в неизвестном формате.');
+        }
         nativeNeedsLogin = false;
         nativeMessage = result.loaded.length === Object.keys(sources).length
           ? 'Данные ЛК обновлены.' : 'Журнал обновлён. Некоторые разделы ЛК пока недоступны.';
         if (location.hash.startsWith('#/schedule')) window.SiriusSchedule?.render();
       } catch (error) {
+        if (error.code === 'LOGIN_REQUIRED') {
+          personalNeedsLogin = true;
+          resetPersonalSchedule();
+        }
         nativeNeedsLogin = error.code === 'LOGIN_REQUIRED' || nativeNeedsLogin;
         nativeMessage = error.message || 'Не удалось обновить данные.';
         if (Object.keys(data).length) nativeMessage += ' Показана сохранённая копия.';
@@ -657,7 +754,7 @@
       </div>
       <section class="lk-connect" data-lk-connect hidden>
         <h2 data-lk-connect-title></h2>
-        ${nativeAccount ? `<p class="lk-lead">Войдите на официальной странице Сириуса. Вики загрузит журнал, учебную траекторию и уведомления. Сохранённые данные доступны без сети.</p>
+        ${nativeAccount ? `<p class="lk-lead">Войдите на официальной странице Сириуса. Вики загрузит персональное расписание, журнал, учебную траекторию и уведомления. Сохранённые данные доступны без сети.</p>
         <button type="button" class="lk-button is-primary" data-native-login>Войти в ЛК</button>
         <div class="lk-connect-foot" data-lk-connect-foot></div>` : `<p class="lk-lead">Сайт ЛК не отдаёт оценки другим сайтам, поэтому их переносит закладка в вашем браузере. Пароль вы вводите только на lks.siriusuniversity.ru, оценки остаются на этом устройстве.</p>
         <div class="lk-devices" role="group" aria-label="Устройство"></div>
@@ -676,9 +773,9 @@
       <div data-journal-content></div>
       <details class="lk-data" data-lk-data hidden>
         <summary>Данные на этом устройстве</summary>
-        <label><input type="checkbox" data-lk-remember ${remember() ? 'checked' : ''}> Хранить оценки на этом устройстве</label>
-        <p class="journal-meta">${nativeAccount ? 'Если выключить, данные будут доступны до закрытия приложения.' : 'Если выключить, оценки пропадут после закрытия вкладки.'}</p>
-        <button type="button" class="lk-button" data-journal-clear>${nativeAccount ? 'Отключить ЛК и удалить данные' : 'Удалить оценки с устройства'}</button>
+        <label><input type="checkbox" data-lk-remember ${remember() ? 'checked' : ''}> Хранить данные ЛК на этом устройстве</label>
+        <p class="journal-meta">${nativeAccount ? 'Если выключить, данные будут доступны до закрытия приложения.' : 'Если выключить, данные пропадут после закрытия вкладки.'}</p>
+        <button type="button" class="lk-button" data-journal-clear>${nativeAccount ? 'Отключить ЛК и удалить данные' : 'Удалить данные ЛК с устройства'}</button>
       </details>
     </section>`;
     const page = app.querySelector('.student-account');
@@ -722,7 +819,7 @@
         let payload;
         try { payload = JSON.parse(text); } catch { payload = null; }
         if (payload?.type !== 'sirius-lk') { status.textContent = 'Это не данные из закладки. Нажмите «Скопировать» на сайте ЛК и вставьте ещё раз.'; return; }
-        if (!importPages(payload.pages).loaded.length) status.textContent = 'В скопированных данных нет оценок. Скопируйте их на сайте ЛК ещё раз.';
+        if (!importTransfer(payload)) status.textContent = 'В скопированных данных ничего не нашлось. Откройте ЛК и запустите закладку ещё раз.';
       };
       if (paste) paste.onclick = async () => {
         try { accept(await navigator.clipboard.readText()); }
@@ -809,6 +906,8 @@
         nativeNeedsLogin = false;
       }
       for (const key of Object.keys(sources)) { revisions[key] = (revisions[key] || 0) + 1; delete data[key]; }
+      personalNeedsLogin = Boolean(nativeAccount);
+      resetPersonalSchedule({ persist: false });
       storage.drop(STORE);
       connectOpen = false;
       draw();
@@ -855,5 +954,7 @@
     lessonRecord: (slot, group) => demo ? [] : lessonRecord(slot, group),
     summary: () => demo ? null : summary(),
     refreshSchedule: () => refreshSession(),
+    personalWeeks: () => !demo && data.schedule,
+    refreshPersonalWeek,
   };
 })();
