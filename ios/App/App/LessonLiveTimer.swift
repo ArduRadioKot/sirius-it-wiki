@@ -48,7 +48,7 @@ final class LessonLiveTimer {
         let slots = WidgetSchedule.current()?.timerSlots(group: WidgetSchedule.group, now: now, horizon: horizon) ?? []
         let wanted: [WidgetSchedule.TimerSlot]
         if #available(iOS 26.0, *) { wanted = Array(slots.prefix(Self.maximumSlots)) }
-        else { wanted = Array(slots.prefix { $0.start <= now }) }
+        else { wanted = Array(slots.prefix { $0.activation <= now }) }
         let validKeys = Set(wanted.map(\.key))
         var existing = Set<String>()
 
@@ -74,9 +74,9 @@ final class LessonLiveTimer {
 
         // A foreground app can retire the card exactly at the end of a pair.
         // When suspended, the system uses the card's stale date and the bounded countdown.
-        let nextBoundary = slots.flatMap { [$0.start, $0.end] }.filter { $0 > now }.min()
+        let nextBoundary = slots.flatMap { [$0.activation, $0.end] }.filter { $0 > now }.min()
         if let nextBoundary {
-            let seconds = max(1, nextBoundary.timeIntervalSinceNow)
+            let seconds = max(0, nextBoundary.timeIntervalSinceNow)
             boundaryTask = Task { [weak self] in
                 try? await Task.sleep(nanoseconds: UInt64(seconds * 1_000_000_000))
                 guard !Task.isCancelled else { return }
@@ -91,12 +91,12 @@ final class LessonLiveTimer {
 
     private func request(_ slot: WidgetSchedule.TimerSlot) throws {
         let attributes = LessonTimerAttributes(key: slot.key, day: slot.day, start: slot.start, end: slot.end)
-        if slot.start <= Date() {
+        if slot.activation <= Date() {
             _ = try Activity.request(attributes: attributes, content: content(for: slot), pushType: nil)
         } else if #available(iOS 26.0, *) {
             let alert = AlertConfiguration(title: "Пара началась", body: "Таймер покажет, сколько осталось до её конца.", sound: .default)
             _ = try Activity.request(attributes: attributes, content: content(for: slot), pushType: nil,
-                                     style: .standard, alertConfiguration: alert, start: slot.start)
+                                     style: .standard, alertConfiguration: alert, start: slot.activation)
         }
     }
 }

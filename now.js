@@ -3,7 +3,8 @@
 (() => {
   const ZONE = 'Europe/Moscow';
   const escape = (s = '') => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-  const today = (ms = Date.now()) => new Intl.DateTimeFormat('sv-SE', { timeZone: ZONE }).format(new Date(ms));
+  const dayFormat = new Intl.DateTimeFormat('sv-SE', { timeZone: ZONE });
+  const today = (ms = Date.now()) => dayFormat.format(ms);
   const at = (date, time) => new Date(`${date}T${time}:00+03:00`).getTime();
   const dayLabel = (iso, opts) => new Date(`${iso}T12:00:00+03:00`).toLocaleDateString('ru-RU', { timeZone: ZONE, ...opts });
   const RING = 2 * Math.PI * 54;
@@ -17,18 +18,19 @@
     }
     return [...map.values()]
       .map(list => ({ list, date: list[0].date, start: list[0].start, end: list[0].end, from: at(list[0].date, list[0].start), to: at(list[0].date, list[0].end) }))
+      .filter(s => Number.isFinite(s.from) && s.to > s.from)
       .sort((a, b) => a.from - b.from || a.to - b.to);
   }
 
   // Pure state for a moment in time, so the panel and tests read the same thing.
-  function state(rows, now = Date.now()) {
-    const all = slots(rows || []);
+  function state(rows, now = Date.now(), all = slots(rows || [])) {
     const day = today(now);
     const todays = all.filter(s => s.date === day);
     const current = todays.find(s => s.from <= now && s.to > now) || null;
     const upcoming = all.find(s => s.from > now) || null;
     const nextToday = todays.find(s => s.from > now) || null;
-    const dayEnd = todays.length ? Math.max(...todays.map(s => s.to)) : null;
+    const last = todays.reduce((latest, slot) => !latest || slot.to > latest.to ? slot : latest, null);
+    const dayEnd = last?.to ?? null;
     const left = todays.filter(s => s.to > now).length;
     let phase = 'none';
     if (todays.length) {
@@ -37,7 +39,7 @@
       else if (now >= dayEnd) phase = 'after';
       else phase = 'break';
     }
-    return { now, day, todays, current, upcoming, nextToday, dayEnd, left, phase };
+    return { now, day, all, todays, current, upcoming, nextToday, dayEnd, dayEndLabel: last?.end, left, phase };
   }
 
   function clock(ms) {
@@ -49,14 +51,12 @@
   function span(ms) {
     const minutes = Math.max(0, Math.ceil(ms / 60000));
     const d = Math.floor(minutes / 1440), h = Math.floor(minutes % 1440 / 60), m = minutes % 60;
-    if (d) return `${d} д ${h} ч`;
+    if (d) return `${d} д ${h} ч${m ? ` ${m} мин` : ''}`;
     if (h) return m ? `${h} ч ${m} мин` : `${h} ч`;
     return `${m} мин`;
   }
-  const plural = (n, one, few, many) => {
-    const a = n % 10, b = n % 100;
-    return a === 1 && b !== 11 ? one : a >= 2 && a <= 4 && (b < 12 || b > 14) ? few : many;
-  };
+  const fraction = (now, from, to) => Math.max(0, Math.min(1, (now - from) / (to - from)));
+  const timing = (now, from, to) => now < from ? 'later' : now < to ? 'live' : 'done';
   const titleOf = slot => [...new Set(slot.list.map(e => e.title))].join(' / ');
   const roomOf = slot => [...new Set(slot.list.map(e => e.room).filter(Boolean))].join(', ');
 
@@ -69,7 +69,7 @@
     } else if (phase === 'break' || phase === 'before') {
       const previousEnd = phase === 'break' ? Math.max(...s.todays.filter(x => x.to <= now).map(x => x.to)) : null;
       label = phase === 'break' ? 'до конца перемены' : 'до первой пары';
-      target = nextToday.from; total = previousEnd ? nextToday.from - previousEnd : 3 * 3600000;
+      target = nextToday.from; total = nextToday.from - (previousEnd ?? at(s.day, '00:00'));
       focus = nextToday; sub = roomOf(nextToday) || 'Аудитория не указана';
     } else {
       focus = upcoming;
@@ -91,14 +91,11 @@
   function ribbon(s) {
     if (!s.todays.length) return '';
     const first = s.todays[0].from, last = s.dayEnd, length = last - first || 1;
-    const needle = s.now >= first && s.now <= last ? `<span class="now-needle" style="left:${((s.now - first) / length * 100).toFixed(2)}%"></span>` : '';
     return `<div class="now-ribbon" role="img" aria-label="Пары сегодня: ${s.todays.map(x => `${x.start}–${x.end}`).join(', ')}">
       <div class="now-ribbon-track">${s.todays.map(x => {
-        const state = x.to <= s.now ? 'done' : x.from <= s.now ? 'live' : 'later';
-        const fill = state === 'live' ? ((s.now - x.from) / (x.to - x.from) * 100).toFixed(1) : state === 'done' ? 100 : 0;
-        return `<span class="now-seg is-${state}" style="left:${((x.from - first) / length * 100).toFixed(2)}%;width:${((x.to - x.from) / length * 100).toFixed(2)}%;--fill:${fill}%" title="${escape(x.start + '–' + x.end + ' ' + titleOf(x))}"></span>`;
-      }).join('')}${needle}</div>
-      <div class="now-ribbon-scale"><span>${escape(s.todays[0].start)}</span><span>${escape(s.todays[s.todays.length - 1].end)}</span></div>
+        return `<span class="now-seg is-${timing(s.now, x.from, x.to)}" style="left:${((x.from - first) / length * 100).toFixed(2)}%;width:${((x.to - x.from) / length * 100).toFixed(2)}%;--fill:${(fraction(s.now, x.from, x.to) * 100).toFixed(1)}%" title="${escape(x.start + '–' + x.end + ' ' + titleOf(x))}"></span>`;
+      }).join('')}<span class="now-needle"></span></div>
+      <div class="now-ribbon-scale"><span>${escape(s.todays[0].start)}</span><span>${escape(s.dayEndLabel)}</span></div>
     </div>`;
   }
 
@@ -113,11 +110,11 @@
     const first = s.upcoming;
     const head = `<p class="now-context"><span class="now-dot" data-phase="${s.phase}"></span>${escape(headline(s))}<span class="now-group">${escape(group)}</span></p>`;
     if (!first) return `<div class="now-body">${head}<h2 class="now-title">Впереди пар нет</h2><p class="now-sub">Расписание на следующие дни ещё не опубликовано.</p></div>`;
-    const day = slots((window.SiriusSchedule?.rows?.() || []).filter(e => e.date === first.date));
+    const day = s.all.filter(slot => slot.date === first.date);
     const when = relativeDay(first.date, s.now);
     return `<div class="now-body">${head}
         <h2 class="now-title">Первая пара ${escape(when)} в ${escape(first.start)}</h2>
-        <p class="now-sub">Через <span data-now-clock>${escape(span(first.from - s.now))}</span> · ${escape(dayLabel(first.date, { day: 'numeric', month: 'long' }))}</p>
+        <p class="now-sub">Через <span data-now-clock>${escape(clock(first.from - s.now))}</span> · ${escape(dayLabel(first.date, { day: 'numeric', month: 'long' }))}</p>
       </div>
       <ol class="now-agenda" aria-label="Пары ${escape(when)}">${day.map(x => `<li><time>${escape(x.start)}<span>${escape(x.end)}</span></time><div><strong>${escape(titleOf(x))}</strong><span>${escape([...new Set(x.list.map(e => e.kind).filter(Boolean))].join(', ') + (roomOf(x) ? ' · ' + roomOf(x) : ''))}</span></div></li>`).join('')}</ol>`;
   }
@@ -125,17 +122,16 @@
   function markup(s, group) {
     if (s.phase === 'none' || s.phase === 'after') return agenda(s, group);
     const v = view(s);
-    const progress = v.total ? Math.min(1, Math.max(0, 1 - (v.target - s.now) / v.total)) : 0;
     const count = s.todays.length;
     const stats = count ? `<dl class="now-stats">
-        <div><dt>До конца пар</dt><dd data-now-dayleft>${s.phase === 'after' ? 'свободен' : span(s.dayEnd - s.now)}</dd></div>
+        <div><dt>До конца пар</dt><dd data-now-dayleft>${clock(s.dayEnd - s.now)}</dd></div>
         <div><dt>Осталось пар</dt><dd>${s.left} из ${count}</dd></div>
-        <div><dt>Свободен с</dt><dd>${escape(s.todays[count - 1].end)}</dd></div>
+        <div><dt>Свободен с</dt><dd>${escape(s.dayEndLabel)}</dd></div>
       </dl>` : '';
     const focus = v.focus ? `<h2 class="now-title">${escape(titleOf(v.focus))}</h2>` : '<h2 class="now-title">Расписание пока пустое</h2>';
-    const clockText = v.target ? (v.target - s.now > 86400000 ? span(v.target - s.now) : clock(v.target - s.now)) : '—';
-    return `<div class="now-dial" aria-hidden="true">
-        <svg viewBox="0 0 120 120"><circle class="now-dial-track" cx="60" cy="60" r="54"/><circle class="now-dial-fill" cx="60" cy="60" r="54" stroke-dasharray="${RING.toFixed(2)}" stroke-dashoffset="${(RING * (1 - progress)).toFixed(2)}"/></svg>
+    const clockText = v.target ? clock(v.target - s.now) : '—';
+    return `<div class="now-dial">
+        <svg viewBox="0 0 120 120" aria-hidden="true"><circle class="now-dial-track" cx="60" cy="60" r="54"/><circle class="now-dial-fill" cx="60" cy="60" r="54" stroke-dasharray="${RING.toFixed(2)}"/></svg>
         <div class="now-dial-face"><strong data-now-clock>${escape(clockText)}</strong><span>${escape(v.label || '')}</span></div>
       </div>
       <div class="now-body">
@@ -149,53 +145,84 @@
 
   const mounts = new Set();
   let timer = 0;
-  function paint(entry) {
+  function paint(entry, now) {
     const api = window.SiriusSchedule;
     const rows = api?.rows?.() || [];
-    const s = state(rows, Date.now());
-    const key = [s.phase, s.current?.from, s.nextToday?.from, s.upcoming?.from, s.todays.length, api?.group?.()].join('|');
+    const rowsChanged = entry.rows !== rows;
+    if (rowsChanged) { entry.rows = rows; entry.slots = slots(rows); }
+    const s = state(rows, now, entry.slots);
+    const group = api?.group?.() || '';
+    const key = [s.day, s.phase, s.current?.from, s.current?.to, s.upcoming?.from, s.upcoming?.to, s.left, group].join('|');
     if (!rows.length && api?.ready && !api.ready()) {
-      entry.el.dataset.phase = 'loading';
-      entry.el.innerHTML = '<div class="now-body"><p class="now-context">Загружаем расписание…</p></div>';
+      if (entry.el.dataset.phase !== 'loading') {
+        entry.el.dataset.phase = 'loading';
+        entry.el.innerHTML = '<div class="now-body"><p class="now-context">Загружаем расписание…</p></div>';
+      }
       entry.key = '';
       return s;
     }
-    if (entry.key !== key || Math.floor(Date.now() / 1000) % 20 === 0) {
+    if (rowsChanged || entry.key !== key) {
       entry.key = key;
       entry.el.dataset.phase = s.phase;
       entry.el.dataset.layout = s.phase === 'none' || s.phase === 'after' ? 'agenda' : 'live';
-      entry.el.innerHTML = markup(s, api?.group?.() || '');
-    } else {
-      const v = view(s);
-      const clockEl = entry.el.querySelector('[data-now-clock]');
-      if (clockEl && v.target) clockEl.textContent = (s.phase === 'none' || s.phase === 'after') ? span(v.target - s.now) : v.target - s.now > 86400000 ? span(v.target - s.now) : clock(v.target - s.now);
-      const fill = entry.el.querySelector('.now-dial-fill');
-      if (fill && v.total) fill.style.strokeDashoffset = (RING * (1 - Math.min(1, Math.max(0, 1 - (v.target - s.now) / v.total)))).toFixed(2);
-      const dayLeft = entry.el.querySelector('[data-now-dayleft]');
-      if (dayLeft && s.dayEnd && s.phase !== 'after') dayLeft.textContent = span(s.dayEnd - s.now);
-      const live = entry.el.querySelector('.now-seg.is-live');
-      if (live && s.current) live.style.setProperty('--fill', ((s.now - s.current.from) / (s.current.to - s.current.from) * 100).toFixed(1) + '%');
+      entry.el.innerHTML = markup(s, group);
     }
+    const v = view(s);
+    const clockEl = entry.el.querySelector('[data-now-clock]');
+    if (clockEl && v.target) clockEl.textContent = clock(v.target - now);
+    const fill = entry.el.querySelector('.now-dial-fill');
+    if (fill && v.total) fill.style.strokeDashoffset = (RING * fraction(now, v.target - v.total, v.target)).toFixed(2);
+    const dayLeft = entry.el.querySelector('[data-now-dayleft]');
+    if (dayLeft) dayLeft.textContent = clock(s.dayEnd - now);
+    const needle = entry.el.querySelector('.now-needle');
+    if (needle) {
+      const first = s.todays[0].from;
+      needle.hidden = now < first || now > s.dayEnd;
+      needle.style.left = (fraction(now, first, s.dayEnd) * 100).toFixed(2) + '%';
+    }
+    entry.el.querySelectorAll('.now-seg').forEach((el, i) => {
+      const { from, to } = s.todays[i];
+      el.classList.toggle('is-done', to <= now);
+      el.style.setProperty('--fill', (fraction(now, from, to) * 100).toFixed(1) + '%');
+    });
     return s;
   }
+  function paintRows(now) {
+    document.querySelectorAll('.lesson[data-start], .schedule-break[data-start]').forEach(el => {
+      const from = Number(el.dataset.start), to = Number(el.dataset.end);
+      const current = from <= now && now < to;
+      const isLesson = el.classList.contains('lesson');
+      el.classList.toggle('current', current);
+      if (isLesson && current) el.style.setProperty('--lesson-progress', (fraction(now, from, to) * 100).toFixed(1) + '%');
+      const label = el.querySelector('[data-row-countdown]');
+      label.hidden = !current;
+      if (current) label.textContent = `${isLesson ? 'До конца пары' : 'До следующей пары'} ${clock(to - now)}`;
+    });
+  }
   function loop() {
+    clearTimeout(timer);
+    timer = 0;
+    const now = Date.now();
     let last = null;
     for (const entry of [...mounts]) {
       if (!entry.el.isConnected) { mounts.delete(entry); continue; }
-      last = paint(entry);
+      last = paint(entry, now);
     }
-    // Progress bar inside the current lesson card of the schedule page.
-    document.querySelectorAll('.lesson.current').forEach(el => {
-      const from = Number(el.dataset.start), to = Number(el.dataset.end);
-      el.style.setProperty('--lesson-progress', `${Math.min(100, Math.max(0, (Date.now() - from) / (to - from) * 100)).toFixed(1)}%`);
-    });
+    if (last && window.SiriusSchedule?.syncToday?.(last.day)) return;
     const rows = window.SiriusSchedule?.rows?.();
     if (rows && 'setAppBadge' in navigator) {
-      const s = last || state(rows);
-      (s.left ? navigator.setAppBadge(s.left) : navigator.clearAppBadge()).catch(() => {});
+      const s = last || state(rows, now);
+      if (s.left !== badgeCount) {
+        badgeCount = s.left;
+        (s.left ? navigator.setAppBadge(s.left) : navigator.clearAppBadge()).catch(() => {});
+      }
     }
-    if (!mounts.size) { clearInterval(timer); timer = 0; }
+    if (mounts.size) {
+      paintRows(now);
+      timer = setTimeout(loop, 1000 - Date.now() % 1000);
+    }
   }
+  let badgeCount;
   function mount(el, options = {}) {
     if (!el) return;
     el.classList.add('now-card');
@@ -203,10 +230,11 @@
     for (const entry of mounts) if (entry.el === el) mounts.delete(entry);
     const entry = { el, key: '' };
     mounts.add(entry);
-    paint(entry);
-    if (!timer) timer = setInterval(loop, 1000);
+    loop();
   }
   document.addEventListener('visibilitychange', () => { if (!document.hidden) loop(); });
+  window.addEventListener('pageshow', loop);
+  window.addEventListener('focus', loop);
 
   window.SiriusNow = { mount, state, clock, span };
 })();

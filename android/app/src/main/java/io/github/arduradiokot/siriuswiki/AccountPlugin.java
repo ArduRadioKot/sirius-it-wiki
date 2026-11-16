@@ -1,8 +1,12 @@
 package io.github.arduradiokot.siriuswiki;
 
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
+import android.provider.Settings;
 import android.webkit.CookieManager;
 import androidx.activity.result.ActivityResult;
 import com.getcapacitor.JSObject;
@@ -100,8 +104,52 @@ public final class AccountPlugin extends Plugin {
     }
 
     @PluginMethod
+    public void cachedSchedule(PluginCall call) {
+        scheduleWork.execute(() -> {
+            try { call.resolve(new JSObject(WidgetSchedule.current(getContext()).toString())); }
+            catch (Exception error) { call.reject("Расписание недоступно.", "CACHE"); }
+        });
+    }
+
+    @PluginMethod
+    public void cacheSchedule(PluginCall call) {
+        scheduleWork.execute(() -> {
+            String value = call.getString("value", "");
+            if (value.isEmpty() || value.getBytes(StandardCharsets.UTF_8).length > 2 * 1024 * 1024) {
+                call.reject("Некорректное расписание.", "CACHE");
+                return;
+            }
+            try {
+                WidgetSchedule.save(getContext(), new JSObject(value));
+                ScheduleWidget.redraw(getContext());
+                call.resolve();
+            } catch (Exception error) { call.reject("Не удалось сохранить расписание.", "CACHE"); }
+        });
+    }
+
+    @PluginMethod
     public void setScheduleGroup(PluginCall call) {
         if (WidgetSchedule.select(getContext(), call.getString("group"))) ScheduleWidget.redraw(getContext());
+        call.resolve();
+    }
+
+    @PluginMethod
+    public void getWidgetTimerSettings(PluginCall call) {
+        AlarmManager alarms = getContext().getSystemService(AlarmManager.class);
+        call.resolve(new JSObject().put("exact", ScheduleWidget.exactTimersAllowed(alarms)));
+    }
+
+    @PluginMethod
+    public void openWidgetTimerSettings(PluginCall call) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            try {
+                Uri app = Uri.fromParts("package", getContext().getPackageName(), null);
+                getActivity().startActivity(new Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM, app));
+            } catch (ActivityNotFoundException | SecurityException error) {
+                call.reject("Не удалось открыть настройки точного отсчёта.");
+                return;
+            }
+        }
         call.resolve();
     }
 

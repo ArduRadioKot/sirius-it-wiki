@@ -8,7 +8,7 @@ final class SiriusAccountPlugin: CAPPlugin, CAPBridgedPlugin {
     let identifier = "SiriusAccountPlugin"
     let jsName = "SiriusAccount"
     let pluginMethods = [
-        "signIn", "refresh", "schedule", "loadCache", "saveCache", "clear", "setScheduleGroup", "widgetRoute",
+        "signIn", "refresh", "schedule", "cachedSchedule", "cacheSchedule", "loadCache", "saveCache", "clear", "setScheduleGroup", "widgetRoute",
         "getEndReminderSettings", "setEndReminderSettings", "getLiveTimerSettings", "setLiveTimerSettings"
     ]
         .compactMap { CAPPluginMethod(name: $0, returnType: CAPPluginReturnPromise) }
@@ -131,6 +131,30 @@ final class SiriusAccountPlugin: CAPPlugin, CAPBridgedPlugin {
         Task {
             if #available(iOS 16.2, *) { await LessonLiveTimer.shared.reconcile() }
             await LessonEndReminders.shared.replan()
+        }
+    }
+
+    @objc func cachedSchedule(_ call: CAPPluginCall) {
+        guard let bytes = WidgetSchedule.currentData(),
+              let data = (try? JSONSerialization.jsonObject(with: bytes)) as? [String: Any] else {
+            call.reject("Расписание недоступно.", "CACHE")
+            return
+        }
+        call.resolve(data)
+    }
+
+    @objc func cacheSchedule(_ call: CAPPluginCall) {
+        guard let value = call.getString("value") else {
+            call.reject("Некорректное расписание.", "CACHE")
+            return
+        }
+        Task {
+            if WidgetSchedule.save(Data(value.utf8)) {
+                WidgetCenter.shared.reloadAllTimelines()
+                if #available(iOS 16.2, *) { await LessonLiveTimer.shared.reconcile() }
+                await LessonEndReminders.shared.replan()
+            }
+            call.resolve()
         }
     }
 

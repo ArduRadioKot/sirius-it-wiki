@@ -8,7 +8,7 @@
     <string name="widget_next">Ближайшая пара</string>
     <string name="widget_day">Расписание на день</string>
     <string name="widget_board">Учебная панель</string>
-    <string name="widget_next_description">Время, предмет и аудитория ближайшей пары</string>
+    <string name="widget_next_description">Круговой таймер из расписания, предмет и аудитория ближайшей пары</string>
     <string name="widget_day_description">Пары на сегодня для выбранной группы</string>
     <string name="widget_board_description">Расписание, личный кабинет и самопроверка</string>
     <string name="widget_refresh">Обновить расписание</string>

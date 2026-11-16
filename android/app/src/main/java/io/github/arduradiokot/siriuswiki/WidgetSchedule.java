@@ -44,17 +44,19 @@ final class WidgetSchedule {
         } catch (Exception error) { return new JSONObject(); }
     }
 
-    private static synchronized JSONObject load(Context context) {
+    static synchronized JSONObject current(Context context) {
+        JSONObject bundled = local(context);
         try {
-            return new JSONObject(new String(cache(context).readFully(), StandardCharsets.UTF_8));
-        } catch (Exception error) { return local(context); }
+            JSONObject saved = new JSONObject(new String(cache(context).readFully(), StandardCharsets.UTF_8));
+            return updated(saved) >= updated(bundled) ? saved : bundled;
+        } catch (Exception error) { return bundled; }
     }
 
     static synchronized void save(Context context, JSONObject data) {
         JSONObject groups = data.optJSONObject("groups");
         if (data.optInt("version") != 1 || groups == null || groups.length() == 0) return;
         long time = updated(data);
-        JSONObject existing = load(context);
+        JSONObject existing = current(context);
         if (time <= 0 || time < updated(existing)) return;
         JSONObject previousGroups = existing.optJSONObject("groups");
         if (previousGroups != null) {
@@ -98,28 +100,47 @@ final class WidgetSchedule {
     }
 
     static final class Lesson {
-        final String date, time, title, room;
+        final String date, time, endTime, title, room;
         final long start, end;
         Lesson(JSONObject data) {
             date = data.optString("date");
             time = data.optString("start");
+            endTime = data.optString("end");
             title = data.optString("title");
             room = data.optString("room");
             start = parse(date + " " + time, "yyyy-MM-dd HH:mm");
-            end = parse(date + " " + data.optString("end"), "yyyy-MM-dd HH:mm");
+            end = parse(date + " " + endTime, "yyyy-MM-dd HH:mm");
         }
     }
 
     static final class Day {
         final String today;
+        final long midnight;
         final List<Lesson> lessons = new ArrayList<>();
         Lesson next;
+        long previousEnd;
         boolean covered;
-        Day(String today) { this.today = today; }
+        Day(String today) {
+            this.today = today;
+            midnight = parse(today + " 00:00", "yyyy-MM-dd HH:mm");
+            previousEnd = midnight;
+        }
+
+        boolean hasCountdown() {
+            return next != null && next.date.equals(today);
+        }
+
+        long deadline(long now) {
+            if (next == null) return 0;
+            return next.start > now ? next.start : next.end;
+        }
     }
 
+    private static final Comparator<Lesson> SLOT_ORDER = Comparator
+        .comparingLong((Lesson lesson) -> lesson.start).thenComparingLong(lesson -> lesson.end);
+
     static Day read(Context context, String group, long now) {
-        JSONObject data = load(context);
+        JSONObject data = current(context);
         String today = day(now);
         Day result = new Day(today);
         JSONObject groups = data.optJSONObject("groups");
@@ -131,10 +152,13 @@ final class WidgetSchedule {
             if (record == null) continue;
             Lesson lesson = new Lesson(record);
             if (lesson.title.isEmpty() || lesson.start < 0 || lesson.end <= lesson.start) continue;
-            if (today.equals(lesson.date)) result.lessons.add(lesson);
-            if (lesson.end > now && (result.next == null || lesson.start < result.next.start)) result.next = lesson;
+            if (today.equals(lesson.date)) {
+                result.lessons.add(lesson);
+                if (lesson.end <= now) result.previousEnd = Math.max(result.previousEnd, lesson.end);
+            }
+            if (lesson.end > now && (result.next == null || SLOT_ORDER.compare(lesson, result.next) < 0)) result.next = lesson;
         }
-        result.lessons.sort(Comparator.comparingLong(lesson -> lesson.start));
+        result.lessons.sort(SLOT_ORDER);
         return result;
     }
 }

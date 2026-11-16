@@ -11,6 +11,7 @@ struct LessonTimerActivity: Widget {
                     Label(context.isStale ? "Пара закончилась" : "До конца пары", systemImage: "clock")
                     Spacer(minLength: 8)
                     countdown(context).font(.title2.weight(.semibold)).monospacedDigit()
+                        .lineLimit(1).minimumScaleFactor(0.7)
                         .frame(maxWidth: 105, alignment: .trailing)
                 }
                 Text(context.state.title).font(.subheadline.weight(.medium)).lineLimit(2)
@@ -29,20 +30,22 @@ struct LessonTimerActivity: Widget {
         } dynamicIsland: { context in
             DynamicIsland {
                 DynamicIslandExpandedRegion(.leading) {
-                    Label("До конца пары", systemImage: "clock").font(.caption)
+                    Label(context.isStale ? "Пара закончилась" : "До конца пары", systemImage: "clock").font(.caption)
                 }
                 DynamicIslandExpandedRegion(.trailing) {
-                    countdown(context).font(.headline.monospacedDigit()).frame(width: 72, alignment: .trailing)
+                    countdown(context).font(.headline.monospacedDigit())
+                        .lineLimit(1).minimumScaleFactor(0.66).frame(width: 72, alignment: .trailing)
                 }
                 DynamicIslandExpandedRegion(.bottom) {
                     Text(context.isStale ? "Пара закончилась" : context.state.title).lineLimit(2)
                 }
             } compactLeading: {
-                Image(systemName: "clock").accessibilityLabel("До конца пары")
+                Image(systemName: "clock").accessibilityLabel(context.isStale ? "Пара закончилась" : "До конца пары")
             } compactTrailing: {
-                countdown(context).monospacedDigit().frame(width: 47, alignment: .trailing)
+                countdown(context).monospacedDigit()
+                    .lineLimit(1).minimumScaleFactor(0.62).frame(width: 49, alignment: .trailing)
             } minimal: {
-                Image(systemName: "clock").accessibilityLabel("До конца пары")
+                Image(systemName: "clock").accessibilityLabel(context.isStale ? "Пара закончилась" : "До конца пары")
             }
             .widgetURL(scheduleURL(context))
         }

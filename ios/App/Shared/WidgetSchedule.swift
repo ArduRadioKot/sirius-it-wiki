@@ -25,10 +25,11 @@ enum WidgetSchedule {
             var slots: [TimerSlot] = []
             for lesson in lessons {
                 guard !lesson.title.isEmpty, let start = lesson.startsAt, let end = lesson.endsAt,
-                      end > start, end > now, start <= horizon,
-                      start >= (slots.last?.end ?? .distantPast) else { continue }
+                      end > start, end > now, start <= horizon else { continue }
+                let activation = max(start, slots.last?.end ?? start)
+                guard activation < end, activation <= horizon else { continue }
                 let key = "\(group)|\(lesson.date)|\(lesson.start)|\(lesson.end)"
-                slots.append(TimerSlot(key: key, day: lesson.date, start: start, end: end, title: lesson.title))
+                slots.append(TimerSlot(key: key, day: lesson.date, start: start, end: end, activation: activation, title: lesson.title))
             }
             return slots
         }
@@ -61,6 +62,10 @@ enum WidgetSchedule {
 
         var startsAt: Date? { timeFormat.date(from: "\(date) \(start)") }
         var endsAt: Date? { timeFormat.date(from: "\(date) \(end)") }
+        var interval: ClosedRange<Date>? {
+            guard let start = startsAt, let end = endsAt, end > start else { return nil }
+            return start...end
+        }
     }
 
     struct TimerSlot {
@@ -68,6 +73,7 @@ enum WidgetSchedule {
         let day: String
         let start: Date
         let end: Date
+        let activation: Date
         let title: String
     }
 
@@ -108,6 +114,12 @@ enum WidgetSchedule {
     }
 
     static func day(_ date: Date) -> String { dateFormat.string(from: date) }
+    static func midnight(_ date: Date, next: Bool = false) -> Date {
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = zone
+        let start = calendar.startOfDay(for: date)
+        return next ? calendar.date(byAdding: .day, value: 1, to: start)! : start
+    }
 
     static func label(_ day: String) -> String {
         dateFormat.date(from: day).map { labelFormat.string(from: $0) } ?? day
@@ -139,17 +151,20 @@ enum WidgetSchedule {
         return snapshot
     }
 
-    private static func bundled() -> Snapshot? {
+    private static func bundledData() -> Data? {
         let path = Bundle.main.url(forResource: "schedule", withExtension: "json")
             ?? Bundle.main.resourceURL?.appendingPathComponent("public/data/schedule.json")
-        guard let path, let data = try? Data(contentsOf: path) else { return nil }
-        return decode(data)
+        return path.flatMap { try? Data(contentsOf: $0) }
+    }
+
+    static func currentData() -> Data? {
+        let bundled = bundledData()
+        guard let cache, let data = try? Data(contentsOf: cache), let saved = decode(data) else { return bundled }
+        return saved.updatedAt >= (bundled.flatMap(decode)?.updatedAt ?? .distantPast) ? data : bundled
     }
 
     static func current() -> Snapshot? {
-        let bundled = bundled()
-        guard let cache, let data = try? Data(contentsOf: cache), let saved = decode(data) else { return bundled }
-        return saved.updatedAt >= (bundled?.updatedAt ?? .distantPast) ? saved : bundled
+        currentData().flatMap(decode)
     }
 
     @discardableResult
@@ -160,7 +175,7 @@ enum WidgetSchedule {
         var coordinationError: NSError?
         var changed = false
         coordinator.coordinate(writingItemAt: cache, options: .forReplacing, error: &coordinationError) { target in
-            let old = (try? Data(contentsOf: target)).flatMap(decode) ?? bundled()
+            let old = (try? Data(contentsOf: target)).flatMap(decode) ?? bundledData().flatMap(decode)
             guard incoming.updatedAt > (old?.updatedAt ?? .distantPast) else { return }
             do {
                 try data.write(to: target, options: .atomic)

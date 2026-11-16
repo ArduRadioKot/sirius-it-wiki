@@ -8,7 +8,7 @@
   const instant = (e, field = 'start') => new Date(`${e.date}T${e[field]}:00+03:00`).getTime();
   let group = get('sirius-group', GROUPS[0]);
   if (!GROUPS.includes(group)) group = GROUPS[0];
-  let date = today(), snapshot = null, loading = false, failure = false, notificationError = '';
+  let date = today(), followsToday = true, snapshot = null, loading = false, failure = false, notificationError = '';
   let lead = Number(get('sirius-lead', '10'));
   if (![5,10,15,30].includes(lead)) lead = 10;
   let enabled = get('sirius-reminders', 'false') === 'true';
@@ -30,16 +30,6 @@
   const active = () => location.hash.startsWith('#/schedule');
   const fresh = () => snapshot && Date.now() - Date.parse(snapshot.updatedAt) < 24 * 3600000;
   const completeSnapshot = () => GROUPS.every((g) => Array.isArray(snapshot?.groups[g]));
-  const nextText = () => {
-    if (!snapshot?.groups[group]) return ['Расписание загружается', 'Нужен интернет для первой загрузки'];
-    if (today() < snapshot.fromDate || today() > snapshot.toDate) return ['Нужно обновить расписание', 'Сохранённый период не включает сегодня'];
-    const now = Date.now(), ongoing = lessons().filter(e => instant(e) <= now && instant(e, 'end') > now);
-    if (ongoing.length) return [`До конца пары ${Math.ceil((instant(ongoing[0], 'end') - now)/60000)} мин`, [...new Set(ongoing.map(e => e.title))].join(' / ')];
-    const next = lessons().find(e => instant(e) > now);
-    if (!next) return ['Пар больше нет', 'В сохранённом периоде'];
-    const minutes = Math.ceil((instant(next) - now)/60000), days = Math.floor(minutes/1440), hours = Math.floor(minutes%1440/60);
-    return [`До пары ${days ? days + ' д ' : ''}${hours ? hours + ' ч ' : ''}${minutes%60} мин`, `${next.title} · ${next.date === today() ? 'сегодня' : next.date} в ${next.start}`];
-  };
   const UPDATE_INTERVAL = 4 * 60 * 60 * 1000;
   const isLocalHost = (hostname) => hostname === 'localhost' || hostname === '127.0.0.1' || hostname === '0.0.0.0' ||
     hostname === '::1' || hostname === '[::1]' || (typeof hostname === 'string' && hostname.endsWith('.local')) ||
@@ -49,8 +39,21 @@
   const canScrape = () => Boolean(window.SiriusSource);
   const nativeSchedule = window.Capacitor?.isNativePlatform?.() && window.Capacitor?.Plugins?.SiriusAccount;
   const iosSchedule = window.Capacitor?.getPlatform?.() === 'ios' && nativeSchedule;
+  const androidSchedule = window.Capacitor?.getPlatform?.() === 'android' && nativeSchedule;
+  let widgetTimerExact = null;
   let endReminders = null, endRemindersBusy = false, endReminderError = '';
   let liveTimer = null, liveTimerBusy = false, liveTimerError = '';
+  function refreshWidgetTimerSettings() {
+    androidSchedule?.getWidgetTimerSettings?.().then(({ exact }) => {
+      if (typeof exact !== 'boolean' || exact === widgetTimerExact) return;
+      widgetTimerExact = exact;
+      if (active()) render();
+    }).catch(() => {});
+  }
+  if (androidSchedule) {
+    refreshWidgetTimerSettings();
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) refreshWidgetTimerSettings(); });
+  }
   if (iosSchedule) {
     iosSchedule.getEndReminderSettings().then(settings => {
       endReminders = settings;
@@ -199,10 +202,30 @@
     if (elapsed >= 0 && elapsed < UPDATE_INTERVAL) return false;
     return true;
   };
+  function applyPublishedSnapshot(data) {
+    const newer = !snapshot || Date.parse(data.updatedAt) >= Date.parse(snapshot.updatedAt);
+    if (!newer || (completeSnapshot() && !incomingComplete(data))) return;
+    snapshot = data;
+    window.SiriusStudentAccount?.refreshSchedule();
+    put('sirius-schedule', JSON.stringify(data));
+    put('sirius-schedule-origin', 'server');
+  }
+
   async function refreshNow({ force, background }) {
     if (!force && lastAttempt && Date.now() - lastAttempt < 60000) return;
 
     lastAttempt = Date.now();
+    if (nativeSchedule && (force || !snapshot)) {
+      try {
+        const cached = await nativeSchedule.cachedSchedule?.();
+        const usable = valid(cached);
+        if (snapshot && (!usable || Date.parse(snapshot.updatedAt) > Date.parse(cached.updatedAt))) {
+          await nativeSchedule.cacheSchedule?.({ value: JSON.stringify(snapshot) });
+        } else if (usable) {
+          applyPublishedSnapshot(cached);
+        }
+      } catch {}
+    }
     // On GitHub Pages the university's CORS policy always blocks this, and outside Russia
     // the request hangs until timeout, delaying the published snapshot. Only the local proxy works.
     if (navigator.onLine && localCollector()) {
@@ -249,15 +272,7 @@
         failure = res.headers?.get('X-Sirius-Offline') === 'true';
       }
       if (!valid(data)) throw new Error('Invalid schedule');
-      const complete = incomingComplete(data);
-      const newer = !snapshot || Date.parse(data.updatedAt) >= Date.parse(snapshot.updatedAt);
-      const keepCompleteLocal = completeSnapshot() && !complete;
-      if (newer && !keepCompleteLocal) {
-        snapshot = data;
-        window.SiriusStudentAccount?.refreshSchedule();
-        put('sirius-schedule', JSON.stringify(data));
-        put('sirius-schedule-origin', 'server');
-      }
+      applyPublishedSnapshot(data);
       if (!failure) {
         lastCheck = Date.now();
         put('sirius-schedule-checked', String(lastCheck));
@@ -333,6 +348,7 @@
       <div class="lesson-body">
         <h3>${escape(titles.join(' / '))}</h3>
         <p class="lesson-meta-line">${metaBits.join('')}</p>
+        <span class="schedule-row-countdown" data-row-countdown hidden></span>
         ${variants}
         ${journal}
         ${comments.map((c) => `<p class="lesson-comment">${escape(c)}</p>`).join('')}
@@ -401,9 +417,10 @@
     setDate(shiftDate(date, step), animate);
   }
 
-  function setDate(nextDate, animate = true) {
+  function setDate(nextDate, animate = true, follow = false) {
     const direction = nextDate > date ? 'next' : nextDate < date ? 'previous' : '';
     date = nextDate;
+    followsToday = follow;
     render(animate ? direction : '');
   }
 
@@ -416,7 +433,9 @@
         const [hours, minutes] = start.split(':').map(Number);
         const [previousHours, previousMinutes] = busyUntil.split(':').map(Number);
         const duration = (hours - previousHours) * 60 + minutes - previousMinutes;
-        pause = `<div class="schedule-break"><span>${escape(busyUntil)}–${escape(start)}</span><span>Перерыв · ${duration} мин</span></div>`;
+        const from = instant({ date, start: busyUntil });
+        const to = instant({ date, start });
+        pause = `<div class="schedule-break" data-start="${from}" data-end="${to}"><span>${escape(busyUntil)}–${escape(start)}</span><span>Перерыв · ${duration} мин</span><span class="schedule-row-countdown" data-row-countdown hidden></span></div>`;
       }
       if (end > busyUntil) busyUntil = end;
       return pause + lessonCard(slot);
@@ -449,6 +468,10 @@
       <div class="schedule-shell">
         <aside class="schedule-rail">
           <div class="schedule-now" data-now-mount aria-live="off"></div>
+          ${widgetTimerExact === false ? `<div class="schedule-reminders schedule-widget-timer">
+            <button id="widgetTimerSettings" type="button">Точная смена таймера в виджетах</button>
+            <span id="widgetTimerStatus" role="status">Разрешение помогает переключать таймер в момент начала и конца пары.</span>
+          </div>` : ''}
           ${weekNav()}
           <p class="schedule-meta schedule-meta-rail" role="status">${escape(statusLine())} · <a href="https://schedule.siriusuniversity.ru" target="_blank" rel="noopener">Источник</a></p>
         </aside>
@@ -502,7 +525,7 @@
     };
     document.getElementById('previousDay').onclick = () => moveDate(-1);
     document.getElementById('nextDay').onclick = () => moveDate(1);
-    document.getElementById('todayButton').onclick = () => setDate(today());
+    document.getElementById('todayButton').onclick = () => setDate(today(), true, true);
     document.getElementById('reminderLead').onchange = (e) => {
       lead = Number(e.target.value);
       put('sirius-lead', String(lead));
@@ -514,6 +537,15 @@
       document.getElementById('endReminderToggle').onclick = () => setEndReminders(!endReminders.enabled, endReminders.lead);
     }
     if (liveTimer?.available) document.getElementById('liveTimerToggle').onclick = toggleLiveTimer;
+    if (widgetTimerExact === false) {
+      document.getElementById('widgetTimerSettings').onclick = async () => {
+        try { await androidSchedule.openWidgetTimerSettings(); }
+        catch {
+          const status = document.getElementById('widgetTimerStatus');
+          if (status) status.textContent = 'Откройте «Будильники и напоминания» в настройках Android.';
+        }
+      };
+    }
     document.getElementById('exportCalendar').onclick = exportCalendar;
     document.getElementById('googleCalendar').onclick = addToGoogle;
     document.getElementById('notionCalendar').onclick = addToNotion;
@@ -526,7 +558,6 @@
     document.querySelectorAll('.schedule-week-day').forEach((btn) => {
       btn.onclick = () => setDate(btn.dataset.date);
     });
-    paintTime();
     window.SiriusNow?.mount(document.querySelector('[data-now-mount]'), { compact: true });
   }
   // The worker can still be installing on the first launch; never wait forever (e.g. local preview has none).
@@ -564,27 +595,24 @@
     }
     put('sirius-reminders', String(enabled)); render(); tick();
   }
-  function paintTime() {
-    if(!active()) return;
-    const [a,b]=nextText();
-    const title=document.getElementById('nextHeadline'); if(title) title.textContent=a;
-    const detail=document.getElementById('nextDetail'); if(detail) detail.textContent=b;
-    document.querySelectorAll('.lesson').forEach(el=>el.classList.toggle('current',Number(el.dataset.start)<=Date.now()&&Number(el.dataset.end)>Date.now()));
-  }
   let notifying=false;
   async function tick() {
-    paintTime();
     if(notifying || !enabled || !fresh() || !('Notification' in window) || Notification.permission !== 'granted') return;
     notifying=true;
     try {
+      const reminderGroup = group;
       const reg=await worker(); if(!reg) return;
-      const due=lessons().filter(e=>instant(e)>Date.now() && instant(e)-Date.now()<=lead*60000);
+      const now = Date.now();
+      const due=lessons().filter(e=>instant(e)>now && instant(e)-now<=lead*60000);
       // Same-time subgroups are combined into one reminder.
       for(const start of new Set(due.map(e=>instant(e)))) {
-        const key=`sirius-notified:${group}:${start}`;
+        if (!enabled || group !== reminderGroup) break;
+        const remaining = start - Date.now();
+        if (remaining <= 0 || remaining > lead * 60000) continue;
+        const key=`sirius-notified:${reminderGroup}:${start}`;
         if(get(key,'')) continue;
         const batch=due.filter(e=>instant(e)===start);
-        await reg.showNotification(`До пары ${Math.ceil((start-Date.now())/60000)} мин`, {body:[...new Set(batch.map(e=>`${e.title} · ${e.room || 'аудитория не указана'}`))].join('\n'),tag:key,icon:new URL('assets/icon-192.png',base).href,data:{url:new URL('#/schedule',base).href}});
+        await reg.showNotification(`До пары ${Math.ceil(remaining/60000)} мин`, {body:[...new Set(batch.map(e=>`${e.title} · ${e.room || 'аудитория не указана'}`))].join('\n'),tag:key,icon:new URL('assets/icon-192.png',base).href,data:{url:new URL('#/schedule?date=' + batch[0].date,base).href}});
         put(key,'1');
       }
     } catch { notificationError='Браузер не смог показать уведомление. Проверьте разрешения или используйте календарь.'; if(active()) document.getElementById('notificationStatus').textContent=notificationError; }
@@ -718,6 +746,11 @@
   }
   window.SiriusSchedule = {
     render, refresh, moveDate,
+    syncToday: (day) => {
+      if (!active() || !followsToday || date === day) return false;
+      setDate(day, false, true);
+      return true;
+    },
     open: (requested) => /^\d{4}-\d{2}-\d{2}$/.test(requested || '') && Number.isFinite(instant({date: requested, start: '00:00'}))
       ? setDate(requested, false) : render(),
     rows: () => lessons(), group: () => group, ready: () => Boolean(snapshot?.groups[group]),

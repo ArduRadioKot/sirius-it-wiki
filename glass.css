@@ -208,6 +208,7 @@ body { font-family: var(--font); }
 .now-agenda div span { display: block; color: var(--muted); font-size: 13px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
 /* In the schedule rail */
+.schedule-widget-timer { margin-bottom: 14px; }
 .schedule-now {
   margin-bottom: 14px;
   padding: 18px;
@@ -236,6 +237,14 @@ body { font-family: var(--font); }
 }
 
 /* Progress of the current pair in the day list */
+.schedule-row-countdown {
+  color: var(--accent);
+  font-size: .78rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.schedule-break .schedule-row-countdown { color: var(--violet); }
+.schedule-row-countdown[hidden] { display: none; }
 .lesson.current::after {
   content: "";
   position: absolute;

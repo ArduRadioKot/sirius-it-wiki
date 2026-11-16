@@ -33,6 +33,12 @@ public class MainActivity extends BridgeActivity {
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        ScheduleWidget.redraw(this);
+    }
+
+    @Override
     protected void load() {
         super.load();
         WikiContent library = WikiContent.get(this);

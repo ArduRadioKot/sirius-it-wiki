@@ -5,7 +5,7 @@ const fs=require('node:fs');
 const source=fs.readFileSync('schedule.js','utf8');
 const group='ИОП-ИТ-26/1';
 const realDate=Date;
-async function setup({offline=false,stale=false,denied=false,legacy=false,host='wiki.test',checked=false,session}={}) {
+async function setup({offline=false,stale=false,denied=false,legacy=false,host='wiki.test',checked=false,session,nativeCache}={}) {
   let now=Date.parse('2026-09-15T05:36:00Z');
   const data={version:1,updatedAt:new Date(now-(stale?2*86400000:0)).toISOString(),fromDate:'2026-09-14',toDate:'2026-10-04',groups:{[group]:[{id:'1',date:'2026-09-15',start:'08:45',end:'10:05',title:'Математика, логика; проверка'.repeat(6),room:'Альфа 5.8',teachers:'Преподаватель',kind:'Лекция',comment:''}], 'ИОП-ИТ-26/2':[], 'ИОП-ИТ-25/1':[], 'ИОП-ИТ-25/2':[], 'ИОП-ИТ-24/1':[], 'ИОП-ИТ-24/2':[]}};
   if(legacy){for(const name of ['ИОП-ИТ-24/1','ИОП-ИТ-24/2']) delete data.groups[name];}
@@ -17,11 +17,39 @@ async function setup({offline=false,stale=false,denied=false,legacy=false,host='
   const document={currentScript:{src:'https://wiki.test/repo/schedule.js'},hidden:false,addEventListener(name,fn){events['doc:'+name]=fn;},querySelectorAll(){return[];},getElementById(id){if(!nodes.has(id)) nodes.set(id,{innerHTML:'',textContent:'',addEventListener(name,fn){this[name]=fn;}});return nodes.get(id);},createElement(){return {click(){}};}};
   class TestURL extends URL {static createObjectURL(b){blob=b;return 'blob:test';}static revokeObjectURL(){}}
   const opened=[];let copied='';
+  const widgetWrites = [];
   const context={URL:TestURL,Blob,TextEncoder,Intl,Date:Clock,AbortSignal,console,document,location:{hash:'#/schedule',hostname:host,protocol:host==='127.0.0.1'||host==='localhost'?'http:':'https:'},localStorage:{getItem:k=>store.get(k)??null,setItem:(k,v)=>store.set(k,v)},sessionStorage:{getItem:k=>sessionStore.get(k)??null,setItem:(k,v)=>sessionStore.set(k,v),removeItem:k=>sessionStore.delete(k)},navigator:{onLine:!offline,clipboard:{writeText:async(text)=>{copied=text;}},serviceWorker:{getRegistration:async()=>({active:true,showNotification:async(...v)=>sent.push(v)})}},Notification:{permission:denied?'denied':'granted',requestPermission:async()=>denied?'denied':'granted'},fetch:async()=>{requests++;if(offline)throw Error('offline');return{ok:true,json:async()=>JSON.parse(JSON.stringify(data))};},setTimeout(){},setInterval(fn,ms){timers.push({fn,ms});},addEventListener(name,fn){events[name]=fn;},open(url){opened.push(url);}};
+  if (nativeCache) context.Capacitor = {
+    isNativePlatform: () => true, getPlatform: () => 'android',
+    Plugins: { SiriusAccount: {
+      cachedSchedule: async () => nativeCache(structuredClone(data)),
+      cacheSchedule: async ({ value }) => widgetWrites.push(JSON.parse(value)),
+    } },
+  };
   context.window=context;vm.runInNewContext(source,context);await new Promise(resolve=>setImmediate(resolve));
-  return {context,nodes,sent,store,events,timers,data,advance:ms=>now+=ms,requests:()=>requests,blob:()=>blob,opened,copied:()=>copied};
+  return {context,nodes,sent,store,events,timers,data,widgetWrites,advance:ms=>now+=ms,requests:()=>requests,blob:()=>blob,opened,copied:()=>copied};
 }
-test('saved offline schedule and Moscow countdown work under a repository subpath',async()=>{const h=await setup({offline:true});assert.match(h.nodes.get('app').innerHTML,/08:45/);assert.match(h.nodes.get('nextHeadline').textContent,/9 мин/);assert.match(h.nodes.get('app').innerHTML,/Без интернета/);assert.equal(h.sent.length,1);assert.match(h.sent[0][1].data.url,/\/repo\/#\/schedule$/);await h.context.SiriusSchedule.refresh();assert.equal(h.sent.length,1);});
+test('saved offline schedule and Moscow reminder work under a repository subpath',async()=>{const h=await setup({offline:true});assert.match(h.nodes.get('app').innerHTML,/08:45/);assert.match(h.nodes.get('app').innerHTML,/data-now-mount/);assert.match(h.nodes.get('app').innerHTML,/Без интернета/);assert.equal(h.sent.length,1);assert.equal(h.sent[0][0],'До пары 9 мин');assert.match(h.sent[0][1].data.url,/\/repo\/#\/schedule\?date=2026-09-15$/);await h.context.SiriusSchedule.refresh();assert.equal(h.sent.length,1);});
+test('the app uses the widget schedule when it has a newer offline copy', async () => {
+  const h = await setup({ offline: true, nativeCache: data => {
+    data.updatedAt = '2026-09-15T05:36:01Z';
+    data.groups[group][0].end = '10:30';
+    return data;
+  }});
+  assert.equal(h.context.SiriusSchedule.rows()[0].end, '10:30');
+  assert.equal(JSON.parse(h.store.get('sirius-schedule')).groups[group][0].end, '10:30');
+  assert.equal(h.requests(), 0);
+});
+test('the app sends its newer copy to the offline widget', async () => {
+  const h = await setup({ offline: true, nativeCache: data => {
+    data.updatedAt = '2026-09-15T05:35:59Z';
+    data.groups[group][0].end = '10:30';
+    return data;
+  }});
+  assert.equal(h.context.SiriusSchedule.rows()[0].end, '10:05');
+  assert.equal(h.widgetWrites.length, 1);
+  assert.equal(h.widgetWrites[0].groups[group][0].end, '10:05');
+});
 test('date navigation shifts by a day or a week and supports an external animation', async () => {
   const h = await setup({offline: true});
   const view = () => h.nodes.get('app').innerHTML;
