@@ -45,6 +45,25 @@ class ScheduleTests(unittest.TestCase):
             partial=self.snapshot();del partial['groups'][m.GROUPS[1]]
             self.assertFalse(m.update(target, Mock(return_value=partial), Mock()))
             self.assertEqual(target.read_text(), original)
+
+    def test_old_cloud_collector_reports_missing_groups(self):
+        old_snapshot = self.snapshot()
+        del old_snapshot['groups']['ИОП-ИТ-24/1']
+        del old_snapshot['groups']['ИОП-ИТ-24/2']
+        with patch.dict(m.os.environ, {'SCHEDULE_COLLECTOR_URL': 'https://collector.example', 'SCHEDULE_PROXY_URL': ''}):
+            with patch.object(m, 'remote_collect', return_value=old_snapshot):
+                with self.assertRaisesRegex(ValueError, 'ИОП-ИТ-24/1, ИОП-ИТ-24/2'):
+                    m.collect_configured()
+
+    def test_incomplete_cloud_snapshot_falls_back_to_configured_proxy(self):
+        old_snapshot = self.snapshot()
+        del old_snapshot['groups']['ИОП-ИТ-24/1']
+        complete = self.snapshot()
+        with patch.dict(m.os.environ, {'SCHEDULE_COLLECTOR_URL': 'https://collector.example', 'SCHEDULE_PROXY_URL': 'http://proxy.example:3128'}):
+            with patch.object(m, 'remote_collect', return_value=old_snapshot):
+                with patch.object(m, 'collect', return_value=complete) as direct:
+                    self.assertEqual(m.collect_configured(), complete)
+                    direct.assert_called_once_with()
     def test_failure_without_backup_is_explicit(self):
         with tempfile.TemporaryDirectory() as directory:
             target=Path(directory)/'schedule.json'

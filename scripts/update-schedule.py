@@ -1,4 +1,5 @@
 """Read the university's public Livewire schedule; publish only complete snapshots."""
+import argparse
 import datetime as dt
 import hashlib
 import html
@@ -304,6 +305,27 @@ def valid_snapshot(data, require_all=True):
         return False
 
 
+def collect_configured():
+    if not os.environ.get('SCHEDULE_COLLECTOR_URL', '').strip():
+        return collect()
+    try:
+        snapshot = remote_collect()
+        groups = snapshot.get('groups') if isinstance(snapshot, dict) else None
+        if isinstance(groups, dict):
+            missing = [group for group in GROUPS if group not in groups]
+            if missing:
+                raise ValueError('Cloud collector omitted groups: ' + ', '.join(missing) +
+                                 '. Redeploy cloud/yandex-function with the current group list.')
+        if not valid_snapshot(snapshot):
+            raise ValueError('Cloud collector returned an invalid timetable snapshot')
+        return snapshot
+    except (OSError, ValueError) as error:
+        if not validated_proxy():
+            raise
+        print(f'Cloud collector failed ({brief_error(error)}). Trying the configured proxy.', file=sys.stderr)
+        return collect()
+
+
 def calendar_slug(group):
     return group.replace('ИОП-ИТ-', 'iop-it-').replace('/', '-')
 
@@ -414,4 +436,8 @@ def update(target=None, fetch_snapshot=collect, sleep=time.sleep):
 
 
 if __name__ == '__main__':
-    update(fetch_snapshot=remote_collect if os.environ.get('SCHEDULE_COLLECTOR_URL', '').strip() else collect)
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--require-fresh', action='store_true', help='Exit with an error if only the saved timetable is available')
+    args = parser.parse_args()
+    if not update(fetch_snapshot=collect_configured) and args.require_fresh:
+        sys.exit(1)

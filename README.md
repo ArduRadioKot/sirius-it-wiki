@@ -139,7 +139,7 @@ GitHub Actions (every 30 min) ──► Yandex Cloud Function ──► schedule
 
 - [`schedule.yml`](.github/workflows/schedule.yml) runs `scripts/publish-schedule.sh` at :17 and :47 every hour and on manual *Run workflow*. It commits only when lessons change or the snapshot is older than about 2 hours.
 - The university site answers Russian IPs only, so the workflow asks `cloud/yandex-function` (free tier) to collect the current week plus the next two. Deploy it once with `bash cloud/yandex-function/deploy.sh` (needs `yc` and `gh`); it stores `SCHEDULE_COLLECTOR_URL` and `SCHEDULE_COLLECTOR_TOKEN` as repository secrets.
-- On any error or unexpected format the previous snapshot is kept and nothing is committed. Same-time subgroup classes are stored separately.
+- Redeploy the cloud function after changing the group list. GitHub Actions reports any groups missing from the cloud response and keeps the last verified snapshot on failure. Same-time subgroup classes are stored separately.
 - `SCHEDULE_PROXY_URL` (an HTTP(S) proxy, `http://USER:PASSWORD@HOST:PORT`) is an optional fallback for the direct fetch.
 - GitHub may delay scheduled runs and pauses them after 60 days without repository activity.
 

@@ -19,7 +19,7 @@ main() {
     git reset -q --hard "origin/$branch"
     git show HEAD:data/schedule.json > "${TMPDIR:-/tmp}/schedule-before.json"
 
-    python3 scripts/update-schedule.py
+    python3 scripts/update-schedule.py --require-fresh
 
     if ! python3 - "${TMPDIR:-/tmp}/schedule-before.json" data/schedule.json <<'PY'
 import datetime as dt, json, sys
