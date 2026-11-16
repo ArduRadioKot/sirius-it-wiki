@@ -502,15 +502,6 @@
       </header>
       ${deviceBanner()}
       <div class="schedule-shell">
-        <aside class="schedule-rail">
-          <div class="schedule-now" data-now-mount aria-live="off"></div>
-          ${widgetTimerExact === false ? `<div class="schedule-reminders schedule-widget-timer">
-            <button id="widgetTimerSettings" type="button">Точная смена таймера в виджетах</button>
-            <span id="widgetTimerStatus" role="status">Разрешение помогает переключать таймер в момент начала и конца пары.</span>
-          </div>` : ''}
-          ${weekNav()}
-          <p class="schedule-meta schedule-meta-rail" role="status">${escape(statusLine())} · <a href="${sourceURL}" target="_blank" rel="noopener">Источник</a></p>
-        </aside>
         <div class="schedule-main${direction === 'next' ? ' schedule-transition-next' : direction === 'previous' ? ' schedule-transition-previous' : ''}" id="scheduleSwipeArea">
           <div class="schedule-day-bar">
             <h2>${escape(dayTitle)}</h2>
@@ -521,6 +512,15 @@
             ${lessonsWithBreaks(slots) || empty}
           </div>
         </div>
+        <aside class="schedule-rail">
+          <div class="schedule-now" data-now-mount aria-live="off"></div>
+          ${widgetTimerExact === false ? `<div class="schedule-reminders schedule-widget-timer">
+            <button id="widgetTimerSettings" type="button">Точная смена таймера в виджетах</button>
+            <span id="widgetTimerStatus" role="status">Разрешение помогает переключать таймер в момент начала и конца пары.</span>
+          </div>` : ''}
+          ${weekNav()}
+          <p class="schedule-meta schedule-meta-rail" role="status">${escape(statusLine())} · <a href="${sourceURL}" target="_blank" rel="noopener">Источник</a></p>
+        </aside>
       </div>
       <footer class="schedule-foot">
         <div class="schedule-reminders">

@@ -1565,16 +1565,22 @@ button:disabled {
 @media (min-width: 980px) {
   .schedule-shell {
     grid-template-columns: 260px minmax(0, 1fr);
+    grid-template-areas: "rail schedule";
     gap: 36px;
     align-items: start;
   }
 
   .schedule-rail {
+    grid-area: rail;
     position: sticky;
     top: 104px;
     display: grid;
     gap: 16px;
     align-content: start;
+  }
+
+  .schedule-main {
+    grid-area: schedule;
   }
 
   .schedule-next {
